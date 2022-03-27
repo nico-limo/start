@@ -1,34 +1,14 @@
-import { Stack, Text } from "@chakra-ui/react";
+import { HStack, Stack, Text } from "@chakra-ui/react";
+import { TokenTable } from "../components/TokenTable";
 
 const Home = () => {
   return (
-    <Stack>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-      <Text>TEST PRUEBA</Text>
-    </Stack>
+    <HStack spacing={4} align="center" justify="space-between">
+      <TokenTable />
+      <Stack bg="bisque">
+        <Text>TEST DOS</Text>
+      </Stack>
+    </HStack>
   );
 };
 

@@ -4,15 +4,29 @@ import { AppProps } from "next/app";
 import theme from "../theme";
 import { RecoilRoot } from "recoil";
 import Topbar from "../layouts/Topbar";
+import { memoize } from "lodash";
+import ApiRoot from "./api/ApiRoot";
+import Web3Root from "./web3/Web3Root";
+import "../theme/global.css";
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
+  const mutedConsole = memoize((console) => ({
+    ...console,
+    warn: (...args) =>
+      args[0].includes("Duplicate atom key") ? null : console.warn(...args),
+  }));
+  global.console = mutedConsole(global.console);
   return (
     <RecoilRoot>
       <ChakraProvider theme={theme}>
         <Topbar />
-        <Container maxW="container.xl" bg="gray.700" my={4}>
-          <Component {...pageProps} />
-        </Container>
+        <Web3Root>
+          <ApiRoot>
+            <Container maxW="container.xl" bg="gray.700" p={4}>
+              <Component {...pageProps} />
+            </Container>
+          </ApiRoot>
+        </Web3Root>
       </ChakraProvider>
     </RecoilRoot>
   );

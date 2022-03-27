@@ -1,16 +1,22 @@
-import { useSetRecoilState, useResetRecoilState } from "recoil";
+import { useSetRecoilState, useResetRecoilState, useRecoilValue } from "recoil";
+import { walletConnect } from "../../utils/cryptoMethods";
 import { userState } from "../atoms/user";
 
 export const UserMethods = () => {
   const setuser = useSetRecoilState(userState);
   const logOut = useResetRecoilState(userState);
-  const logIn = () => {
+  const wallet = useRecoilValue(userState);
+  const logIn = async () => {
     try {
-      setuser({ isConnected: true, account: "0x0000000" });
+      const account = await walletConnect();
+      setuser({
+        isConnected: true,
+        account: account,
+      });
     } catch (error) {
       console.log("error ", error);
     }
   };
 
-  return { logIn, logOut };
+  return { logIn, logOut, wallet };
 };

@@ -11,11 +11,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FC, useRef } from "react";
-import WalletConnect from "../components/WalletConnect";
+import { PricesStatics } from "../components/PricesStatics";
+import { WalletConnection } from "../components/WalletConnection";
 import { PAGES } from "../utils/constants";
 import { MobileTopBar } from "../utils/interfaces";
 
-const MobileDrawer: FC<MobileTopBar> = ({ isOpen, onClose }) => {
+const MobileDrawer: FC<MobileTopBar> = ({ isOpen, onClose, onModalOpen }) => {
   const btnRef = useRef();
 
   return (
@@ -32,7 +33,7 @@ const MobileDrawer: FC<MobileTopBar> = ({ isOpen, onClose }) => {
           <DrawerHeader>Menu</DrawerHeader>
           <DrawerBody>
             <VStack>
-              <WalletConnect />
+              <WalletConnection onModalOpen={onModalOpen} />
               {PAGES.map((page) => (
                 <Link key={page.id} href={page.path}>
                   <Button variant="nav"> {page.label} </Button>
@@ -41,11 +42,11 @@ const MobileDrawer: FC<MobileTopBar> = ({ isOpen, onClose }) => {
             </VStack>
           </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
+          <DrawerFooter justifyContent="space-between">
+            <PricesStatics />
+            <Button variant="solid" colorScheme="red" mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme="blue">Action</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

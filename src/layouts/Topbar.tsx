@@ -1,6 +1,5 @@
 import { HamburgerIcon } from "@chakra-ui/icons";
 import {
-  Image,
   chakra,
   Flex,
   HStack,
@@ -8,15 +7,27 @@ import {
   Link,
   IconButton,
   useDisclosure,
+  Image,
+  Box,
 } from "@chakra-ui/react";
 import { useRef } from "react";
-import WalletConnect from "../components/WalletConnect";
 import { PAGES } from "../utils/constants";
 import MobileDrawer from "./MobileDrawer";
+import { PricesStatics } from "../components/PricesStatics";
+import WalletModal from "../components/WalletModal/WalletModal";
+import { WalletConnection } from "../components/WalletConnection";
+import { useRecoilValue } from "recoil";
+import { networkState } from "../store/atoms/network";
 
 const Topbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isModalOpen,
+    onOpen: onModalOpen,
+    onClose: onModalClose,
+  } = useDisclosure();
   const btnRef = useRef();
+  const { label } = useRecoilValue(networkState);
 
   return (
     <chakra.header id="header" bg="gray.600" position="sticky" top={0} w="full">
@@ -29,7 +40,11 @@ const Topbar = () => {
             </Link>
           ))}
         </HStack>
-        <WalletConnect display="none" />
+        <HStack>
+          <PricesStatics display="none" />
+          <WalletConnection onModalOpen={onModalOpen} />
+          <Image src={`/networks/${label}.png`} w={8} />
+        </HStack>
         <IconButton
           display={{ base: "initial", md: "none" }}
           ref={btnRef}
@@ -39,7 +54,12 @@ const Topbar = () => {
           icon={<HamburgerIcon />}
         ></IconButton>
       </Flex>
-      <MobileDrawer isOpen={isOpen} onClose={onClose} />
+      <WalletModal isOpen={isModalOpen} onClose={onModalClose} />
+      <MobileDrawer
+        isOpen={isOpen}
+        onClose={onClose}
+        onModalOpen={onModalOpen}
+      />
     </chakra.header>
   );
 };

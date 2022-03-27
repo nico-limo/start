@@ -1,0 +1,116 @@
+import { PagesLabel } from "../interfaces/components";
+
+export const WALLETS_ID = {
+  metamask: {
+    id: "1xmeta",
+    label: "metamask",
+  },
+  trustWallet: {
+    id: "1xtrust",
+    label: "trustWallet",
+  },
+  coinbase: {
+    id: "1xcoin",
+    label: "coinbase",
+  },
+};
+
+export const NETWORKS_ID = {
+  ethereum: {
+    id: "0x1",
+    label: "Ethereum",
+  },
+  fantom: {
+    id: "0xfa",
+    label: "Fantom",
+  },
+  binance: {
+    id: "0x38",
+    label: "Binance",
+  },
+};
+
+export const NATIVES_TOKENS = {
+  1: "ETH",
+  56: "BNB",
+  250: "FTM",
+};
+
+export const PAGES: PagesLabel[] = [
+  {
+    id: "1-home",
+    label: "Home",
+    path: "/",
+  },
+  {
+    id: "2-swap",
+    label: "Swap",
+    path: "/swap",
+  },
+  {
+    id: "3-limit",
+    label: "Limit",
+    path: "/limit",
+  },
+];
+
+export const NETWORKS_LIST = [
+  NETWORKS_ID.ethereum,
+  NETWORKS_ID.fantom,
+  NETWORKS_ID.binance,
+];
+export const WALLETS_LIST = [
+  WALLETS_ID.metamask,
+  WALLETS_ID.trustWallet,
+  WALLETS_ID.coinbase,
+];
+
+export const DEFAULT_NETWORK = NETWORKS_ID.fantom;
+export const DEFAULT_WALLET = WALLETS_ID.metamask;
+
+export const API_COINGECKO = "https://api.coingecko.com/api/v3/simple/price";
+export const API_COVALENT = "https://api.covalenthq.com/v1";
+export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
+
+export const networksColors = {
+  1: {
+    // ETH
+    font: "rgba(57, 57, 57, 1)",
+    bg: "rgba(57, 57, 57, 0.25)",
+  },
+  10: {
+    // OPTIMISTIC
+    font: "rgba(255, 4, 32, 1)",
+    bg: "rgba(255, 4, 32, 0.25)",
+  },
+  56: {
+    // BSC
+    font: "rgba(243, 186, 47, 1)",
+    bg: "rgba(243, 186, 47, 0.25)",
+  },
+  100: {
+    // GNOSIS
+    font: "rgba(0, 166, 196, 1)",
+    bg: "rgba(0, 166, 196, 0.25)",
+  },
+  137: {
+    // POLYGON
+    font: "rgba(130, 71, 230, 1)",
+    bg: "rgba(130, 71, 230, 0.25)",
+  },
+  250: {
+    // FANTOM
+    font: "rgba(19, 181, 236, 1)",
+    bg: "rgba(19, 181, 236, 0.25)",
+  },
+  42161: {
+    // ARB
+    font: "rgba(40, 160, 240, 1)",
+    bg: "rgba(40, 160, 240, 0.25)",
+  },
+  43114: {
+    // AVL
+    font: "rgba(232, 65, 66, 1)",
+    bg: "rgba(232, 65, 66, 0.25)",
+  },
+};
