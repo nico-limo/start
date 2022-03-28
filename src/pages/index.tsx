@@ -1,14 +1,13 @@
-import { HStack, Stack, Text } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
+import { TokenDashboard } from "../components/TokenDashboard";
 import { TokenTable } from "../components/TokenTable";
 
 const Home = () => {
   return (
-    <HStack spacing={4} align="center" justify="space-between">
+    <Stack direction={{ base: "column", md: "row" }} spacing={4}>
       <TokenTable />
-      <Stack bg="bisque">
-        <Text>TEST DOS</Text>
-      </Stack>
-    </HStack>
+      <TokenDashboard />
+    </Stack>
   );
 };
 

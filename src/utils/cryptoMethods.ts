@@ -3,6 +3,7 @@ import { formatUnits } from "ethers/lib/utils";
 import { NETWORKS_ID } from "./constants";
 import { hexToNumber, NETWORKS } from "./constants/networks";
 import { NetworkProps } from "./interfaces/index.";
+import { formatAmount } from "./methods";
 
 export const formatTokenAmount = (
   amount: string,
@@ -15,6 +16,18 @@ export const formatTokenAmount = (
     return FixedNumber.fromString(amountFormatted).round(trunc).toString();
   } catch (error) {
     console.log("ether format ", error);
+  }
+};
+
+export const getUSDBalance = (balance: string, price: number) => {
+  try {
+    if (balance === "loading") return "0.00";
+    const fixedBalance = FixedNumber.fromString(balance);
+    const fixedPrice = FixedNumber.fromString(price.toString());
+    const balacneUSD = fixedBalance.mulUnsafe(fixedPrice).round(2).toString();
+    return balacneUSD;
+  } catch (error) {
+    console.log("error format USD amount ", error);
   }
 };
 

@@ -45,12 +45,12 @@ export const PAGES: PagesLabel[] = [
   {
     id: "2-swap",
     label: "Swap",
-    path: "/swap",
+    path: "/Swap",
   },
   {
     id: "3-limit",
     label: "Limit",
-    path: "/limit",
+    path: "/Limit",
   },
 ];
 

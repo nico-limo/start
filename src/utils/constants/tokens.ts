@@ -68,10 +68,10 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       pathCoingecko: "ethereum",
     },
     {
-      name: "USD Coin",
+      name: "Binance-Peg USD Coin",
       symbol: "USDC",
       address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
-      decimals: 6,
+      decimals: 18,
       pathCoingecko: "usd-coin",
     },
     {

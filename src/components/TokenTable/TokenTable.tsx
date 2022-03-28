@@ -5,15 +5,16 @@ import { TokensMethod } from "../../store/methods/tokens";
 
 const TokenTable = () => {
   const { portfolio } = TokensMethod();
+  const hasBalance = portfolio.every((token) => token.balance);
 
   return (
     <Box>
-      <Labels />
-      <Box overflowY="auto" h={400}>
+      <Labels showBalance={hasBalance} />
+      <Box overflowY="auto" maxH={400}>
         {portfolio &&
           portfolio.map((token) => (
             <Box key={`table-${token.address}`}>
-              <TokenInfo token={token} />
+              <TokenInfo token={token} showBalance={hasBalance} />
             </Box>
           ))}
       </Box>

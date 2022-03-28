@@ -12,7 +12,6 @@ const ApiRoot = ({ children }) => {
   useEffect(() => {
     const fethData = async () => {
       const tokensPrices = await tokensPrice(network.chainID);
-      updatePortfolio({ tokensPrices });
       const tokensBalances = await tokensBalance({
         account: wallet.account,
         chainID: network.chainID,
@@ -22,7 +21,7 @@ const ApiRoot = ({ children }) => {
     fethData();
     const interval = setInterval(() => {
       fethData();
-    }, 6000000);
+    }, 20000);
     return () => clearInterval(interval);
   }, [wallet, network]);
 

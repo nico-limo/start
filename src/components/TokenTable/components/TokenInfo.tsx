@@ -7,20 +7,33 @@ import {
   Text,
   Skeleton,
 } from "@chakra-ui/react";
-import { formatTokenAmount } from "../../../utils/cryptoMethods";
+import { formatTokenAmount, getUSDBalance } from "../../../utils/cryptoMethods";
 import { TokenPortfolio } from "../../../utils/interfaces/index.";
-import { formatAmount } from "../../../utils/methods";
+import { formatAmount, priceStatus } from "../../../utils/methods";
 
-const TokenInfo = ({ token }: { token: TokenPortfolio }) => {
-  const { symbol, balance, usd, usd_24h, decimals, logo_url } = token;
+interface TokenInfoProps {
+  token: TokenPortfolio;
+  showBalance: boolean;
+}
+
+const TokenInfo = ({ token, showBalance }: TokenInfoProps) => {
+  const { symbol, balance, usd, usd_24h, decimals } = token;
+  const { color_rate, symbol_rate } = priceStatus(usd_24h);
   const diffPrice = usd_24h ? usd_24h.toFixed(2) : "00.00";
   const isPrice: boolean = usd > 0 ?? false;
   const isBalance: boolean = formatTokenAmount(balance, decimals) === "loading";
+  const balanceNotFormatted = formatTokenAmount(balance, decimals, 4);
+  const balanceFormatted = formatAmount(balanceNotFormatted);
+  const balanceUSD = getUSDBalance(balanceNotFormatted, usd);
+  const columns = showBalance ? 4 : 2;
+  const fontSize = { base: "xs", md: "md" };
   return (
-    <Grid templateColumns="repeat(3, 1fr)" w={{ base: 400, md: 700 }}>
+    <Grid
+      templateColumns={`repeat(${columns}, 1fr)`}
+      w={{ base: "full", md: 700 }}
+    >
       <GridItem
         p={3}
-        w="100%"
         h="10"
         bg="teal.800"
         display="flex"
@@ -30,15 +43,14 @@ const TokenInfo = ({ token }: { token: TokenPortfolio }) => {
         <HStack>
           <Image
             src={`/tokens/${symbol}.png`}
-            w={4}
-            fallback={<QuestionIcon />}
+            fallback={<QuestionIcon w={6} />}
+            w={6}
           />
-          <Text>{symbol}</Text>
+          <Text fontSize={fontSize}>{symbol}</Text>
         </HStack>
       </GridItem>
       <GridItem
         p={3}
-        w="100%"
         h="10"
         bg="teal.800"
         display="flex"
@@ -48,27 +60,46 @@ const TokenInfo = ({ token }: { token: TokenPortfolio }) => {
       >
         <Skeleton isLoaded={isPrice}>
           <HStack>
-            <Text>{formatAmount(usd)}</Text>
+            <Text fontSize={fontSize}>{formatAmount(usd)}</Text>
             <HStack spacing={1}>
-              <Text fontSize="xx-small">{`(${diffPrice})`}</Text>
+              <Text
+                color={color_rate}
+                fontSize={{ base: "xx-small", md: "xs" }}
+              >{`(${symbol_rate}${diffPrice})`}</Text>
             </HStack>
           </HStack>
         </Skeleton>
       </GridItem>
-      <GridItem
-        p={3}
-        w="100%"
-        h="10"
-        bg="teal.800"
-        display="flex"
-        alignItems="center"
-        justifyContent="flex-end"
-        border="2px solid teal"
-      >
-        <Skeleton isLoaded={!isBalance}>
-          <Text>{formatTokenAmount(balance, decimals)}</Text>
-        </Skeleton>
-      </GridItem>
+      {showBalance && (
+        <>
+          <GridItem
+            p={3}
+            h="10"
+            bg="teal.800"
+            display="flex"
+            alignItems="center"
+            justifyContent="flex-end"
+            border="2px solid teal"
+          >
+            <Skeleton isLoaded={!isBalance}>
+              <Text fontSize={fontSize}>{balanceFormatted}</Text>
+            </Skeleton>
+          </GridItem>
+          <GridItem
+            p={3}
+            h="10"
+            bg="teal.800"
+            display="flex"
+            alignItems="center"
+            justifyContent="flex-end"
+            border="2px solid teal"
+          >
+            <Skeleton isLoaded={!isBalance}>
+              <Text fontSize={fontSize}>{`$${formatAmount(balanceUSD)}`}</Text>
+            </Skeleton>
+          </GridItem>
+        </>
+      )}
     </Grid>
   );
 };

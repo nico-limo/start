@@ -14,7 +14,7 @@ export const TokensMethod = () => {
     tokensPrices,
     tokensBalances,
   }: PortfolioProps) => {
-    if (tokensBalances && tokensPrices) {
+    if (tokensBalances?.length && tokensPrices?.length) {
       const mixData = tokensBalances.map((tokensBalances) => {
         const tokenPrice = tokensPrices.find(
           (token) => token.address === tokensBalances.address

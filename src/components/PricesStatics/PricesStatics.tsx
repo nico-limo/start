@@ -1,39 +1,30 @@
-import { Box, HStack, Image, Skeleton, Text, VStack } from "@chakra-ui/react";
-import React, { FC, useMemo } from "react";
-import { useRecoilValue } from "recoil";
-import { priceLoaderState } from "../../store/atoms/loaders";
-import { networkState } from "../../store/atoms/network";
-
+import React, { useMemo } from "react";
+import { Box, HStack, Image, Skeleton, Text } from "@chakra-ui/react";
+import { NetworksMethods } from "../../store/methods/network";
 import { ADDRESS_ZERO, networksColors } from "../../utils/constants";
-import { formatAmount } from "../../utils/methods";
+import { formatAmount, priceStatus } from "../../utils/methods";
+import { TokensMethod } from "../../store/methods/tokens";
 
-interface Props {
-  display?: string;
-}
-
-const PricesStatics: FC<Props> = ({ display }) => {
-  const isLoadingPrices = useRecoilValue(priceLoaderState);
-  const { chainID } = useRecoilValue(networkState);
-
+const PricesStatics = () => {
+  const { network } = NetworksMethods();
+  const { portfolio } = TokensMethod();
   const nativePrice = useMemo(() => {
+    if (portfolio.length) {
+      return portfolio.find((token) => token.address === ADDRESS_ZERO);
+    }
     return null;
-  }, []);
-
-  const bg: string = networksColors[chainID].bg;
+  }, [portfolio]);
+  const isLoadedPrice = nativePrice.usd > 0;
+  const bg: string = networksColors[network.chainID].bg;
 
   if (!nativePrice) return null;
-  const { symbol, usd, usd_24h_change } = nativePrice;
-  const color_rate = usd_24h_change > 0 ? "green.300" : "red.300";
-  const symbol_rate = usd_24h_change > 0 ? "+" : "";
+  const { symbol, usd, usd_24h } = nativePrice;
+  const { color_rate, symbol_rate } = priceStatus(usd_24h);
   const displayMode = { base: "none", md: "initial" };
+
   return (
-    <HStack
-      bg={bg}
-      p={2}
-      display={{ base: display, md: "initial" }}
-      borderRadius="5px"
-    >
-      <Skeleton isLoaded={!isLoadingPrices}>
+    <HStack bg={bg} p={2} borderRadius="5px">
+      <Skeleton isLoaded={isLoadedPrice}>
         <HStack align="center" justify="space-between">
           <Image loading="lazy" src={`/tokens/${symbol}.png`} w={6} />
           <HStack>
@@ -46,7 +37,7 @@ const PricesStatics: FC<Props> = ({ display }) => {
           <Text
             color={color_rate}
             fontSize="xs"
-          >{`(${symbol_rate}${usd_24h_change.toFixed(2)}%)`}</Text>
+          >{`(${symbol_rate}${usd_24h.toFixed(2)}%)`}</Text>
         </HStack>
       </Skeleton>
       );
