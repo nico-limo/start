@@ -1,64 +1,47 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import React from "react";
 
-const Labels = ({ showBalance }: { showBalance: boolean }) => {
-  const columns = showBalance ? 4 : 2;
+const Labels = ({
+  showBalance,
+  type,
+}: {
+  showBalance: boolean;
+  type: string;
+}) => {
+  const columns = showBalance ? 3 : 2;
   const fontSize = { base: "xs", md: "md" };
+  const labels = {
+    asset: type === "tokens" ? "Token" : "Farm",
+    market: type === "tokens" ? "Price" : "Staked",
+    user: type === "tokens" ? "Balance" : "Earns",
+  };
   return (
     <Grid
       templateColumns={`repeat(${columns}, 1fr)`}
-      w={{ base: "full", md: 700 }}
+      borderBottom="2px solid white"
     >
-      <GridItem
-        p={3}
-        h="10"
-        bg="teal.800"
-        display="flex"
-        alignItems="center"
-        border="2px solid teal"
-        fontSize={fontSize}
-      >
-        Token
+      <GridItem p={2} display="flex" alignItems="center" fontSize={fontSize}>
+        {labels.asset}
       </GridItem>
       <GridItem
-        p={3}
-        h="10"
-        bg="teal.800"
+        p={2}
         display="flex"
         alignItems="center"
         justifyContent="flex-end"
-        border="2px solid teal"
         fontSize={fontSize}
       >
-        Price
+        {labels.market}
       </GridItem>
       {showBalance && (
-        <>
-          <GridItem
-            p={3}
-            h="10"
-            bg="teal.800"
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-end"
-            border="2px solid teal"
-            fontSize={fontSize}
-          >
-            Balance
-          </GridItem>
-          <GridItem
-            p={3}
-            h="10"
-            bg="teal.800"
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-end"
-            border="2px solid teal"
-            fontSize={fontSize}
-          >
-            Balance USD
-          </GridItem>
-        </>
+        <GridItem
+          p={2}
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-end"
+          fontSize={fontSize}
+        >
+          {labels.user}
+        </GridItem>
       )}
     </Grid>
   );

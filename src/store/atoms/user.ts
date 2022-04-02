@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { TokenPortfolio } from "../../utils/interfaces/index.";
+import { FarmsPortfolio, TokenPortfolio } from "../../utils/interfaces/index.";
 import { currentTokens } from "../../utils/methods";
 
 export const userState = atom({
@@ -13,4 +13,9 @@ export const userState = atom({
 export const portfolioState = atom({
   key: "portfolioState",
   default: currentTokens(250) as TokenPortfolio[],
+});
+
+export const farmsState = atom({
+  key: "farmsState",
+  default: [] as FarmsPortfolio[],
 });

@@ -6,40 +6,30 @@ import {
   Image,
   Text,
   Skeleton,
+  Flex,
 } from "@chakra-ui/react";
 import { formatTokenAmount, getUSDBalance } from "../../../utils/cryptoMethods";
 import { TokenPortfolio } from "../../../utils/interfaces/index.";
 import { formatAmount, priceStatus } from "../../../utils/methods";
-
 interface TokenInfoProps {
   token: TokenPortfolio;
   showBalance: boolean;
 }
 
 const TokenInfo = ({ token, showBalance }: TokenInfoProps) => {
-  const { symbol, balance, usd, usd_24h, decimals } = token;
+  const { symbol, balance, usd, usd_24h, decimals, address } = token;
   const { color_rate, symbol_rate } = priceStatus(usd_24h);
   const diffPrice = usd_24h ? usd_24h.toFixed(2) : "00.00";
   const isPrice: boolean = usd > 0 ?? false;
-  const isBalance: boolean = formatTokenAmount(balance, decimals) === "loading";
   const balanceNotFormatted = formatTokenAmount(balance, decimals, 4);
   const balanceFormatted = formatAmount(balanceNotFormatted);
   const balanceUSD = getUSDBalance(balanceNotFormatted, usd);
-  const columns = showBalance ? 4 : 2;
+  const columns = showBalance ? 3 : 2;
   const fontSize = { base: "xs", md: "md" };
+
   return (
-    <Grid
-      templateColumns={`repeat(${columns}, 1fr)`}
-      w={{ base: "full", md: 700 }}
-    >
-      <GridItem
-        p={3}
-        h="10"
-        bg="teal.800"
-        display="flex"
-        alignItems="center"
-        border="2px solid teal"
-      >
+    <Grid templateColumns={`repeat(${columns}, 1fr)`} my={1} bg="gray.700">
+      <GridItem p={2} display="flex" alignItems="center">
         <HStack>
           <Image
             src={`/tokens/${symbol}.png`}
@@ -50,13 +40,10 @@ const TokenInfo = ({ token, showBalance }: TokenInfoProps) => {
         </HStack>
       </GridItem>
       <GridItem
-        p={3}
-        h="10"
-        bg="teal.800"
+        p={2}
         display="flex"
         alignItems="center"
         justifyContent="flex-end"
-        border="2px solid teal"
       >
         <Skeleton isLoaded={isPrice}>
           <HStack>
@@ -71,34 +58,14 @@ const TokenInfo = ({ token, showBalance }: TokenInfoProps) => {
         </Skeleton>
       </GridItem>
       {showBalance && (
-        <>
-          <GridItem
-            p={3}
-            h="10"
-            bg="teal.800"
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-end"
-            border="2px solid teal"
-          >
-            <Skeleton isLoaded={!isBalance}>
-              <Text fontSize={fontSize}>{balanceFormatted}</Text>
-            </Skeleton>
-          </GridItem>
-          <GridItem
-            p={3}
-            h="10"
-            bg="teal.800"
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-end"
-            border="2px solid teal"
-          >
-            <Skeleton isLoaded={!isBalance}>
-              <Text fontSize={fontSize}>{`$${formatAmount(balanceUSD)}`}</Text>
-            </Skeleton>
-          </GridItem>
-        </>
+        <GridItem p={2}>
+          <Flex direction="column" justify="end" align="flex-end">
+            <Text fontSize={fontSize}>{balanceFormatted}</Text>
+            <Text color="teal.300" fontSize={fontSize}>{`$${formatAmount(
+              balanceUSD
+            )}`}</Text>
+          </Flex>
+        </GridItem>
       )}
     </Grid>
   );

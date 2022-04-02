@@ -3,7 +3,6 @@ import { formatUnits } from "ethers/lib/utils";
 import { NETWORKS_ID } from "./constants";
 import { hexToNumber, NETWORKS } from "./constants/networks";
 import { NetworkProps } from "./interfaces/index.";
-import { formatAmount } from "./methods";
 
 export const formatTokenAmount = (
   amount: string,
@@ -28,6 +27,7 @@ export const getUSDBalance = (balance: string, price: number) => {
     return balacneUSD;
   } catch (error) {
     console.log("error format USD amount ", error);
+    return "0.00";
   }
 };
 
@@ -80,4 +80,11 @@ export const setupNetwork = async (hexId = NETWORKS_ID.fantom.id) => {
       `Can't setup the ${networkConfig.chainName} network because no wallet exists`
     );
   }
+};
+
+export const getProvider = (chainId: number = 250) => {
+  const hexId: string = hexToNumber[chainId];
+  const { rpcUrls }: NetworkProps = NETWORKS[hexId];
+  const provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], chainId);
+  return provider;
 };

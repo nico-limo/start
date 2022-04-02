@@ -4,6 +4,7 @@ import { TOKENS } from "../../utils/constants/tokens";
 import {
   CovalentApi,
   CovalentData,
+  CovalentPool,
   Token,
   TokenPortfolio,
 } from "../../utils/interfaces/index.";
@@ -62,6 +63,23 @@ export const tokensBalance = async ({ account, chainID }: CovalentApi) => {
     );
     const portfolioBalance = formatCovalentData(walletBalance, chainID);
     return portfolioBalance;
+  } catch (error) {
+    console.log("error covalnet", error);
+  }
+};
+export const covalentPools = async (chainID: number) => {
+  const params = {
+    key: process.env.NEXT_PUBLIC_COVALENT_KEY,
+  };
+
+  try {
+    const { data } = await axios.get(
+      `https://api.covalenthq.com/v1/${chainID}/xy=k/spiritswap/pools/?quote-currency=USD&&key=${params.key}`
+    );
+
+    const items: CovalentPool[] = data.data.items;
+
+    return items;
   } catch (error) {
     console.log("error covalnet", error);
   }

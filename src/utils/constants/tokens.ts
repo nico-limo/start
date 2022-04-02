@@ -132,5 +132,12 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       decimals: 18,
       pathCoingecko: "binancecoin",
     },
+    {
+      name: "Tarot",
+      symbol: "TAROT",
+      address: "0xC5e2B037D30a390e62180970B3aa4E91868764cD",
+      decimals: 18,
+      pathCoingecko: "tarot",
+    },
   ],
 };

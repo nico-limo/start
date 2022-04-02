@@ -3,10 +3,12 @@ import { useEffect } from "react";
 import { UserMethods } from "../../store/methods/user";
 import { NetworksMethods } from "../../store/methods/network";
 import { hexToNumber } from "../../utils/constants/networks";
+import { TokensMethod } from "../../store/methods/tokens";
 
 const Web3Root = ({ children }) => {
   const { logIn } = UserMethods();
   const { connectNetwork, network } = NetworksMethods();
+  const { cleanFarms } = TokensMethod();
 
   useEffect(() => {
     const fetchWeb3 = async () => {
@@ -16,7 +18,9 @@ const Web3Root = ({ children }) => {
         window.ethereum,
         "any"
       );
+
       const isLogged = await provider.listAccounts();
+
       const { chainId: web3ChainId } = await provider.getNetwork();
 
       if (web3ChainId !== network.chainID) {
@@ -28,6 +32,7 @@ const Web3Root = ({ children }) => {
       // EVENT LISTENERS
       window.ethereum.on("accountsChanged", () => {
         logIn();
+        cleanFarms();
       });
 
       window.ethereum.on("chainChanged", (hexId) => {
