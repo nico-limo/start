@@ -14,7 +14,7 @@ import { FC, useRef } from "react";
 import { PricesStatics } from "../components/PricesStatics";
 import { WalletConnection } from "../components/WalletConnection";
 import { PAGES } from "../utils/constants";
-import { MobileTopBar } from "../utils/interfaces";
+import { MobileTopBar } from "../utils/interfaces/components";
 
 const MobileDrawer: FC<MobileTopBar> = ({ isOpen, onClose, onModalOpen }) => {
   const btnRef = useRef();
