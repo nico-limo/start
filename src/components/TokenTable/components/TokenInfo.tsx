@@ -33,6 +33,7 @@ const TokenInfo = ({ token, showBalance }: TokenInfoProps) => {
         <HStack>
           <Image
             src={`/tokens/${symbol}.png`}
+            alt={symbol}
             fallback={<QuestionIcon w={6} />}
             w={6}
           />

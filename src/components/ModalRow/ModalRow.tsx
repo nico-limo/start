@@ -13,6 +13,7 @@ const ModalRow: FC<ModalRowProps> = ({
       {list.map((item) => (
         <Image
           key={`modal-${type}-${item.id}`}
+          alt={item.label}
           bg={selectedItem?.id === item.id ? "gray.900" : "none"}
           src={`/${type}/${item.label}.png`}
           onClick={() => onSelect(item)}

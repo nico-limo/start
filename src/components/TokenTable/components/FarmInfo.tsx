@@ -3,7 +3,6 @@ import { Grid, GridItem, HStack, Image, Text, Flex } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { TokensMethod } from "../../../store/methods/tokens";
 import { getUSDBalance } from "../../../utils/cryptoMethods";
-
 import { FarmsPortfolio } from "../../../utils/interfaces/index.";
 import { formatAmount } from "../../../utils/methods";
 interface FarmInfoProps {
@@ -24,7 +23,7 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
   const staked_USD = useMemo(() => {
     if (usd && staked) return getUSDBalance(staked, usd);
     return "0.00";
-  }, [earns, spiritToken]);
+  }, [staked, usd]);
 
   return (
     <Grid templateColumns={`repeat(3, 1fr)`} my={1} bg="gray.700">
@@ -32,11 +31,13 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
         <HStack>
           <Image
             src={`/tokens/${symbolA}.png`}
+            alt={symbolA}
             fallback={<QuestionIcon w={6} />}
             w={6}
           />
           <Image
             src={`/tokens/${symbolB}.png`}
+            alt={symbolB}
             fallback={<QuestionIcon w={6} />}
             w={6}
           />

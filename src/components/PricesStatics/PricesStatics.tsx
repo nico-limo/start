@@ -26,7 +26,12 @@ const PricesStatics = () => {
     <HStack bg={bg} p={2} borderRadius="5px">
       <Skeleton isLoaded={isLoadedPrice}>
         <HStack align="center" justify="space-between">
-          <Image loading="lazy" src={`/tokens/${symbol}.png`} w={6} />
+          <Image
+            alt={symbol}
+            loading="lazy"
+            src={`/tokens/${symbol}.png`}
+            w={6}
+          />
           <HStack>
             <Text display={displayMode} color="gray.200">
               {symbol}

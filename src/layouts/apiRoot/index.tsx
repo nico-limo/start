@@ -13,6 +13,7 @@ const ApiRoot = ({ children }) => {
   const { updatePortfolio, getFarmsBalance, cleanFarms } = TokensMethod();
   useEffect(() => {
     const fethData = async () => {
+      console.log("RENDERS DEL APIROOT");
       if (wallet.account) {
         const { data: coingeckoPrices } = await axios("/api/coingeckoPrices");
         const pricesPortfolio = formatCoingeckoPortfolio(
@@ -52,7 +53,7 @@ const ApiRoot = ({ children }) => {
       fethData();
     }, 25000);
     return () => clearInterval(interval);
-  }, [wallet, network]);
+  }, [wallet, chainID]);
 
   return children;
 };

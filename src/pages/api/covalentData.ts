@@ -1,8 +1,8 @@
 import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { API_COVALENT } from "../../utils/constants";
-import { CovalentData } from "../../utils/interfaces/index.";
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const params = {
     key: process.env.NEXT_PUBLIC_COVALENT_KEY,

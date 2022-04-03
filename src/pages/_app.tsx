@@ -5,9 +5,9 @@ import theme from "../theme";
 import { RecoilRoot } from "recoil";
 import Topbar from "../layouts/Topbar";
 import { memoize } from "lodash";
-import Web3Root from "./web3/Web3Root";
+import Web3Root from "../layouts/web3/Web3Root";
+import ApiRoot from "../layouts/apiRoot";
 import "../theme/global.css";
-import ApiRoot from "./apiRoot";
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   const mutedConsole = memoize((console) => ({
