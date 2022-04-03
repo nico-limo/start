@@ -1,4 +1,4 @@
-import { TOKENS } from "./constants/tokens";
+import { TOKENS } from "./constants/tokens/tokens";
 import { Token, TokenPortfolio } from "./interfaces/index.";
 
 export const formatAmount = (value: number | string, round: number = 0) => {
@@ -62,5 +62,6 @@ export const priceStatus = (value: number) => {
 };
 
 export const checkAddresses = (valueA: string, valueB: string): boolean => {
-  return valueA.toLowerCase() === valueB.toLowerCase();
+  if (valueA && valueB) return valueA.toLowerCase() === valueB.toLowerCase();
+  return false;
 };

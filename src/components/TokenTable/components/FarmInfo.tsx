@@ -1,13 +1,5 @@
 import { QuestionIcon } from "@chakra-ui/icons";
-import {
-  Grid,
-  GridItem,
-  HStack,
-  Image,
-  Text,
-  Skeleton,
-  Flex,
-} from "@chakra-ui/react";
+import { Grid, GridItem, HStack, Image, Text, Flex } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { TokensMethod } from "../../../store/methods/tokens";
 import { getUSDBalance } from "../../../utils/cryptoMethods";

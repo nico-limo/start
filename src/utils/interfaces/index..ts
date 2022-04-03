@@ -6,10 +6,15 @@ export interface Token {
   pathCoingecko: string;
 }
 
+export interface PricesApiDB {
+  path: string;
+  price: number;
+  price24: number;
+}
+
 export interface TokenPortfolio extends Token {
   balance: string;
   balance_24h: string;
-  logo_url: string;
   usd: number;
   usd_24h: number;
   type: string;

@@ -1,4 +1,4 @@
-import { Token } from "../interfaces/index.";
+import { Token } from "../../interfaces/index.";
 
 export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
   1: [

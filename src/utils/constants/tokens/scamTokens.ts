@@ -1,0 +1,4 @@
+export const TOKENS_SCAM = [
+  "0x119e2AD8f0c85c6f61AfdF0Df69693028cdC10bE",
+  "0x5558447b06867ffebd87dd63426d61c868c45904",
+];

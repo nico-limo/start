@@ -52,50 +52,48 @@ const TokenDashboard = () => {
   const totalBalance_24h = balance_24h + farmsBalance;
   const status_balance_24 = totalBalance - totalBalance_24h > 0;
   const isLoadedBalance: boolean = balance !== 0 ?? false;
-  return (
-    wallet.account && (
-      <VStack w="full" bg="gray.800" p={4}>
-        <Text fontSize="large" fontWeight={500}>
-          Portafolio Dashboard
-        </Text>
-        <HStack h={100} w="full" justify="space-around">
-          <VStack
-            w={200}
-            h={100}
-            bg="gray.600"
-            justify="center"
-            borderRadius="5px"
-          >
-            <Text>Balance</Text>
-            <Skeleton isLoaded={isLoadedBalance}>
-              <Text
-                color={status_balance_24 ? "green.300" : "red.300"}
-                fontSize="lg"
-                fontWeight={500}
-              >{`$${formatAmount(totalBalance)}`}</Text>
-            </Skeleton>
-          </VStack>
+  return wallet.account && balance ? (
+    <VStack w="full" bg="gray.800" p={4}>
+      <Text fontSize="large" fontWeight={500}>
+        Portafolio Dashboard
+      </Text>
+      <HStack h={100} w="full" justify="space-around">
+        <VStack
+          w={200}
+          h={100}
+          bg="gray.600"
+          justify="center"
+          borderRadius="5px"
+        >
+          <Text>Balance</Text>
+          <Skeleton isLoaded={isLoadedBalance}>
+            <Text
+              color={status_balance_24 ? "green.300" : "red.300"}
+              fontSize="lg"
+              fontWeight={500}
+            >{`$${formatAmount(totalBalance)}`}</Text>
+          </Skeleton>
+        </VStack>
 
-          <VStack
-            w={200}
-            h={100}
-            bg="gray.600"
-            justify="center"
-            borderRadius="5px"
-          >
-            <Text>Balance 24 Hs</Text>
-            <Skeleton isLoaded={isLoadedBalance}>
-              <Text
-                color="teal.300"
-                fontSize="lg"
-                fontWeight={500}
-              >{`$${formatAmount(totalBalance_24h)}`}</Text>
-            </Skeleton>
-          </VStack>
-        </HStack>
-      </VStack>
-    )
-  );
+        <VStack
+          w={200}
+          h={100}
+          bg="gray.600"
+          justify="center"
+          borderRadius="5px"
+        >
+          <Text>Balance 24 Hs</Text>
+          <Skeleton isLoaded={isLoadedBalance}>
+            <Text
+              color="teal.300"
+              fontSize="lg"
+              fontWeight={500}
+            >{`$${formatAmount(totalBalance_24h)}`}</Text>
+          </Skeleton>
+        </VStack>
+      </HStack>
+    </VStack>
+  ) : null;
 };
 
 export default TokenDashboard;

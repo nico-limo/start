@@ -5,15 +5,11 @@ import theme from "../theme";
 import { RecoilRoot } from "recoil";
 import Topbar from "../layouts/Topbar";
 import { memoize } from "lodash";
-import ApiRoot from "./api/ApiRoot";
 import Web3Root from "./web3/Web3Root";
 import "../theme/global.css";
-import { TOKENS } from "../utils/constants/tokens";
-import axios from "axios";
-import { API_COINGECKO } from "../utils/constants";
+import ApiRoot from "./apiRoot";
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
-  console.log("pageProps ", pageProps);
   const mutedConsole = memoize((console) => ({
     ...console,
     warn: (...args) =>
@@ -37,24 +33,3 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 };
 
 export default App;
-
-export async function getStaticProps() {
-  try {
-    const namesArr = TOKENS[250].map((token) => token.pathCoingecko);
-    const ids = namesArr.join(",");
-    const params = {
-      ids: "fantom",
-      include_24hr_change: true,
-      vs_currencies: "usd",
-    };
-
-    const { data: prices } = await axios.get(API_COINGECKO, { params });
-    return {
-      props: {
-        prices,
-      },
-    };
-  } catch (error) {
-    console.log("ERROR PRE FETCH STATIC");
-  }
-}

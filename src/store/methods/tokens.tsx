@@ -1,4 +1,4 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CovalentPool,
   FarmContract,
@@ -13,8 +13,8 @@ import { farms } from "../../utils/constants/farms";
 import { checkAddresses } from "../../utils/methods";
 import { spiritState } from "../atoms/tokens";
 interface PortfolioProps {
-  tokensPrices?: TokenPortfolio[];
-  tokensBalances?: TokenPortfolio[];
+  pricesPortfolio?: TokenPortfolio[];
+  covalentPortfolio?: TokenPortfolio[];
 }
 
 export const TokensMethod = () => {
@@ -22,46 +22,54 @@ export const TokensMethod = () => {
   const [farmsPortfolio, setFarmsPortfolio] = useRecoilState(farmsState);
   const [spiritToken, setSpiritToken] = useRecoilState(spiritState);
 
-  const filterCovalentTokens = (array: TokenPortfolio[]) =>
-    array.filter(
-      (token) =>
-        token.usd &&
-        token.type === "cryptocurrency" &&
-        !token.symbol.includes("LP") &&
-        token.usd_24h !== Infinity
-    );
-
   const updatePortfolio = ({
-    tokensPrices,
-    tokensBalances,
+    pricesPortfolio,
+    covalentPortfolio,
   }: PortfolioProps) => {
-    if (tokensBalances?.length && tokensPrices?.length) {
-      const spiritPrice = tokensPrices.find((token) =>
+    if (
+      pricesPortfolio &&
+      pricesPortfolio.length &&
+      covalentPortfolio &&
+      covalentPortfolio.length
+    ) {
+      const spirit = pricesPortfolio.find((token) =>
         checkAddresses(token.address, spiritToken.address)
       );
-      setSpiritToken(spiritPrice);
-      const mixData = tokensBalances.map((tokensBalances) => {
-        const tokenPrice = tokensPrices.find(
-          (token) => token.address === tokensBalances.address
+      if (spirit) setSpiritToken(spirit);
+      const mixData = covalentPortfolio.map((covaToken) => {
+        const tokenPrice = pricesPortfolio.find((token) =>
+          checkAddresses(token.address, covaToken.address)
         );
         if (tokenPrice) {
           return {
             ...tokenPrice,
-            balance: tokensBalances.balance,
-            balance_24h: tokensBalances.balance_24h,
-            logo_url: tokensBalances.logo_url,
-            type: tokensBalances.type,
+            balance: covaToken.balance,
+            balance_24h: covaToken.balance_24h
+              ? covaToken.balance_24h
+              : covaToken.balance,
+            type: covaToken.type,
           };
         }
-        return tokensBalances;
+        return {
+          ...covaToken,
+          balance_24h: covaToken.balance_24h
+            ? covaToken.balance_24h
+            : covaToken.balance,
+        };
       });
-      const filterTokens = filterCovalentTokens(mixData);
-      setPortfolio(filterTokens);
-    }
-    if (tokensPrices && !tokensBalances) setPortfolio(tokensPrices);
-    if (!tokensPrices && tokensBalances?.length) {
-      const filterTokens = filterCovalentTokens(tokensBalances);
-      setPortfolio(filterTokens);
+      setPortfolio(mixData);
+    } else if (
+      pricesPortfolio &&
+      pricesPortfolio.length &&
+      ((covalentPortfolio && !covalentPortfolio.length) || !covalentPortfolio)
+    ) {
+      setPortfolio(pricesPortfolio);
+    } else if (
+      ((pricesPortfolio && !pricesPortfolio.length) || !pricesPortfolio) &&
+      covalentPortfolio &&
+      covalentPortfolio.length
+    ) {
+      setPortfolio(covalentPortfolio);
     }
   };
 

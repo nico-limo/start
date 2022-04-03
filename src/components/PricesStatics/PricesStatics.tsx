@@ -14,7 +14,7 @@ const PricesStatics = () => {
     }
     return null;
   }, [portfolio]);
-  const isLoadedPrice = nativePrice.usd > 0;
+  const isLoadedPrice = nativePrice ? nativePrice.usd > 0 : false;
   const bg: string = networksColors[network.chainID].bg;
 
   if (!nativePrice) return null;
