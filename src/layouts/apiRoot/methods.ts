@@ -72,6 +72,7 @@ export const formatCovalentData = (data: CovalentData[], chainID: number) => {
   const excludeIncompleteData = portfolio.filter(
     (token) =>
       token.usd &&
+      token.name &&
       token.type === "cryptocurrency" &&
       !token.name.includes("LP") &&
       token.usd_24h !== Infinity &&

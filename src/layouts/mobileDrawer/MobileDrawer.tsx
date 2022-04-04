@@ -11,14 +11,21 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FC, useRef } from "react";
-import { PricesStatics } from "../components/PricesStatics";
-import { WalletConnection } from "../components/WalletConnection";
-import { PAGES } from "../utils/constants";
-import { MobileTopBar } from "../utils/interfaces/components";
+import { PricesStatics } from "../../components/PricesStatics";
+import { WalletConnection } from "../../components/WalletConnection";
+import { WalletRole } from "../../components/WalletRole";
+import { UserMethods } from "../../store/methods/user";
+import { PAGES } from "../../utils/constants";
+import { MobileTopBar } from "../../utils/interfaces/components";
 
-const MobileDrawer: FC<MobileTopBar> = ({ isOpen, onClose, onModalOpen }) => {
+const MobileDrawer: FC<MobileTopBar> = ({
+  isOpen,
+  onClose,
+  onModalOpen,
+  onPurchaseOpen,
+}) => {
   const btnRef = useRef();
-
+  const { wallet } = UserMethods();
   return (
     <>
       <Drawer
@@ -34,6 +41,10 @@ const MobileDrawer: FC<MobileTopBar> = ({ isOpen, onClose, onModalOpen }) => {
           <DrawerBody>
             <VStack>
               <WalletConnection onModalOpen={onModalOpen} />
+              {wallet.isConnected && (
+                <WalletRole onPurchaseOpen={onPurchaseOpen} />
+              )}
+
               {PAGES.map((page) => (
                 <Link key={page.id} href={page.path}>
                   <Button variant="nav"> {page.label} </Button>

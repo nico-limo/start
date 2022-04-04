@@ -38,7 +38,6 @@ export const NETWORKS = {
       decimals: 18,
     },
     blockExplorerUrls: ["https://ftmscan.com/"],
-
     label: "Fantom",
   },
 };

@@ -1,4 +1,4 @@
-export const farms = [
+export const spiritFarms = [
   {
     pid: 1,
     lpSymbol: ["SPIRIT", "FTM"],

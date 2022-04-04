@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { ROLE } from "../../utils/constants";
 import { FarmsPortfolio, TokenPortfolio } from "../../utils/interfaces/index.";
 import { currentTokens } from "../../utils/methods";
 
@@ -7,6 +8,7 @@ export const userState = atom({
   default: {
     isConnected: false,
     account: "",
+    role: ROLE.standard,
   },
 });
 

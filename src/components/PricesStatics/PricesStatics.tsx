@@ -27,9 +27,9 @@ const PricesStatics = () => {
       <Skeleton isLoaded={isLoadedPrice}>
         <HStack align="center" justify="space-between">
           <Image
-            alt={symbol}
+            alt={network.label}
             loading="lazy"
-            src={`/tokens/${symbol}.png`}
+            src={`/networks/${network.label}.png`}
             w={6}
           />
           <HStack>

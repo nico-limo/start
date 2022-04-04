@@ -1,7 +1,16 @@
 import { QuestionIcon } from "@chakra-ui/icons";
-import { Grid, GridItem, HStack, Image, Text, Flex } from "@chakra-ui/react";
+import {
+  Grid,
+  GridItem,
+  HStack,
+  Image,
+  Text,
+  Flex,
+  Button,
+} from "@chakra-ui/react";
 import { useMemo } from "react";
 import { TokensMethod } from "../../../store/methods/tokens";
+import { UserMethods } from "../../../store/methods/user";
 import { getUSDBalance } from "../../../utils/cryptoMethods";
 import { FarmsPortfolio } from "../../../utils/interfaces/index.";
 import { formatAmount } from "../../../utils/methods";
@@ -11,6 +20,8 @@ interface FarmInfoProps {
 
 const FarmInfo = ({ farm }: FarmInfoProps) => {
   const { spiritToken } = TokensMethod();
+  const { isPremium } = UserMethods();
+
   const { earns, lpSymbol, staked, usd } = farm;
   const [symbolA, symbolB] = lpSymbol;
   const fontSize = { base: "xs", md: "md" };
@@ -24,15 +35,15 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
     if (usd && staked) return getUSDBalance(staked, usd);
     return "0.00";
   }, [staked, usd]);
-
+  const columns = isPremium ? "1fr 1fr 1fr 80px" : "1fr 1fr 1fr";
   return (
-    <Grid templateColumns={`repeat(3, 1fr)`} my={1} bg="gray.700">
+    <Grid templateColumns={columns} my={1} bg="gray.700">
       <GridItem p={2} display="flex" alignItems="center">
         <HStack>
           <Image
             src={`/tokens/${symbolA}.png`}
             alt={symbolA}
-            fallback={<QuestionIcon w={6} />}
+            fallback={<QuestionIcon w={6} h={6} />}
             w={6}
           />
           <Image
@@ -65,6 +76,13 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
           </Text>
         </Flex>
       </GridItem>
+      {isPremium && (
+        <GridItem p={1} textAlign="end" alignSelf="center">
+          <Button colorScheme="yellow" fontSize="xs" size="xs">
+            CLAIM
+          </Button>
+        </GridItem>
+      )}
     </Grid>
   );
 };

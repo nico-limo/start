@@ -11,12 +11,14 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { PAGES } from "../utils/constants";
-import MobileDrawer from "./MobileDrawer";
+import { MobileDrawer } from "./mobileDrawer";
 import { PricesStatics } from "../components/PricesStatics";
 import WalletModal from "../components/WalletModal/WalletModal";
 import { WalletConnection } from "../components/WalletConnection";
-import { NetworksMethods } from "../store/methods/network";
 import Link from "next/link";
+import { PurshaseModal } from "../components/PurshaseModal";
+import { WalletRole } from "../components/WalletRole";
+import { UserMethods } from "../store/methods/user";
 
 const Topbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,9 +27,13 @@ const Topbar = () => {
     onOpen: onModalOpen,
     onClose: onModalClose,
   } = useDisclosure();
+  const {
+    isOpen: isPurchaseOpen,
+    onOpen: onPurchaseOpen,
+    onClose: onPurchaseClose,
+  } = useDisclosure();
   const btnRef = useRef();
-  const { network } = NetworksMethods();
-
+  const { wallet } = UserMethods();
   return (
     <chakra.header id="header" bg="gray.600" position="sticky" top={0} w="full">
       <Flex py={2} px={4} align="center" justify="space-between">
@@ -40,7 +46,7 @@ const Topbar = () => {
 
         <HStack display={{ base: "none", md: "inherit" }} as="nav" spacing="5">
           {PAGES.map((page) => (
-            <Link key={page.id} href={page.path}>
+            <Link key={page.id} href={page.path} passHref>
               <Button variant="nav"> {page.label} </Button>
             </Link>
           ))}
@@ -48,7 +54,7 @@ const Topbar = () => {
         <HStack display={{ base: "none", md: "inherit" }}>
           <PricesStatics />
           <WalletConnection onModalOpen={onModalOpen} />
-          <Image src={`/networks/${network.label}.png`} w={8} />
+          {wallet.isConnected && <WalletRole onPurchaseOpen={onPurchaseOpen} />}
         </HStack>
         <IconButton
           display={{ base: "inherit", md: "none" }}
@@ -60,10 +66,12 @@ const Topbar = () => {
         ></IconButton>
       </Flex>
       <WalletModal isOpen={isModalOpen} onClose={onModalClose} />
+      <PurshaseModal isOpen={isPurchaseOpen} onClose={onPurchaseClose} />
       <MobileDrawer
         isOpen={isOpen}
         onClose={onClose}
         onModalOpen={onModalOpen}
+        onPurchaseOpen={onPurchaseOpen}
       />
     </chakra.header>
   );

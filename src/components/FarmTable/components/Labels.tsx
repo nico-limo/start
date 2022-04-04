@@ -1,19 +1,19 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import React from "react";
+import { UserMethods } from "../../../store/methods/user";
 
-const Labels = ({ showBalance }: { showBalance: boolean }) => {
-  const columns = showBalance ? 3 : 2;
+const Labels = () => {
+  const { isPremium } = UserMethods();
+  const columns = isPremium ? "1fr 1fr 1fr 80px" : "1fr 1fr 1fr";
   const fontSize = { base: "xs", md: "md" };
   const labels = {
-    asset: "Token",
-    market: "Price",
-    user: "Balance",
+    asset: "Farm",
+    market: "Staked",
+    user: "Earns",
+    action: "Claim",
   };
   return (
-    <Grid
-      templateColumns={`repeat(${columns}, 1fr)`}
-      borderBottom="2px solid white"
-    >
+    <Grid templateColumns={columns} borderBottom="2px solid white">
       <GridItem p={2} display="flex" alignItems="center" fontSize={fontSize}>
         {labels.asset}
       </GridItem>
@@ -26,7 +26,16 @@ const Labels = ({ showBalance }: { showBalance: boolean }) => {
       >
         {labels.market}
       </GridItem>
-      {showBalance && (
+      <GridItem
+        p={2}
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        fontSize={fontSize}
+      >
+        {labels.user}
+      </GridItem>
+      {columns && (
         <GridItem
           p={2}
           display="flex"
@@ -34,7 +43,7 @@ const Labels = ({ showBalance }: { showBalance: boolean }) => {
           justifyContent="flex-end"
           fontSize={fontSize}
         >
-          {labels.user}
+          {labels.action}
         </GridItem>
       )}
     </Grid>

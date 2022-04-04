@@ -34,7 +34,7 @@ const TokenInfo = ({ token, showBalance }: TokenInfoProps) => {
           <Image
             src={`/tokens/${symbol}.png`}
             alt={symbol}
-            fallback={<QuestionIcon w={6} />}
+            fallback={<QuestionIcon w={6} h={6} />}
             w={6}
           />
           <Text fontSize={fontSize}>{symbol}</Text>

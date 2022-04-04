@@ -13,31 +13,35 @@ const Web3Root = ({ children }) => {
   useEffect(() => {
     const fetchWeb3 = async () => {
       try {
-      } catch (error) {}
-      const provider = new ethers.providers.Web3Provider(
-        window.ethereum,
-        "any"
-      );
+        if (window.ethereum) {
+          const provider = new ethers.providers.Web3Provider(
+            window.ethereum,
+            "any"
+          );
 
-      const isLogged = await provider.listAccounts();
+          const isLogged = await provider.listAccounts();
 
-      const { chainId: web3ChainId } = await provider.getNetwork();
+          const { chainId: web3ChainId } = await provider.getNetwork();
 
-      if (web3ChainId !== network.chainID) {
-        const hexId: string = hexToNumber[web3ChainId];
-        connectNetwork(hexId);
+          if (web3ChainId !== network.chainID) {
+            const hexId: string = hexToNumber[web3ChainId];
+            connectNetwork(hexId);
+          }
+          if (isLogged.length) logIn();
+
+          // EVENT LISTENERS
+          window.ethereum.on("accountsChanged", () => {
+            logIn();
+            cleanFarms();
+          });
+
+          window.ethereum.on("chainChanged", (hexId) => {
+            connectNetwork(hexId);
+          });
+        }
+      } catch (error) {
+        console.log("error ", error);
       }
-      if (isLogged.length) logIn();
-
-      // EVENT LISTENERS
-      window.ethereum.on("accountsChanged", () => {
-        logIn();
-        cleanFarms();
-      });
-
-      window.ethereum.on("chainChanged", (hexId) => {
-        connectNetwork(hexId);
-      });
     };
     fetchWeb3();
     // eslint-disable-next-line react-hooks/exhaustive-deps

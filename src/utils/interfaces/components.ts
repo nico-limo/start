@@ -7,6 +7,7 @@ export interface PagesLabel {
 export interface MobileTopBar {
   isOpen: boolean;
   onModalOpen: () => void;
+  onPurchaseOpen: () => void;
   onClose: () => void;
 }
 

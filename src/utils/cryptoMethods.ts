@@ -58,18 +58,31 @@ export const networkConnection = async (
 
 export const setupNetwork = async (hexId = NETWORKS_ID.fantom.id) => {
   const provider = window.ethereum;
-  const networkConfig: NetworkProps = NETWORKS[hexId];
+  const {
+    chainName,
+    hex,
+    rpcUrls,
+    nativeCurrency,
+    blockExplorerUrls,
+  }: NetworkProps = NETWORKS[hexId];
+  const params = {
+    chainId: hex,
+    chainName,
+    rpcUrls,
+    nativeCurrency,
+    blockExplorerUrls,
+  };
   if (provider) {
     try {
       await provider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: `${networkConfig.hex}` }],
+        params: [{ chainId: `${params.chainId}` }],
       });
-    } catch (e: any) {
+    } catch (e) {
       if (e.code === 4902) {
         await provider.request({
           method: "wallet_addEthereumChain",
-          params: [networkConfig],
+          params: [params],
         });
       } else {
         console.log("error setup network ", e);
@@ -77,12 +90,12 @@ export const setupNetwork = async (hexId = NETWORKS_ID.fantom.id) => {
     }
   } else {
     console.log(
-      `Can't setup the ${networkConfig.chainName} network because no wallet exists`
+      `Can't setup the ${params.chainName} network because no wallet exists`
     );
   }
 };
 
-export const getProvider = (chainId: number = 250) => {
+export const getProvider = (chainId = 250) => {
   const hexId: string = hexToNumber[chainId];
   const { rpcUrls }: NetworkProps = NETWORKS[hexId];
   const provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], chainId);

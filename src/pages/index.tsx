@@ -1,4 +1,5 @@
 import { Stack, VStack } from "@chakra-ui/react";
+import { FarmTable } from "../components/FarmTable";
 import { TokenDashboard } from "../components/TokenDashboard";
 import { TokenTable } from "../components/TokenTable";
 import { TokensMethod } from "../store/methods/tokens";
@@ -16,7 +17,7 @@ const Home = () => {
         justify="space-between"
       >
         <TokenTable type="tokens" />
-        {farmsPortfolio.length && <TokenTable type="farms" />}
+        {farmsPortfolio.length && <FarmTable />}
       </Stack>
     </VStack>
   );

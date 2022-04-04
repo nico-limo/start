@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import {
   CovalentPool,
   FarmContract,
@@ -9,9 +9,10 @@ import { farmsState, portfolioState } from "../atoms/user";
 import GAUGE_ABI from "../../utils/constants/abis/gauges.json";
 import { Contract, Provider } from "ethers-multicall";
 import { formatTokenAmount, getProvider } from "../../utils/cryptoMethods";
-import { farms } from "../../utils/constants/farms";
+
 import { checkAddresses } from "../../utils/methods";
 import { spiritState } from "../atoms/tokens";
+import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
 interface PortfolioProps {
   pricesPortfolio?: TokenPortfolio[];
   covalentPortfolio?: TokenPortfolio[];
@@ -83,13 +84,13 @@ export const TokensMethod = () => {
         const ethcallProvider = new Provider(provider);
         await ethcallProvider.init();
 
-        const balanceCalls = farms.map((farm) => {
+        const balanceCalls = spiritFarms.map((farm) => {
           const farmContract = new Contract(farm.gaugeAddress, GAUGE_ABI);
           const balanceOf = farmContract.balanceOf(account);
           return balanceOf;
         });
 
-        const earnsCalls = farms.map((farm) => {
+        const earnsCalls = spiritFarms.map((farm) => {
           const farmContract = new Contract(farm.gaugeAddress, GAUGE_ABI);
           const earned = farmContract.earned(account);
           return earned;
@@ -100,7 +101,7 @@ export const TokensMethod = () => {
         const staked = response.slice(0, balanceCalls.length);
         const earns = response.slice(balanceCalls.length);
 
-        const farmsData: FarmContract[] = farms.map((farm, i) => {
+        const farmsData: FarmContract[] = spiritFarms.map((farm, i) => {
           const stakeFormat = formatTokenAmount(staked[i].toString(), 18);
           const earnFormat = formatTokenAmount(earns[i].toString(), 18);
           return {

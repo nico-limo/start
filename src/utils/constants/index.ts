@@ -68,7 +68,6 @@ export const WALLETS_LIST = [
 export const DEFAULT_NETWORK = NETWORKS_ID.fantom;
 export const DEFAULT_WALLET = WALLETS_ID.metamask;
 
-export const API_COINGECKO = "https://api.coingecko.com/api/v3/simple/price";
 export const API_COVALENT = "https://api.covalenthq.com/v1";
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
@@ -114,3 +113,8 @@ export const networksColors = {
     bg: "rgba(232, 65, 66, 0.25)",
   },
 };
+
+export enum ROLE {
+  standard,
+  premium,
+}
