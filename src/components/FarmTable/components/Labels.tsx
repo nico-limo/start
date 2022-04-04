@@ -35,7 +35,7 @@ const Labels = () => {
       >
         {labels.user}
       </GridItem>
-      {columns && (
+      {isPremium && (
         <GridItem
           p={2}
           display="flex"
