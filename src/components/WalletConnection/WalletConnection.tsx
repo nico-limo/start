@@ -2,6 +2,7 @@ import { Button } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../store/atoms/user";
+import { TokensMethod } from "../../store/methods/tokens";
 import { UserMethods } from "../../store/methods/user";
 
 interface Props {
@@ -10,11 +11,17 @@ interface Props {
 
 const WalletConnection: FC<Props> = ({ onModalOpen }) => {
   const { logOut } = UserMethods();
+  const { cleanFarms } = TokensMethod();
+
+  const handleLogOut = () => {
+    cleanFarms();
+    logOut();
+  };
   const { account } = useRecoilValue(userState);
   const startAccount = account.slice(0, 4);
   const endAccount = account.slice(-4);
   return account ? (
-    <Button colorScheme="facebook" onClick={logOut}>
+    <Button colorScheme="facebook" onClick={handleLogOut}>
       {`${startAccount}...${endAccount}`}
     </Button>
   ) : (
