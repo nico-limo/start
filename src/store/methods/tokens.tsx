@@ -9,7 +9,6 @@ import { farmsState, portfolioState } from "../atoms/user";
 import GAUGE_ABI from "../../utils/constants/abis/gauges.json";
 import { Contract, Provider } from "ethers-multicall";
 import { formatTokenAmount, getProvider } from "../../utils/cryptoMethods";
-
 import { checkAddresses } from "../../utils/methods";
 import { spiritState } from "../atoms/tokens";
 import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
@@ -37,27 +36,17 @@ export const TokensMethod = () => {
         checkAddresses(token.address, spiritToken.address)
       );
       if (spirit) setSpiritToken(spirit);
-      const mixData = covalentPortfolio.map((covaToken) => {
-        const tokenPrice = pricesPortfolio.find((token) =>
-          checkAddresses(token.address, covaToken.address)
-        );
-        if (tokenPrice) {
-          return {
-            ...tokenPrice,
-            balance: covaToken.balance,
-            balance_24h: covaToken.balance_24h
-              ? covaToken.balance_24h
-              : covaToken.balance,
-            type: covaToken.type,
-          };
-        }
-        return {
-          ...covaToken,
-          balance_24h: covaToken.balance_24h
-            ? covaToken.balance_24h
-            : covaToken.balance,
-        };
-      });
+      const mixData = pricesPortfolio.reduce(
+        (acc, item) => {
+          return acc.some((token) =>
+            checkAddresses(token.address, item.address)
+          )
+            ? acc
+            : [...acc, item];
+        },
+        [...covalentPortfolio]
+      );
+
       setPortfolio(mixData);
     } else if (
       pricesPortfolio &&
@@ -84,25 +73,22 @@ export const TokensMethod = () => {
         const ethcallProvider = new Provider(provider);
         await ethcallProvider.init();
 
-        const balanceCalls = spiritFarms.map((farm) => {
+        const calls = spiritFarms.reduce((accCalls, farm, i) => {
           const farmContract = new Contract(farm.gaugeAddress, GAUGE_ABI);
           const balanceOf = farmContract.balanceOf(account);
-          return balanceOf;
-        });
-
-        const earnsCalls = spiritFarms.map((farm) => {
-          const farmContract = new Contract(farm.gaugeAddress, GAUGE_ABI);
           const earned = farmContract.earned(account);
-          return earned;
-        });
+          accCalls.splice(i, 0, balanceOf);
+          accCalls.push(earned);
+          return accCalls;
+        }, []);
 
-        const allCalls = balanceCalls.concat(earnsCalls);
-        const response = await ethcallProvider.all(allCalls);
-        const staked = response.slice(0, balanceCalls.length);
-        const earns = response.slice(balanceCalls.length);
+        const response = await ethcallProvider.all(calls);
+        const staked = response.slice(0, spiritFarms.length);
+        const earns = response.slice(spiritFarms.length);
 
         const farmsData: FarmContract[] = spiritFarms.map((farm, i) => {
           const stakeFormat = formatTokenAmount(staked[i].toString(), 18);
+
           const earnFormat = formatTokenAmount(earns[i].toString(), 18);
           return {
             ...farm,
@@ -119,7 +105,6 @@ export const TokensMethod = () => {
             checkAddresses(exchange, lpAddresses[250])
           )
         );
-
         const completeFarms: FarmsPortfolio[] = userFarms.map((farm) => {
           const covalentPool = userCovalentFarms.find((pool) =>
             checkAddresses(pool.exchange, farm.lpAddresses[250])
@@ -131,7 +116,6 @@ export const TokensMethod = () => {
             liquidity_rate: covalentPool.total_liquidity_quote,
           };
         });
-
         setFarmsPortfolio(completeFarms);
       }
     } catch (error) {

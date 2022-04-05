@@ -1,3 +1,5 @@
+import { ChangeEvent } from "react";
+
 export interface Token {
   name: string;
   address: string;
@@ -86,4 +88,11 @@ export interface CovalentPool {
   total_supply: string;
   volume_7d_quote: number;
   volume_24h_quote: number;
+}
+
+export interface SearchInputProps {
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  value: string;
+  onToggle: () => void;
+  isVisible: boolean;
 }

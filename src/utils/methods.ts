@@ -1,11 +1,11 @@
 import { TOKENS } from "./constants/tokens/tokens";
 import { Token, TokenPortfolio } from "./interfaces/index.";
 
-export const formatAmount = (value: number | string, round: number = 0) => {
+export const formatAmount = (value: number | string, round = 18) => {
   if (typeof value === "string") {
     const [integer, decimals] = value.split(".");
     const newValue = Number(integer).toLocaleString("en-US");
-    const newDecimals = decimals?.slice(round);
+    const newDecimals = decimals?.slice(0, round);
     return newValue.concat(".", newDecimals);
   }
   const getDigits = () => {
@@ -17,6 +17,8 @@ export const formatAmount = (value: number | string, round: number = 0) => {
   };
   return value.toLocaleString("en-US", {
     maximumSignificantDigits: getDigits(),
+    style: "currency",
+    currency: "USD",
   });
 };
 

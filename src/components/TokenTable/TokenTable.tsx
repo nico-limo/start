@@ -1,8 +1,10 @@
-import { Box, Text } from "@chakra-ui/react";
+import { ChangeEvent, useState } from "react";
+import { Box, HStack, Text, useDisclosure } from "@chakra-ui/react";
 import TokenInfo from "./components/TokenInfo";
 import Labels from "./components/Labels";
 import { TokensMethod } from "../../store/methods/tokens";
 import { UserMethods } from "../../store/methods/user";
+import { SearchInput } from "../SearchInput";
 
 interface TableProp {
   type: string;
@@ -11,18 +13,45 @@ interface TableProp {
 const TokenTable = ({ type }: TableProp) => {
   const { portfolio } = TokensMethod();
   const { wallet } = UserMethods();
-  const hasBalanceWallet =
-    wallet.isConnected && portfolio.every((token) => token.balance);
+  const { isOpen, onToggle } = useDisclosure();
+  const [inputValue, setInputValue] = useState("");
+
+  const userBalance = wallet.isConnected
+    ? portfolio.filter((token) => token.balance)
+    : [];
+
+  const { userPortfolio, hasBalance } = userBalance.length
+    ? { userPortfolio: userBalance, hasBalance: true }
+    : { userPortfolio: portfolio, hasBalance: false };
+
+  const onchangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    if (isOpen) setInputValue(e.target.value);
+  };
+
+  const filterTokens = userPortfolio.filter(
+    (token) =>
+      token.symbol.toLowerCase().includes(inputValue.toLowerCase()) ||
+      token.name.toLowerCase().includes(inputValue.toLowerCase())
+  );
+
   const isTokens = type === "tokens";
   const title = isTokens ? "ASSETS WALLETS" : "FARMING REWARDS";
   return (
     <Box bg="gray.800" borderRadius={5} p={2} w="full">
-      <Text>{title}</Text>
-      <Labels showBalance={hasBalanceWallet} />
+      <HStack w="full" justify="space-between" align="center">
+        <Text>{title}</Text>
+        <SearchInput
+          value={inputValue}
+          isVisible={isOpen}
+          onToggle={onToggle}
+          onChange={onchangeInput}
+        />
+      </HStack>
+      <Labels showBalance={hasBalance} />
       <Box overflowY="auto" maxH={250}>
-        {portfolio.map((token) => (
+        {filterTokens.map((token) => (
           <Box key={`table-${token.address}`}>
-            <TokenInfo token={token} showBalance={hasBalanceWallet} />
+            <TokenInfo token={token} showBalance={hasBalance} />
           </Box>
         ))}
       </Box>

@@ -13,26 +13,28 @@ export const formatCoingeckoPortfolio = (
   chainID: number
 ) => {
   try {
-    const networkTokens: PricesApiDB[] = data.reduce((filterTokens, token) => {
-      const tokenList: Token = TOKENS[chainID].find(
-        (listToken) => listToken.pathCoingecko === token.path
-      );
-      if (tokenList) {
-        const portfolioToken: TokenPortfolio = {
-          ...tokenList,
-          address: tokenList.address.toLowerCase(),
-          balance: "",
-          balance_24h: "",
-          type: "",
-          usd: token.price,
-          usd_24h: token.price24,
-          pathCoingecko: tokenList.pathCoingecko,
-        };
-        filterTokens.push(portfolioToken);
-      }
-      return filterTokens;
-    }, []);
-
+    const networkTokens: TokenPortfolio[] = data.reduce(
+      (filterTokens, token) => {
+        const tokenList: Token = TOKENS[chainID].find(
+          (listToken) => listToken.pathCoingecko === token.path
+        );
+        if (tokenList) {
+          const portfolioToken: TokenPortfolio = {
+            ...tokenList,
+            address: tokenList.address.toLowerCase(),
+            balance: "",
+            balance_24h: "",
+            type: "",
+            usd: token.price,
+            usd_24h: token.price24,
+            pathCoingecko: tokenList.pathCoingecko,
+          };
+          filterTokens.push(portfolioToken);
+        }
+        return filterTokens;
+      },
+      []
+    );
     return networkTokens;
   } catch (error) {
     console.log("Error formating coingecko data ", error);

@@ -62,7 +62,7 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
         justifyContent="flex-end"
       >
         <Flex direction="column" justify="end" align="flex-end">
-          <Text fontSize={fontSize}>{formatAmount(staked, -4)}</Text>
+          <Text fontSize={fontSize}>{formatAmount(staked, 4)}</Text>
           <Text color="teal.300" fontSize={fontSize}>
             {`$${formatAmount(staked_USD)}`}
           </Text>
@@ -70,7 +70,7 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
       </GridItem>
       <GridItem p={2}>
         <Flex direction="column" justify="end" align="flex-end">
-          <Text fontSize={fontSize}>{formatAmount(earns, -4)}</Text>
+          <Text fontSize={fontSize}>{formatAmount(earns, 4)}</Text>
           <Text color="teal.300" fontSize={fontSize}>
             {`$${formatAmount(earn_USD)}`}
           </Text>
