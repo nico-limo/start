@@ -1,17 +1,17 @@
 import { useRecoilState } from "recoil";
-import {
-  CovalentPool,
-  FarmContract,
-  FarmsPortfolio,
-  TokenPortfolio,
-} from "../../utils/interfaces/index.";
+import { TokenPortfolio } from "../../utils/interfaces/index.";
 import { farmsState, portfolioState } from "../atoms/user";
 import GAUGE_ABI from "../../utils/constants/abis/gauges.json";
+import PAIR_ABI from "../../utils/constants/abis/pair.json";
+import ERC_ABI from "../../utils/constants/abis/erc20.json";
 import { Contract, Provider } from "ethers-multicall";
-import { formatTokenAmount, getProvider } from "../../utils/cryptoMethods";
+import { getProvider } from "../../utils/cryptoMethods";
 import { checkAddresses } from "../../utils/methods";
 import { spiritState } from "../atoms/tokens";
 import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
+import { QUOTES } from "../../utils/constants/tokens/quoteFarms";
+import { formatSpiritFarms } from "./spiritMethod";
+
 interface PortfolioProps {
   pricesPortfolio?: TokenPortfolio[];
   covalentPortfolio?: TokenPortfolio[];
@@ -65,58 +65,38 @@ export const TokensMethod = () => {
 
   const getFarmsBalance = async (
     account: string,
-    poolsPrices: CovalentPool[]
+    tokenPrices: TokenPortfolio[]
   ) => {
     try {
-      if (account) {
+      if (account && tokenPrices.length) {
         const provider = await getProvider();
         const ethcallProvider = new Provider(provider);
         await ethcallProvider.init();
 
-        const calls = spiritFarms.reduce((accCalls, farm, i) => {
-          const farmContract = new Contract(farm.gaugeAddress, GAUGE_ABI);
-          const balanceOf = farmContract.balanceOf(account);
-          const earned = farmContract.earned(account);
-          accCalls.splice(i, 0, balanceOf);
-          accCalls.push(earned);
-          return accCalls;
+        const newCalls = spiritFarms.reduce((calls, farm) => {
+          const tokenAddress: string = QUOTES[farm.lpSymbol[1]]?.address;
+          const lpAddress: string = farm.lpAddresses[250];
+          const gaugeAddress: string = farm.gaugeAddress;
+          const tokenContract = new Contract(tokenAddress, ERC_ABI);
+          const lpContract = new Contract(lpAddress, PAIR_ABI);
+          const gaugeContract = new Contract(gaugeAddress, GAUGE_ABI);
+
+          const balanceOfLP = tokenContract.balanceOf(lpAddress);
+          const lpSupply = lpContract.totalSupply();
+          const gaugeSupply = gaugeContract.totalSupply();
+          const staked = gaugeContract.balanceOf(account);
+          const earned = gaugeContract.earned(account);
+          calls.push(balanceOfLP);
+          calls.push(lpSupply);
+          calls.push(gaugeSupply);
+          calls.push(staked);
+          calls.push(earned);
+          return calls;
         }, []);
+        const result = await ethcallProvider.all(newCalls);
+        const spiritData = formatSpiritFarms(result, tokenPrices);
 
-        const response = await ethcallProvider.all(calls);
-        const staked = response.slice(0, spiritFarms.length);
-        const earns = response.slice(spiritFarms.length);
-
-        const farmsData: FarmContract[] = spiritFarms.map((farm, i) => {
-          const stakeFormat = formatTokenAmount(staked[i].toString(), 18);
-
-          const earnFormat = formatTokenAmount(earns[i].toString(), 18);
-          return {
-            ...farm,
-            staked: stakeFormat,
-            earns: earnFormat,
-          };
-        });
-        const userFarms = farmsData.filter(
-          (farm) => farm.earns !== "0.0" || farm.staked !== "0.0"
-        );
-
-        const userCovalentFarms = poolsPrices.filter(({ exchange }) =>
-          userFarms.some(({ lpAddresses }) =>
-            checkAddresses(exchange, lpAddresses[250])
-          )
-        );
-        const completeFarms: FarmsPortfolio[] = userFarms.map((farm) => {
-          const covalentPool = userCovalentFarms.find((pool) =>
-            checkAddresses(pool.exchange, farm.lpAddresses[250])
-          );
-          return {
-            ...farm,
-            usd: covalentPool.quote_rate,
-            totalSupply: covalentPool.total_supply,
-            liquidity_rate: covalentPool.total_liquidity_quote,
-          };
-        });
-        setFarmsPortfolio(completeFarms);
+        setFarmsPortfolio(spiritData);
       }
     } catch (error) {
       console.log("error multicall ", error);

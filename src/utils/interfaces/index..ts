@@ -5,7 +5,6 @@ export interface Token {
   address: string;
   symbol: string;
   decimals: number;
-  pathCoingecko: string;
 }
 
 export interface PricesApiDB {
@@ -65,29 +64,11 @@ export interface Farm {
   };
   gaugeAddress: string;
 }
-
-export interface FarmContract extends Farm {
+export interface FarmsPortfolio extends Farm {
+  usd: string;
   staked: string;
   earns: string;
-}
-export interface FarmsPortfolio extends FarmContract {
-  usd: number;
   totalSupply: string;
-  liquidity_rate: number;
-}
-
-export interface CovalentPool {
-  chain_id: string;
-  exchange: string;
-  fee_24h_quote: number;
-  quote_rate: number;
-  token_0: CovalentData;
-  token_1: CovalentData;
-  swap_count_24h: number;
-  total_liquidity_quote: number;
-  total_supply: string;
-  volume_7d_quote: number;
-  volume_24h_quote: number;
 }
 
 export interface SearchInputProps {

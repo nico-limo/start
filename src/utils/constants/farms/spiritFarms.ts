@@ -163,14 +163,14 @@ export const spiritFarms = [
     },
     gaugeAddress: "0xfF1E257F9b482567dE88fcE9788502CbD4cC95F2",
   },
-  {
-    pid: 21,
-    lpSymbol: ["wsSQUID", "gOHM"],
-    lpAddresses: {
-      250: "0x292e3CF358C40c38156F874ac4Fc726F72543E92",
-    },
-    gaugeAddress: "0x0ccb407510C529EfF71F02348E57E26a406Ac0E1",
-  },
+  // {
+  //   pid: 21,
+  //   lpSymbol: ["wsSQUID", "gOHM"],
+  //   lpAddresses: {
+  //     250: "0x292e3CF358C40c38156F874ac4Fc726F72543E92",
+  //   },
+  //   gaugeAddress: "0x0ccb407510C529EfF71F02348E57E26a406Ac0E1",
+  // },
 
   {
     pid: 22,
@@ -220,14 +220,14 @@ export const spiritFarms = [
     },
     gaugeAddress: "0xF7d3dE134c9d09998f94a3de5E0D7F3317Dd97be",
   },
-  {
-    pid: 28,
-    lpSymbol: ["wMEMO", "MIM"],
-    lpAddresses: {
-      250: "0xC9B98e4A4e306DFc24bc5b5F66e271e19Fd74c5A",
-    },
-    gaugeAddress: "0x86762289Ffb97F8DB441a4fAf5ecd335165e8E08",
-  },
+  // {
+  //   pid: 28,
+  //   lpSymbol: ["wMEMO", "MIM"],
+  //   lpAddresses: {
+  //     250: "0xC9B98e4A4e306DFc24bc5b5F66e271e19Fd74c5A",
+  //   },
+  //   gaugeAddress: "0x86762289Ffb97F8DB441a4fAf5ecd335165e8E08",
+  // },
   {
     pid: 29,
     lpSymbol: ["YOSHI", "FTM"],

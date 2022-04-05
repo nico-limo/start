@@ -3,7 +3,6 @@ import axios from "axios";
 import { NetworksMethods } from "../../store/methods/network";
 import { TokensMethod } from "../../store/methods/tokens";
 import { UserMethods } from "../../store/methods/user";
-import { CovalentPool } from "../../utils/interfaces/index.";
 import { formatCoingeckoPortfolio, formatCovalentPortfolio } from "./methods";
 import { useToast } from "@chakra-ui/react";
 
@@ -31,11 +30,10 @@ const ApiRoot = ({ children }) => {
           );
           updatePortfolio({ pricesPortfolio, covalentPortfolio });
           if (chainID === 250) {
-            const { data: covalentPools }: { data: CovalentPool[] } =
-              await axios("/api/covalentPools", {
-                params: { chainID },
-              });
-            getFarmsBalance(wallet.account, covalentPools);
+            const array = pricesPortfolio.length
+              ? pricesPortfolio
+              : covalentPortfolio;
+            getFarmsBalance(wallet.account, array);
           } else {
             cleanFarms();
           }
@@ -59,7 +57,7 @@ const ApiRoot = ({ children }) => {
     fethData();
     const interval = setInterval(() => {
       fethData();
-    }, 10000);
+    }, 15000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet, chainID]);

@@ -27,7 +27,6 @@ export const formatCoingeckoPortfolio = (
             type: "",
             usd: token.price,
             usd_24h: token.price24,
-            pathCoingecko: tokenList.pathCoingecko,
           };
           filterTokens.push(portfolioToken);
         }
@@ -69,7 +68,6 @@ export const formatCovalentPortfolio = (data, chainID: number) => {
           balance_24h: token.balance_24h,
           usd: token.quote_rate,
           usd_24h,
-          pathCoingecko: "",
           type: token.type,
         };
         filterTokens.push(newToken);

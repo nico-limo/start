@@ -37,7 +37,7 @@ const TokenDashboard = () => {
     if (farmsPortfolio.length) {
       const initialBalance = 0;
       const sumBalance = farmsPortfolio.reduce((accumulator, curValue) => {
-        const balanceUSD = getUSDBalance(curValue.staked, curValue.usd);
+        const balanceUSD = getUSDBalance(curValue.staked, Number(curValue.usd));
         return accumulator + Number(balanceUSD);
       }, initialBalance);
 

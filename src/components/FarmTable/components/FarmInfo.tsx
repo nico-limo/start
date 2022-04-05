@@ -27,33 +27,32 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
   const fontSize = { base: "xs", md: "md" };
 
   const earn_USD = useMemo(() => {
-    if (spiritToken.usd && earns) return getUSDBalance(earns, spiritToken.usd);
+    if (spiritToken.usd && earns)
+      return getUSDBalance(earns, spiritToken.usd, 4);
     return "0.00";
   }, [earns, spiritToken]);
 
-  const staked_USD = useMemo(() => {
-    if (usd && staked) return getUSDBalance(staked, usd);
-    return "0.00";
-  }, [staked, usd]);
   const columns = isPremium ? "1fr 1fr 1fr 80px" : "1fr 1fr 1fr";
   return (
     <Grid templateColumns={columns} my={1} bg="gray.700">
       <GridItem p={2} display="flex" alignItems="center">
-        <HStack>
-          <Image
-            src={`/tokens/${symbolA}.png`}
-            alt={symbolA}
-            fallback={<QuestionIcon w={6} h={6} />}
-            w={6}
-          />
-          <Image
-            src={`/tokens/${symbolB}.png`}
-            alt={symbolB}
-            fallback={<QuestionIcon w={6} />}
-            w={6}
-          />
+        <Flex direction="column">
+          <HStack justify="center">
+            <Image
+              src={`/tokens/${symbolA}.png`}
+              alt={symbolA}
+              fallback={<QuestionIcon w={6} h={6} />}
+              w={6}
+            />
+            <Image
+              src={`/tokens/${symbolB}.png`}
+              alt={symbolB}
+              fallback={<QuestionIcon w={6} />}
+              w={6}
+            />
+          </HStack>
           <Text fontSize={fontSize}>{`${symbolA}-${symbolB}`}</Text>
-        </HStack>
+        </Flex>
       </GridItem>
       <GridItem
         p={2}
@@ -62,15 +61,15 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
         justifyContent="flex-end"
       >
         <Flex direction="column" justify="end" align="flex-end">
-          <Text fontSize={fontSize}>{formatAmount(staked, 4)}</Text>
+          <Text fontSize={fontSize}>{formatAmount(staked, 8)}</Text>
           <Text color="teal.300" fontSize={fontSize}>
-            {`$${formatAmount(staked_USD)}`}
+            {`$${formatAmount(usd, 2)}`}
           </Text>
         </Flex>
       </GridItem>
       <GridItem p={2}>
         <Flex direction="column" justify="end" align="flex-end">
-          <Text fontSize={fontSize}>{formatAmount(earns, 4)}</Text>
+          <Text fontSize={fontSize}>{formatAmount(earns, 8)}</Text>
           <Text color="teal.300" fontSize={fontSize}>
             {`$${formatAmount(earn_USD)}`}
           </Text>

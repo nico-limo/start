@@ -18,12 +18,15 @@ export const formatTokenAmount = (
   }
 };
 
-export const getUSDBalance = (balance: string, price: number) => {
+export const getUSDBalance = (balance: string, price: number, round = 2) => {
   try {
     if (balance === "loading") return "0.00";
     const fixedBalance = FixedNumber.fromString(balance);
     const fixedPrice = FixedNumber.fromString(price.toString());
-    const balacneUSD = fixedBalance.mulUnsafe(fixedPrice).round(2).toString();
+    const balacneUSD = fixedBalance
+      .mulUnsafe(fixedPrice)
+      .round(round)
+      .toString();
     return balacneUSD;
   } catch (error) {
     console.log("error format USD amount ", error);
