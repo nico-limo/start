@@ -2,24 +2,12 @@ import { TOKENS } from "./constants/tokens/tokens";
 import { Token, TokenPortfolio } from "./interfaces/index.";
 
 export const formatAmount = (value: number | string, round = 18) => {
-  if (typeof value === "string") {
-    const [integer, decimals] = value.split(".");
-    const newValue = Number(integer).toLocaleString("en-US");
-    const newDecimals = decimals?.slice(0, round);
-    return newValue.concat(".", newDecimals);
-  }
-  const getDigits = () => {
-    if (value > 1000) return 6;
-    if (value > 100) return 9;
-    if (value > 10) return 12;
-    if (value < 10) return 4;
-    return 4;
-  };
-  return value.toLocaleString("en-US", {
-    maximumSignificantDigits: getDigits(),
-    style: "currency",
-    currency: "USD",
-  });
+  const stringValue = value.toString();
+
+  const [integer, decimals] = stringValue.split(".");
+  const newValue = Number(integer).toLocaleString("en-US");
+  const newDecimals = decimals?.slice(0, round);
+  return newValue.concat(".", newDecimals);
 };
 
 export const currentTokens = (chainID: number): TokenPortfolio[] => {

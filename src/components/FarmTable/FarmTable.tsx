@@ -29,6 +29,7 @@ const FarmTable = () => {
           isVisible={isOpen}
           onToggle={onToggle}
           onChange={onchangeInput}
+          type="farm"
         />
       </HStack>
       <Labels />

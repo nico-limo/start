@@ -38,6 +38,7 @@ const TokenTable = ({ type }: TableProp) => {
           isVisible={isOpen}
           onToggle={onToggle}
           onChange={onchangeInput}
+          type="token"
         />
       </HStack>
       <Labels showBalance={hasBalance} />

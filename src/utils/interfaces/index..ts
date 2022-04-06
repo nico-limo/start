@@ -77,4 +77,5 @@ export interface SearchInputProps {
   value: string;
   onToggle: () => void;
   isVisible: boolean;
+  type: string;
 }

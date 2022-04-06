@@ -22,7 +22,7 @@ const TokenInfo = ({ token, showBalance }: TokenInfoProps) => {
   const diffPrice = usd_24h ? usd_24h.toFixed(2) : "00.00";
   const isPrice: boolean = usd > 0 ?? false;
   const balanceNotFormatted = formatTokenAmount(balance, decimals, 4);
-  const balanceFormatted = formatAmount(balanceNotFormatted);
+  const balanceFormatted = formatAmount(balanceNotFormatted, 4);
   const balanceUSD = getUSDBalance(balanceNotFormatted, usd);
   const columns = showBalance ? 3 : 2;
   const fontSize = { base: "xs", md: "md" };
@@ -48,7 +48,7 @@ const TokenInfo = ({ token, showBalance }: TokenInfoProps) => {
       >
         <Skeleton isLoaded={isPrice}>
           <HStack>
-            <Text fontSize={fontSize}>{formatAmount(usd)}</Text>
+            <Text fontSize={fontSize}>{formatAmount(usd, 4)}</Text>
             <HStack spacing={1}>
               <Text
                 color={color_rate}
@@ -63,7 +63,8 @@ const TokenInfo = ({ token, showBalance }: TokenInfoProps) => {
           <Flex direction="column" justify="end" align="flex-end">
             <Text fontSize={fontSize}>{balanceFormatted}</Text>
             <Text color="teal.300" fontSize={fontSize}>{`$${formatAmount(
-              balanceUSD
+              balanceUSD,
+              2
             )}`}</Text>
           </Flex>
         </GridItem>

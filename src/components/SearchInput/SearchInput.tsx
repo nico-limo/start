@@ -8,6 +8,7 @@ const SearchInput = ({
   onToggle,
   onChange,
   value,
+  type,
 }: SearchInputProps) => {
   return (
     <InputGroup
@@ -19,7 +20,7 @@ const SearchInput = ({
         value={value}
         opacity={isVisible ? 1 : 0}
         cursor={isVisible ? "text" : "default"}
-        placeholder="Find a farm"
+        placeholder={`Find a ${type}`}
         transition={" opacity 0.4s ease-in-out 0s"}
         onChange={onChange}
       />

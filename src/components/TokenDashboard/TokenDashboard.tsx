@@ -71,7 +71,7 @@ const TokenDashboard = () => {
               color={status_balance_24 ? "green.300" : "red.300"}
               fontSize="lg"
               fontWeight={500}
-            >{`$${formatAmount(totalBalance)}`}</Text>
+            >{`$${formatAmount(totalBalance, 2)}`}</Text>
           </Skeleton>
         </VStack>
 
@@ -88,7 +88,7 @@ const TokenDashboard = () => {
               color="teal.300"
               fontSize="lg"
               fontWeight={500}
-            >{`$${formatAmount(totalBalance_24h)}`}</Text>
+            >{`$${formatAmount(totalBalance_24h, 2)}`}</Text>
           </Skeleton>
         </VStack>
       </HStack>
