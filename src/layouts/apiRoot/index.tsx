@@ -68,8 +68,6 @@ const ApiRoot = ({ children }) => {
         }
       } else {
         try {
-          console.log("process.env.COVALENT_KEY ", process.env.COVALENT_KEY);
-          console.log("process.env ", process.env);
           const { data: coingeckoPrices } = await axios("/api/coingeckoPrices");
           pricesPortfolio = formatCoingeckoPortfolio(coingeckoPrices, chainID);
           updatePortfolio({ pricesPortfolio });
@@ -81,11 +79,6 @@ const ApiRoot = ({ children }) => {
             status: "error",
           });
           try {
-            console.log(
-              "process.env.COINMARKET_KEY ",
-              process.env.COINMARKET_KEY
-            );
-
             const { data: coinMarketPrices } = await axios(
               "/api/coinmarketPrices",
               {

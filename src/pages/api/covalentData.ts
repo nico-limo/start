@@ -5,7 +5,7 @@ import { API_COVALENT } from "../../utils/constants";
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const params = {
-    key: process.env.NEXT_PUBLIC_COVALENT_KEY,
+    key: "ckey_eadd99f846a445788cb396086ea",
   };
   const { query } = req;
 

@@ -9,7 +9,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     symbol: query.tokens,
   };
   const headers = {
-    "X-CMC_PRO_API_KEY": process.env.NEXT_PUBLIC_COINMARKET_KEY,
+    "X-CMC_PRO_API_KEY": "b6b40cf3-adc6-4580-96a7-28cf94f6d59b",
   };
   try {
     const { data: coinmarketData } = await axios.get(`${API_COINMARKET}`, {
