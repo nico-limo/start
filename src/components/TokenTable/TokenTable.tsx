@@ -4,7 +4,6 @@ import TokenInfo from "./components/TokenInfo";
 import Labels from "./components/Labels";
 import { TokensMethod } from "../../store/methods/tokens";
 import { SearchInput } from "../SearchInput";
-import { TokenPortfolio } from "../../utils/interfaces/index.";
 
 interface TableProp {
   type: string;
@@ -19,20 +18,15 @@ const TokenTable = ({ type }: TableProp) => {
     if (isOpen) setInputValue(e.target.value);
   };
 
-  const portfolioUser: TokenPortfolio[] = portfolio.reduce((acc, token) => {
-    if (token.balance) {
-      if (
-        token.symbol.toLowerCase().includes(inputValue.toLowerCase()) ||
-        token.name.toLowerCase().includes(inputValue.toLowerCase())
-      ) {
-        acc.push(token);
-      }
-    }
-    return acc;
-  }, []);
+  const userPortfolio = portfolio.filter(
+    (token) =>
+      token.balance &&
+      (token.symbol.toLowerCase().includes(inputValue.toLowerCase()) ||
+        token.name.toLowerCase().includes(inputValue.toLowerCase()))
+  );
 
-  const hasBalance = portfolioUser.length > 0;
-  const portfolioToShow = hasBalance ? portfolioUser : portfolio;
+  const hasBalance = userPortfolio.length > 0;
+  const portfolioToShow = hasBalance ? userPortfolio : portfolio;
   const isTokens = type === "tokens";
   const title = isTokens ? "ASSETS WALLETS" : "FARMING REWARDS";
   return (

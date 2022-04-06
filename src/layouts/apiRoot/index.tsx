@@ -57,7 +57,7 @@ const ApiRoot = ({ children }) => {
     fethData();
     const interval = setInterval(() => {
       fethData();
-    }, 15000);
+    }, 150000000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet, chainID]);

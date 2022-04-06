@@ -13,27 +13,24 @@ export const formatCoingeckoPortfolio = (
   chainID: number
 ) => {
   try {
-    const networkTokens: TokenPortfolio[] = data.reduce(
-      (filterTokens, token) => {
-        const tokenList: Token = TOKENS[chainID].find(
-          (listToken) => listToken.pathCoingecko === token.path
-        );
-        if (tokenList) {
-          const portfolioToken: TokenPortfolio = {
-            ...tokenList,
-            address: tokenList.address.toLowerCase(),
-            balance: "",
-            balance_24h: "",
-            type: "",
-            usd: token.price,
-            usd_24h: token.price24,
-          };
-          filterTokens.push(portfolioToken);
-        }
-        return filterTokens;
-      },
-      []
-    );
+    const networkTokens: TokenPortfolio[] = [];
+    const defaultTokens: Token[] = TOKENS[chainID];
+    for (let i = 0; i < defaultTokens.length; i++) {
+      const defaultToken = defaultTokens[i];
+      const tokenList = data.find((token) => token.path === defaultToken.path);
+      if (tokenList) {
+        const portfolioToken: TokenPortfolio = {
+          ...defaultToken,
+          address: defaultToken.address.toLowerCase(),
+          balance: "",
+          balance_24h: "",
+          type: "",
+          usd: tokenList.price,
+          usd_24h: tokenList.price24,
+        };
+        networkTokens.push(portfolioToken);
+      }
+    }
     return networkTokens;
   } catch (error) {
     console.log("Error formating coingecko data ", error);
@@ -41,41 +38,48 @@ export const formatCoingeckoPortfolio = (
 };
 
 export const formatCovalentPortfolio = (data, chainID: number) => {
-  const covalentPortfolio: TokenPortfolio[] = data.data.items.reduce(
-    (filterTokens, token: CovalentData) => {
-      if (
-        token.balance !== "0" &&
-        token.quote &&
-        token.quote_24h !== Infinity &&
-        token.contract_name &&
-        !token.contract_name.includes("LP") &&
-        !TOKENS_SCAM.includes(token.contract_address) &&
-        token.type === "cryptocurrency"
-      ) {
-        const usd_24h =
-          ((token.quote_rate - token.quote_rate_24h) / token.quote_rate_24h) *
-          100;
-        const nativeToken: string = NATIVES_TOKENS[chainID];
-        const isNative = nativeToken === token.contract_ticker_symbol;
-        const newToken: TokenPortfolio = {
-          address: !isNative
-            ? token.contract_address.toLowerCase()
-            : ADDRESS_ZERO,
-          symbol: token.contract_ticker_symbol,
-          decimals: token.contract_decimals,
-          name: token.contract_name,
-          balance: token.balance,
-          balance_24h: token.balance_24h,
-          usd: token.quote_rate,
-          usd_24h,
-          type: token.type,
-        };
-        filterTokens.push(newToken);
-      }
-      return filterTokens;
-    },
-    []
-  );
-
-  return covalentPortfolio;
+  const covalentData: CovalentData[] = data.data.items;
+  const covalentArray: TokenPortfolio[] = [];
+  for (let i = 0; i < covalentData.length; i++) {
+    const {
+      balance,
+      balance_24h,
+      quote_24h,
+      type,
+      contract_name,
+      contract_address,
+      quote_rate,
+      quote_rate_24h,
+      contract_decimals,
+      contract_ticker_symbol,
+    } = covalentData[i];
+    if (
+      contract_name &&
+      !contract_name.includes("LP") &&
+      balance !== "0" &&
+      quote_24h !== Infinity &&
+      !TOKENS_SCAM.includes(contract_address) &&
+      type === "cryptocurrency" &&
+      quote_rate &&
+      quote_rate_24h
+    ) {
+      const usd_24h = ((quote_rate - quote_rate_24h) / quote_rate_24h) * 100;
+      const nativeToken: string = NATIVES_TOKENS[chainID];
+      const isNative = nativeToken === contract_ticker_symbol;
+      const newToken: TokenPortfolio = {
+        address: !isNative ? contract_address.toLowerCase() : ADDRESS_ZERO,
+        symbol: contract_ticker_symbol,
+        decimals: contract_decimals,
+        name: contract_name,
+        balance,
+        balance_24h: balance_24h ? balance_24h : balance,
+        usd: quote_rate,
+        usd_24h,
+        type,
+        path: "",
+      };
+      covalentArray.push(newToken);
+    }
+  }
+  return covalentArray;
 };

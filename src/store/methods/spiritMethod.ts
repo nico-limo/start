@@ -8,7 +8,9 @@ export const formatSpiritFarms = (
   calls,
   prices: TokenPortfolio[]
 ): FarmsPortfolio[] => {
-  const spiritData: FarmsPortfolio[] = spiritFarms.reduce((accFarms, farm) => {
+  const spiritData: FarmsPortfolio[] = [];
+  for (let i = 0; i < spiritFarms.length; i++) {
+    const farm = spiritFarms[i];
     const [balanceOfLP, lpSupply, gaugeSupply, staked, earned] = calls.splice(
       0,
       5
@@ -52,10 +54,9 @@ export const formatSpiritFarms = (
         usd: staked_usd,
         totalSupply: "100000",
       };
-      accFarms.push(userFarm);
+      spiritData.push(userFarm);
     }
+  }
 
-    return accFarms;
-  }, []);
   return spiritData;
 };

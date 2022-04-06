@@ -36,18 +36,26 @@ export const TokensMethod = () => {
         checkAddresses(token.address, spiritToken.address)
       );
       if (spirit) setSpiritToken(spirit);
-      const mixData = pricesPortfolio.reduce(
-        (acc, item) => {
-          return acc.some((token) =>
-            checkAddresses(token.address, item.address)
-          )
-            ? acc
-            : [...acc, item];
-        },
-        [...covalentPortfolio]
-      );
 
-      setPortfolio(mixData);
+      const userPortfolio: TokenPortfolio[] = [];
+      for (let i = 0; i < covalentPortfolio.length; i++) {
+        const covaToken = covalentPortfolio[i];
+        const priceToken = pricesPortfolio.find((priceItem) =>
+          checkAddresses(priceItem.address, covaToken.address)
+        );
+        if (priceToken) {
+          const mixToken: TokenPortfolio = {
+            ...priceToken,
+            balance: covaToken.balance,
+            balance_24h: covaToken.balance_24h,
+          };
+          userPortfolio.push(mixToken);
+        } else {
+          userPortfolio.push(covaToken);
+        }
+      }
+
+      setPortfolio(userPortfolio);
     } else if (
       pricesPortfolio &&
       pricesPortfolio.length &&
@@ -73,7 +81,9 @@ export const TokensMethod = () => {
         const ethcallProvider = new Provider(provider);
         await ethcallProvider.init();
 
-        const newCalls = spiritFarms.reduce((calls, farm) => {
+        const calls = [];
+        for (let i = 0; i < spiritFarms.length; i++) {
+          const farm = spiritFarms[i];
           const tokenAddress: string = QUOTES[farm.lpSymbol[1]]?.address;
           const lpAddress: string = farm.lpAddresses[250];
           const gaugeAddress: string = farm.gaugeAddress;
@@ -91,9 +101,9 @@ export const TokensMethod = () => {
           calls.push(gaugeSupply);
           calls.push(staked);
           calls.push(earned);
-          return calls;
-        }, []);
-        const result = await ethcallProvider.all(newCalls);
+        }
+
+        const result = await ethcallProvider.all(calls);
         const spiritData = formatSpiritFarms(result, tokenPrices);
 
         setFarmsPortfolio(spiritData);

@@ -5,6 +5,7 @@ export interface Token {
   address: string;
   symbol: string;
   decimals: number;
+  path: string;
 }
 
 export interface PricesApiDB {
