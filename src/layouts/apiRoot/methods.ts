@@ -1,5 +1,6 @@
 import { TOKENS } from "../../utils/constants/tokens/tokens";
 import {
+  CoinMarket,
   CovalentData,
   PricesApiDB,
   Token,
@@ -7,6 +8,7 @@ import {
 } from "../../utils/interfaces/index.";
 import { ADDRESS_ZERO, NATIVES_TOKENS } from "../../utils/constants";
 import { TOKENS_SCAM } from "../../utils/constants/tokens/scamTokens";
+import { IDs_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
 
 export const formatCoingeckoPortfolio = (
   data: PricesApiDB[],
@@ -77,9 +79,40 @@ export const formatCovalentPortfolio = (data, chainID: number) => {
         usd_24h,
         type,
         path: "",
+        id_coinMarket: 0,
       };
       covalentArray.push(newToken);
     }
   }
   return covalentArray;
+};
+
+export const formatCoinmarketPortfolio = (data, chainID: number) => {
+  const coinMarketArr: [string, Array<CoinMarket>][] = Object.entries(data);
+  const defaultTokens: Token[] = TOKENS[chainID];
+
+  const listArr = [];
+  for (let i = 0; i < coinMarketArr.length; i++) {
+    const tokenArr = coinMarketArr[i];
+    const token_id: number = IDs_COINMARKET[tokenArr[0]];
+    const tokenCoinMarket = tokenArr[1].find(
+      (coinToken) => coinToken.id === token_id
+    );
+    const defaultToken = defaultTokens.find(
+      (token) => token.id_coinMarket === token_id
+    );
+    if (tokenCoinMarket && defaultToken) {
+      const newTokenPortfolio: TokenPortfolio = {
+        ...defaultToken,
+        balance: "",
+        balance_24h: "",
+        type: "",
+        usd: tokenCoinMarket.quote.USD.price,
+        usd_24h: tokenCoinMarket.quote.USD.percent_change_24h,
+      };
+      listArr.push(newTokenPortfolio);
+    }
+  }
+
+  return listArr;
 };

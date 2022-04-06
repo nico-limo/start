@@ -6,8 +6,9 @@ import { formatAmount } from "../../utils/methods";
 import { UserMethods } from "../../store/methods/user";
 
 const TokenDashboard = () => {
-  const { portfolio, farmsPortfolio } = TokensMethod();
+  const { portfolio, farmsPortfolio, spiritToken } = TokensMethod();
   const { wallet } = UserMethods();
+
   const { balance, balance_24h } = useMemo(() => {
     if (portfolio.length) {
       const initialBalance = 0;
@@ -33,23 +34,19 @@ const TokenDashboard = () => {
     return { balance: 0, balance_24h: 0 };
   }, [portfolio]);
 
-  const { farmsBalance } = useMemo(() => {
-    if (farmsPortfolio.length) {
-      const initialBalance = 0;
-      const sumBalance = farmsPortfolio.reduce((accumulator, curValue) => {
-        const balanceUSD = getUSDBalance(curValue.staked, Number(curValue.usd));
-        return accumulator + Number(balanceUSD);
-      }, initialBalance);
-
-      if (isNaN(sumBalance)) return { farmsBalance: 0 };
-
-      return { farmsBalance: sumBalance };
+  const balanceFarm = useMemo(() => {
+    if (farmsPortfolio.length && spiritToken.usd) {
+      for (let i = 0; i < farmsPortfolio.length; i++) {
+        const farm = farmsPortfolio[i];
+        const earnBalance = getUSDBalance(farm.earns, spiritToken.usd);
+        return Number(earnBalance) + Number(farm.usd);
+      }
     }
-    return { farmsBalance: 0 };
-  }, [farmsPortfolio]);
+    return 0;
+  }, [farmsPortfolio, spiritToken]);
 
-  const totalBalance = balance + farmsBalance;
-  const totalBalance_24h = balance_24h + farmsBalance;
+  const totalBalance = balance + balanceFarm;
+  const totalBalance_24h = balance_24h + balanceFarm;
   const status_balance_24 = totalBalance - totalBalance_24h > 0;
   const isLoadedBalance: boolean = balance !== 0 ?? false;
   return wallet.account && balance ? (

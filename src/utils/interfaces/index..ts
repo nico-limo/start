@@ -6,6 +6,7 @@ export interface Token {
   symbol: string;
   decimals: number;
   path: string;
+  id_coinMarket: number;
 }
 
 export interface PricesApiDB {
@@ -25,6 +26,17 @@ export interface TokenPortfolio extends Token {
 export interface CovalentApi {
   account: string;
   chainID: number;
+}
+
+export interface CoinMarket {
+  id: number;
+  symbol: string;
+  quote: {
+    USD: {
+      price: number;
+      percent_change_24h: number;
+    };
+  };
 }
 
 export interface CovalentData {

@@ -27,8 +27,9 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
   const fontSize = { base: "xs", md: "md" };
 
   const earn_USD = useMemo(() => {
-    if (spiritToken.usd && earns)
+    if (spiritToken.usd && earns) {
       return getUSDBalance(earns, spiritToken.usd, 4);
+    }
     return "0.00";
   }, [earns, spiritToken]);
 

@@ -3,9 +3,14 @@ import axios from "axios";
 import { NetworksMethods } from "../../store/methods/network";
 import { TokensMethod } from "../../store/methods/tokens";
 import { UserMethods } from "../../store/methods/user";
-import { formatCoingeckoPortfolio, formatCovalentPortfolio } from "./methods";
+import {
+  formatCoingeckoPortfolio,
+  formatCoinmarketPortfolio,
+  formatCovalentPortfolio,
+} from "./methods";
 import { useToast } from "@chakra-ui/react";
 import { TokenPortfolio } from "../../utils/interfaces/index.";
+import { PATH_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
 
 const ApiRoot = ({ children }) => {
   const { network } = NetworksMethods();
@@ -29,6 +34,16 @@ const ApiRoot = ({ children }) => {
             position: "top-right",
             status: "error",
           });
+          const { data: coinMarketPrices } = await axios(
+            "/api/coinmarketPrices",
+            {
+              params: { tokens: PATH_COINMARKET },
+            }
+          );
+          pricesPortfolio = formatCoinmarketPortfolio(
+            coinMarketPrices.data,
+            chainID
+          );
         }
 
         try {
@@ -47,10 +62,7 @@ const ApiRoot = ({ children }) => {
 
         updatePortfolio({ pricesPortfolio, covalentPortfolio });
         if (chainID === 250) {
-          const array = pricesPortfolio.length
-            ? pricesPortfolio
-            : covalentPortfolio;
-          getFarmsBalance(wallet.account, array);
+          getFarmsBalance(wallet.account, pricesPortfolio);
         } else {
           cleanFarms();
         }
@@ -66,6 +78,26 @@ const ApiRoot = ({ children }) => {
             position: "top-right",
             status: "error",
           });
+          try {
+            const { data: coinMarketPrices } = await axios(
+              "/api/coinmarketPrices",
+              {
+                params: { tokens: PATH_COINMARKET },
+              }
+            );
+            pricesPortfolio = formatCoinmarketPortfolio(
+              coinMarketPrices.data,
+              chainID
+            );
+            updatePortfolio({ pricesPortfolio });
+          } catch (error) {
+            toast({
+              title: "Error coinmarket api",
+              description: "Failed to get prices info",
+              position: "top-right",
+              status: "error",
+            });
+          }
         }
       }
     };

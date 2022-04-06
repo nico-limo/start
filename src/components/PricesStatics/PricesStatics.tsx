@@ -36,7 +36,7 @@ const PricesStatics = () => {
             <Text display={displayMode} color="gray.200">
               {symbol}
             </Text>
-            <Box as="span">{`$${formatAmount(usd)}`}</Box>
+            <Box as="span">{`$${formatAmount(usd, 2)}`}</Box>
           </HStack>
 
           <Text
