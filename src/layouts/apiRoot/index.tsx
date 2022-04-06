@@ -68,6 +68,11 @@ const ApiRoot = ({ children }) => {
         }
       } else {
         try {
+          console.log(
+            "process.env.NEXT_PUBLIC_COINMARKET_KEY ",
+            process.env.NEXT_PUBLIC_COINMARKET_KEY
+          );
+          console.log("process.env ", process.env);
           const { data: coingeckoPrices } = await axios("/api/coingeckoPrices");
           pricesPortfolio = formatCoingeckoPortfolio(coingeckoPrices, chainID);
           updatePortfolio({ pricesPortfolio });
