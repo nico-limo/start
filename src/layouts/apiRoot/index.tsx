@@ -79,6 +79,11 @@ const ApiRoot = ({ children }) => {
             status: "error",
           });
           try {
+            console.log(
+              "process.env.NEXT_PUBLIC_COINMARKET_KEY ",
+              process.env.NEXT_PUBLIC_COINMARKET_KEY
+            );
+            console.log("process.env ", process.env);
             const { data: coinMarketPrices } = await axios(
               "/api/coinmarketPrices",
               {

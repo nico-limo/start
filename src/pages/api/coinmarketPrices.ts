@@ -11,9 +11,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const headers = {
     "X-CMC_PRO_API_KEY": process.env.NEXT_PUBLIC_COINMARKET_KEY,
   };
-
-  console.log("params ", params);
-  console.log("headers ", headers);
   try {
     const { data: coinmarketData } = await axios.get(`${API_COINMARKET}`, {
       params,
