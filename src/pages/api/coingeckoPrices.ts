@@ -13,6 +13,6 @@ export default async (req, res) => {
     controller.abort();
     res.status(200).json(data);
   } catch (error) {
-    // res.status(500).send("Error getting Coingecko Data");
+    res.status(500).send("Error getting Coingecko Data");
   }
 };

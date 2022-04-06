@@ -7,7 +7,6 @@ import { TokensMethod } from "../store/methods/tokens";
 const Home = () => {
   const { farmsPortfolio } = TokensMethod();
 
-  console.log("farmsPortfolio ", farmsPortfolio);
   return (
     <VStack>
       <TokenDashboard />

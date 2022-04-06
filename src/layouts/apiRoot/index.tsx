@@ -5,6 +5,7 @@ import { TokensMethod } from "../../store/methods/tokens";
 import { UserMethods } from "../../store/methods/user";
 import { formatCoingeckoPortfolio, formatCovalentPortfolio } from "./methods";
 import { useToast } from "@chakra-ui/react";
+import { TokenPortfolio } from "../../utils/interfaces/index.";
 
 const ApiRoot = ({ children }) => {
   const { network } = NetworksMethods();
@@ -14,44 +15,58 @@ const ApiRoot = ({ children }) => {
   const toast = useToast();
   useEffect(() => {
     const fethData = async () => {
-      try {
-        if (wallet.account) {
+      let pricesPortfolio: TokenPortfolio[] = [],
+        covalentPortfolio: TokenPortfolio[] = [];
+
+      if (wallet.account) {
+        try {
           const { data: coingeckoPrices } = await axios("/api/coingeckoPrices");
-          const pricesPortfolio = formatCoingeckoPortfolio(
-            coingeckoPrices,
-            chainID
-          );
+          pricesPortfolio = formatCoingeckoPortfolio(coingeckoPrices, chainID);
+        } catch (error) {
+          toast({
+            title: "Error Database",
+            description: "Failed to get prices info",
+            position: "top-right",
+            status: "error",
+          });
+        }
+
+        try {
           const { data: covalentData } = await axios("/api/covalentData", {
             params: { chainID, account: wallet.account },
           });
-          const covalentPortfolio = formatCovalentPortfolio(
-            covalentData,
-            chainID
-          );
-          updatePortfolio({ pricesPortfolio, covalentPortfolio });
-          if (chainID === 250) {
-            const array = pricesPortfolio.length
-              ? pricesPortfolio
-              : covalentPortfolio;
-            getFarmsBalance(wallet.account, array);
-          } else {
-            cleanFarms();
-          }
-        } else {
-          const { data: coingeckoPrices } = await axios("/api/coingeckoPrices");
-          const pricesPortfolio = formatCoingeckoPortfolio(
-            coingeckoPrices,
-            chainID
-          );
-          updatePortfolio({ pricesPortfolio });
+          covalentPortfolio = formatCovalentPortfolio(covalentData, chainID);
+        } catch (error) {
+          toast({
+            title: "Error api covalent",
+            description: "Failed to get covalent data",
+            position: "top-right",
+            status: "error",
+          });
         }
-      } catch (error) {
-        toast({
-          title: "Error fetching data",
-          description: "Failed to get external data",
-          position: "top-right",
-          status: "error",
-        });
+
+        updatePortfolio({ pricesPortfolio, covalentPortfolio });
+        if (chainID === 250) {
+          const array = pricesPortfolio.length
+            ? pricesPortfolio
+            : covalentPortfolio;
+          getFarmsBalance(wallet.account, array);
+        } else {
+          cleanFarms();
+        }
+      } else {
+        try {
+          const { data: coingeckoPrices } = await axios("/api/coingeckoPrices");
+          pricesPortfolio = formatCoingeckoPortfolio(coingeckoPrices, chainID);
+          updatePortfolio({ pricesPortfolio });
+        } catch (error) {
+          toast({
+            title: "Error Database sin covalent",
+            description: "Failed to get prices info",
+            position: "top-right",
+            status: "error",
+          });
+        }
       }
     };
     fethData();
