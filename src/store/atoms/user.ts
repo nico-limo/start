@@ -8,7 +8,7 @@ export const userState = atom({
   default: {
     isConnected: false,
     account: "",
-    role: ROLE.standard,
+    role: ROLE.premium,
   },
 });
 

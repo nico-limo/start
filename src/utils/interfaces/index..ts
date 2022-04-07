@@ -77,11 +77,26 @@ export interface Farm {
   };
   gaugeAddress: string;
 }
+
+export interface TransactionResponse {
+  hash: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  wait: any;
+}
+
+export interface FarmActions {
+  gaugeReward: () => Promise<TransactionResponse>;
+  gaugeWithdraw: (_amount: string) => Promise<TransactionResponse>;
+  gaugeWithdrawAll: () => Promise<TransactionResponse>;
+  gaugeDeposit: (_amount: string) => Promise<TransactionResponse>;
+  gaugeDepositAll: () => Promise<TransactionResponse>;
+}
 export interface FarmsPortfolio extends Farm {
   usd: string;
   staked: string;
   earns: string;
   totalSupply: string;
+  actions: FarmActions;
 }
 
 export interface SearchInputProps {

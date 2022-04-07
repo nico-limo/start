@@ -98,7 +98,13 @@ export const setupNetwork = async (hexId = NETWORKS_ID.fantom.id) => {
   }
 };
 
-export const getProvider = (chainId = 250) => {
+export const getProvider = () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  const signer = provider.getSigner();
+  return { provider, signer };
+};
+
+export const getProviderRPC = (chainId = 250) => {
   const hexId: string = hexToNumber[chainId];
   const { rpcUrls }: NetworkProps = NETWORKS[hexId];
   const provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], chainId);

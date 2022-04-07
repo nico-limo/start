@@ -8,16 +8,16 @@ import {
   formatCoinmarketPortfolio,
   formatCovalentPortfolio,
 } from "./methods";
-import { useToast } from "@chakra-ui/react";
 import { TokenPortfolio } from "../../utils/interfaces/index.";
 import { PATH_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
+import useNotification from "../../hooks/useNotification";
 
 const ApiRoot = ({ children }) => {
   const { network } = NetworksMethods();
   const { chainID } = network;
   const { wallet } = UserMethods();
   const { updatePortfolio, getFarmsBalance, cleanFarms } = TokensMethod();
-  const toast = useToast();
+  const { errorDB } = useNotification();
   useEffect(() => {
     const fethData = async () => {
       let pricesPortfolio: TokenPortfolio[] = [],
@@ -28,12 +28,8 @@ const ApiRoot = ({ children }) => {
           const { data: coingeckoPrices } = await axios("/api/coingeckoPrices");
           pricesPortfolio = formatCoingeckoPortfolio(coingeckoPrices, chainID);
         } catch (error) {
-          toast({
-            title: "Error Database",
-            description: "Failed to get prices info",
-            position: "top-right",
-            status: "error",
-          });
+          errorDB("coingecko");
+
           const { data: coinMarketPrices } = await axios(
             "/api/coinmarketPrices",
             {
@@ -52,12 +48,7 @@ const ApiRoot = ({ children }) => {
           });
           covalentPortfolio = formatCovalentPortfolio(covalentData, chainID);
         } catch (error) {
-          toast({
-            title: "Error api covalent",
-            description: "Failed to get covalent data",
-            position: "top-right",
-            status: "error",
-          });
+          errorDB("covalent");
         }
 
         updatePortfolio({ pricesPortfolio, covalentPortfolio });
@@ -72,12 +63,7 @@ const ApiRoot = ({ children }) => {
           pricesPortfolio = formatCoingeckoPortfolio(coingeckoPrices, chainID);
           updatePortfolio({ pricesPortfolio });
         } catch (error) {
-          toast({
-            title: "Error Database sin covalent",
-            description: "Failed to get prices info",
-            position: "top-right",
-            status: "error",
-          });
+          errorDB("coingecko");
           try {
             const { data: coinMarketPrices } = await axios(
               "/api/coinmarketPrices",
@@ -91,12 +77,7 @@ const ApiRoot = ({ children }) => {
             );
             updatePortfolio({ pricesPortfolio });
           } catch (error) {
-            toast({
-              title: "Error coinmarket api",
-              description: "Failed to get prices info",
-              position: "top-right",
-              status: "error",
-            });
+            errorDB("coinmarket");
           }
         }
       }

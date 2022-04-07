@@ -16,7 +16,7 @@ export const UserMethods = () => {
         setuser({
           isConnected: true,
           account,
-          role: ROLE.standard,
+          role: ROLE.premium,
         });
       } else {
         toast({
@@ -35,7 +35,6 @@ export const UserMethods = () => {
   const upgradeRole = () => {
     setuser({ ...wallet, role: ROLE.premium });
   };
-
   const isPremium = wallet.role === ROLE.premium;
 
   return { logIn, logOut, wallet, upgradeRole, isPremium };
