@@ -1,16 +1,11 @@
 import { useRecoilState } from "recoil";
 import { TokenPortfolio } from "../../utils/interfaces/index.";
 import { farmsState, portfolioState } from "../atoms/user";
-import GAUGE_ABI from "../../utils/constants/abis/gauges.json";
-import PAIR_ABI from "../../utils/constants/abis/pair.json";
-import ERC_ABI from "../../utils/constants/abis/erc20.json";
-import { Contract, Provider } from "ethers-multicall";
-import { getProvider } from "../../utils/cryptoMethods";
+import { Provider } from "ethers-multicall";
+import { getProviderRPC } from "../../utils/cryptoMethods";
 import { checkAddresses } from "../../utils/methods";
 import { spiritState } from "../atoms/tokens";
-import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
-import { QUOTES } from "../../utils/constants/tokens/quoteFarms";
-import { formatSpiritFarms } from "./spiritMethod";
+import { formatSpiritFarms, spiritCalls } from "./spiritMethod";
 
 interface PortfolioProps {
   pricesPortfolio?: TokenPortfolio[];
@@ -77,32 +72,10 @@ export const TokensMethod = () => {
   ) => {
     try {
       if (account && tokenPrices.length) {
-        const provider = await getProvider();
+        const provider = getProviderRPC();
         const ethcallProvider = new Provider(provider);
         await ethcallProvider.init();
-
-        const calls = [];
-        for (let i = 0; i < spiritFarms.length; i++) {
-          const farm = spiritFarms[i];
-          const tokenAddress: string = QUOTES[farm.lpSymbol[1]]?.address;
-          const lpAddress: string = farm.lpAddresses[250];
-          const gaugeAddress: string = farm.gaugeAddress;
-          const tokenContract = new Contract(tokenAddress, ERC_ABI);
-          const lpContract = new Contract(lpAddress, PAIR_ABI);
-          const gaugeContract = new Contract(gaugeAddress, GAUGE_ABI);
-
-          const balanceOfLP = tokenContract.balanceOf(lpAddress);
-          const lpSupply = lpContract.totalSupply();
-          const gaugeSupply = gaugeContract.totalSupply();
-          const staked = gaugeContract.balanceOf(account);
-          const earned = gaugeContract.earned(account);
-          calls.push(balanceOfLP);
-          calls.push(lpSupply);
-          calls.push(gaugeSupply);
-          calls.push(staked);
-          calls.push(earned);
-        }
-
+        const calls = spiritCalls(account);
         const result = await ethcallProvider.all(calls);
         const spiritData = formatSpiritFarms(result, tokenPrices);
 

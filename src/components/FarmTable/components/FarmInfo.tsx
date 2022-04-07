@@ -9,6 +9,8 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
+import useLoader from "../../../hooks/UseLoader";
+import useNotification from "../../../hooks/useNotification";
 import { TokensMethod } from "../../../store/methods/tokens";
 import { UserMethods } from "../../../store/methods/user";
 import { getUSDBalance } from "../../../utils/cryptoMethods";
@@ -21,8 +23,9 @@ interface FarmInfoProps {
 const FarmInfo = ({ farm }: FarmInfoProps) => {
   const { spiritToken } = TokensMethod();
   const { isPremium } = UserMethods();
-
-  const { earns, lpSymbol, staked, usd } = farm;
+  const { pendingTx, successTx, cancelTx } = useNotification();
+  const { isLoading, loadOff, loadOn } = useLoader();
+  const { earns, lpSymbol, staked, usd, actions } = farm;
   const [symbolA, symbolB] = lpSymbol;
   const fontSize = { base: "xs", md: "md" };
 
@@ -34,6 +37,21 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
   }, [earns, spiritToken]);
 
   const columns = isPremium ? "1fr 1fr 1fr 80px" : "1fr 1fr 1fr";
+
+  const handleClaim = async () => {
+    try {
+      loadOn();
+      const tx = await actions.gaugeReward();
+      pendingTx(`${symbolA}-${symbolB}`);
+      await tx.wait();
+      loadOff();
+      successTx();
+    } catch (error) {
+      loadOff();
+      cancelTx();
+    }
+  };
+
   return (
     <Grid templateColumns={columns} my={1} bg="gray.700">
       <GridItem p={2} display="flex" alignItems="center">
@@ -78,7 +96,13 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
       </GridItem>
       {isPremium && (
         <GridItem p={1} textAlign="end" alignSelf="center">
-          <Button colorScheme="yellow" fontSize="xs" size="xs">
+          <Button
+            onClick={handleClaim}
+            isLoading={isLoading}
+            colorScheme="yellow"
+            fontSize="xs"
+            size="xs"
+          >
             CLAIM
           </Button>
         </GridItem>
