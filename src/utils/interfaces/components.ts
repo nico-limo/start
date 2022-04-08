@@ -27,3 +27,9 @@ export interface ModalRowProps {
   onSelect: (value: ItemSelection) => void;
   selectedItem: ItemSelection;
 }
+
+export interface FarmActionProps {
+  actions: FarmActions;
+
+  staked?: string;
+}
