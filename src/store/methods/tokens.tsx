@@ -9,7 +9,7 @@ import { formatSpiritFarms, spiritCalls } from "./spiritMethod";
 
 interface PortfolioProps {
   pricesPortfolio?: TokenPortfolio[];
-  covalentPortfolio?: TokenPortfolio[];
+  covalentPortfolio?: { tokens: TokenPortfolio[]; liquidity: TokenPortfolio[] };
 }
 
 export const TokensMethod = () => {
@@ -25,7 +25,7 @@ export const TokensMethod = () => {
       pricesPortfolio &&
       pricesPortfolio.length &&
       covalentPortfolio &&
-      covalentPortfolio.length
+      covalentPortfolio.tokens.length
     ) {
       const spirit = pricesPortfolio.find((token) =>
         checkAddresses(token.address, spiritToken.address)
@@ -33,8 +33,8 @@ export const TokensMethod = () => {
       if (spirit) setSpiritToken(spirit);
 
       const userPortfolio: TokenPortfolio[] = [];
-      for (let i = 0; i < covalentPortfolio.length; i++) {
-        const covaToken = covalentPortfolio[i];
+      for (let i = 0; i < covalentPortfolio.tokens.length; i++) {
+        const covaToken = covalentPortfolio.tokens[i];
         const priceToken = pricesPortfolio.find((priceItem) =>
           checkAddresses(priceItem.address, covaToken.address)
         );
@@ -50,19 +50,32 @@ export const TokensMethod = () => {
         }
       }
 
-      setPortfolio(userPortfolio);
+      setPortfolio({
+        assets: userPortfolio,
+        hasBalance: true,
+        liquidity: covalentPortfolio.liquidity,
+      });
     } else if (
       pricesPortfolio &&
       pricesPortfolio.length &&
-      ((covalentPortfolio && !covalentPortfolio.length) || !covalentPortfolio)
+      ((covalentPortfolio && !covalentPortfolio.tokens.length) ||
+        !covalentPortfolio)
     ) {
-      setPortfolio(pricesPortfolio);
+      setPortfolio({
+        assets: pricesPortfolio,
+        hasBalance: false,
+        liquidity: [],
+      });
     } else if (
       ((pricesPortfolio && !pricesPortfolio.length) || !pricesPortfolio) &&
       covalentPortfolio &&
-      covalentPortfolio.length
+      covalentPortfolio.tokens.length
     ) {
-      setPortfolio(covalentPortfolio);
+      setPortfolio({
+        assets: covalentPortfolio.tokens,
+        hasBalance: true,
+        liquidity: covalentPortfolio.liquidity,
+      });
     }
   };
 

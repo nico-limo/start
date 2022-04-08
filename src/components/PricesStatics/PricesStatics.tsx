@@ -9,8 +9,8 @@ const PricesStatics = () => {
   const { network } = NetworksMethods();
   const { portfolio } = TokensMethod();
   const nativePrice = useMemo(() => {
-    if (portfolio.length) {
-      return portfolio.find((token) => token.address === ADDRESS_ZERO);
+    if (portfolio.assets.length) {
+      return portfolio.assets.find((token) => token.address === ADDRESS_ZERO);
     }
     return null;
   }, [portfolio]);
@@ -31,6 +31,7 @@ const PricesStatics = () => {
             loading="lazy"
             src={`/networks/${network.label}.png`}
             w={6}
+            h={6}
           />
           <HStack>
             <Text display={displayMode} color="gray.200">

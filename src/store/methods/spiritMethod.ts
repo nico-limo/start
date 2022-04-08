@@ -36,7 +36,7 @@ export const formatSpiritFarms = (
     const gaugeReward = async () => await gaugeEtherContract.getReward();
     const gaugeWithdraw = async (_amount: string) =>
       await gaugeEtherContract.withdraw(_amount);
-    const gaugeWithdrawAll = async () => await gaugeEtherContract.withdrawAll();
+    const gaugeExit = async () => await gaugeEtherContract.exit();
     const gaugeDeposit = async (_amount: string) =>
       await gaugeEtherContract.deposit(_amount);
     const gaugeDepositAll = async () => await gaugeEtherContract.depositAll();
@@ -81,7 +81,7 @@ export const formatSpiritFarms = (
           gaugeDeposit,
           gaugeDepositAll,
           gaugeWithdraw,
-          gaugeWithdrawAll,
+          gaugeExit,
         },
       };
       spiritData.push(userFarm);

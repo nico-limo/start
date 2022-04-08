@@ -14,7 +14,11 @@ export const userState = atom({
 
 export const portfolioState = atom({
   key: "portfolioState",
-  default: currentTokens(250) as TokenPortfolio[],
+  default: { assets: currentTokens(250), hasBalance: false, liquidity: [] } as {
+    assets: TokenPortfolio[];
+    liquidity: TokenPortfolio[];
+    hasBalance: boolean;
+  },
 });
 
 export const farmsState = atom({

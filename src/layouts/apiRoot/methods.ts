@@ -9,6 +9,8 @@ import {
 import { ADDRESS_ZERO, NATIVES_TOKENS } from "../../utils/constants";
 import { TOKENS_SCAM } from "../../utils/constants/tokens/scamTokens";
 import { IDs_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
+import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
+import { checkAddresses } from "../../utils/methods";
 
 export const formatCoingeckoPortfolio = (
   data: PricesApiDB[],
@@ -42,6 +44,7 @@ export const formatCoingeckoPortfolio = (
 export const formatCovalentPortfolio = (data, chainID: number) => {
   const covalentData: CovalentData[] = data.data.items;
   const covalentArray: TokenPortfolio[] = [];
+  const covalentLPArray: TokenPortfolio[] = [];
   for (let i = 0; i < covalentData.length; i++) {
     const {
       balance,
@@ -50,14 +53,15 @@ export const formatCovalentPortfolio = (data, chainID: number) => {
       type,
       contract_name,
       contract_address,
+      quote,
       quote_rate,
       quote_rate_24h,
       contract_decimals,
       contract_ticker_symbol,
     } = covalentData[i];
+
     if (
       contract_name &&
-      !contract_name.includes("LP") &&
       balance !== "0" &&
       quote_24h !== Infinity &&
       !TOKENS_SCAM.includes(contract_address) &&
@@ -65,26 +69,52 @@ export const formatCovalentPortfolio = (data, chainID: number) => {
       quote_rate &&
       quote_rate_24h
     ) {
-      const usd_24h = ((quote_rate - quote_rate_24h) / quote_rate_24h) * 100;
-      const nativeToken: string = NATIVES_TOKENS[chainID];
-      const isNative = nativeToken === contract_ticker_symbol;
-      const newToken: TokenPortfolio = {
-        address: !isNative ? contract_address.toLowerCase() : ADDRESS_ZERO,
-        symbol: contract_ticker_symbol,
-        decimals: contract_decimals,
-        name: contract_name,
-        balance,
-        balance_24h: balance_24h ? balance_24h : balance,
-        usd: quote_rate,
-        usd_24h,
-        type,
-        path: "",
-        id_coinMarket: 0,
-      };
-      covalentArray.push(newToken);
+      if (contract_name.includes("LP")) {
+        const spiritFarm = spiritFarms.find((farm) =>
+          checkAddresses(farm.lpAddresses[250], contract_address)
+        );
+        const newFarm: TokenPortfolio = {
+          address: contract_address.toLowerCase(),
+          symbol: spiritFarm
+            ? `${spiritFarm.lpSymbol[0]}-${spiritFarm.lpSymbol[1]}`
+            : contract_ticker_symbol,
+          decimals: contract_decimals,
+          name: spiritFarm
+            ? `${spiritFarm.lpSymbol[0]}-${spiritFarm.lpSymbol[1]}`
+            : contract_name,
+          balance,
+          balance_24h: balance_24h ? balance_24h : balance,
+          usd: quote,
+          usd_24h: 0,
+          type,
+          path: "",
+          id_coinMarket: 0,
+        };
+        covalentLPArray.push(newFarm);
+      } else {
+        const usd_24h = ((quote_rate - quote_rate_24h) / quote_rate_24h) * 100;
+        const nativeToken: string = NATIVES_TOKENS[chainID];
+        const isNative = nativeToken === contract_ticker_symbol;
+        const newToken: TokenPortfolio = {
+          address: !isNative ? contract_address.toLowerCase() : ADDRESS_ZERO,
+          symbol: contract_ticker_symbol,
+          decimals: contract_decimals,
+          name: contract_name,
+          balance,
+          balance_24h: balance_24h ? balance_24h : balance,
+          usd: quote_rate,
+          usd_24h,
+          type,
+          path: "",
+          id_coinMarket: 0,
+        };
+
+        covalentArray.push(newToken);
+      }
     }
   }
-  return covalentArray;
+
+  return { tokens: covalentArray, liquidity: covalentLPArray };
 };
 
 export const formatCoinmarketPortfolio = (data, chainID: number) => {

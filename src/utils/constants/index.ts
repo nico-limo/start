@@ -72,7 +72,7 @@ export const API_COVALENT = "https://api.covalenthq.com/v1";
 export const API_COINMARKET =
   "https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest";
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
-
+export const AMOUNT_ZERO = "0";
 export const networksColors = {
   1: {
     // ETH

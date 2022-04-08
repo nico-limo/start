@@ -18,11 +18,32 @@ export const formatTokenAmount = (
   }
 };
 
+export const sumAmounts = (amountA: string, amountB: string): string => {
+  if (amountA === "0") return amountB;
+  if (amountB === "0") return amountA;
+  const FixedA = FixedNumber.fromString(amountA);
+  const FixedB = FixedNumber.fromString(amountB);
+  return FixedA.addUnsafe(FixedB).toString();
+};
+export const subAmounts = (amountA: string, amountB: string): string => {
+  if (amountA === "0") return amountB;
+  if (amountB === "0") return amountA;
+  const FixedA = FixedNumber.fromString(amountA);
+  const FixedB = FixedNumber.fromString(amountB);
+  return FixedA.subUnsafe(FixedB).toString();
+};
+
+export const amountIsNegative = (amount: string): boolean => {
+  if (amount === "0") return false;
+  const fixedAmount = FixedNumber.fromString(amount);
+  return fixedAmount.isNegative();
+};
+
 export const getUSDBalance = (balance: string, price: number, round = 2) => {
   try {
     if (balance === "loading") return "0.00";
     const fixedBalance = FixedNumber.fromString(balance);
-    const fixedPrice = FixedNumber.fromString(price.toString());
+    const fixedPrice = FixedNumber.from(price.toString());
     const balacneUSD = fixedBalance
       .mulUnsafe(fixedPrice)
       .round(round)

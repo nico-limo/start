@@ -1,21 +1,12 @@
 import { QuestionIcon } from "@chakra-ui/icons";
-import {
-  Grid,
-  GridItem,
-  HStack,
-  Image,
-  Text,
-  Flex,
-  Button,
-} from "@chakra-ui/react";
+import { Grid, GridItem, HStack, Image, Text, Flex } from "@chakra-ui/react";
 import { useMemo } from "react";
-import useLoader from "../../../hooks/UseLoader";
-import useNotification from "../../../hooks/useNotification";
 import { TokensMethod } from "../../../store/methods/tokens";
 import { UserMethods } from "../../../store/methods/user";
 import { getUSDBalance } from "../../../utils/cryptoMethods";
 import { FarmsPortfolio } from "../../../utils/interfaces/index.";
 import { formatAmount } from "../../../utils/methods";
+import FarmActions from "./FarmActions";
 interface FarmInfoProps {
   farm: FarmsPortfolio;
 }
@@ -23,8 +14,6 @@ interface FarmInfoProps {
 const FarmInfo = ({ farm }: FarmInfoProps) => {
   const { spiritToken } = TokensMethod();
   const { isPremium } = UserMethods();
-  const { pendingTx, successTx, cancelTx } = useNotification();
-  const { isLoading, loadOff, loadOn } = useLoader();
   const { earns, lpSymbol, staked, usd, actions } = farm;
   const [symbolA, symbolB] = lpSymbol;
   const fontSize = { base: "xs", md: "md" };
@@ -38,20 +27,6 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
 
   const columns = isPremium ? "1fr 1fr 1fr 80px" : "1fr 1fr 1fr";
 
-  const handleClaim = async () => {
-    try {
-      loadOn();
-      const tx = await actions.gaugeReward();
-      pendingTx(`${symbolA}-${symbolB}`);
-      await tx.wait();
-      loadOff();
-      successTx();
-    } catch (error) {
-      loadOff();
-      cancelTx();
-    }
-  };
-
   return (
     <Grid templateColumns={columns} my={1} bg="gray.700">
       <GridItem p={2} display="flex" alignItems="center">
@@ -62,12 +37,14 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
               alt={symbolA}
               fallback={<QuestionIcon w={6} h={6} />}
               w={6}
+              h={6}
             />
             <Image
               src={`/tokens/${symbolB}.png`}
               alt={symbolB}
               fallback={<QuestionIcon w={6} />}
               w={6}
+              h={6}
             />
           </HStack>
           <Text fontSize={fontSize}>{`${symbolA}-${symbolB}`}</Text>
@@ -94,19 +71,7 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
           </Text>
         </Flex>
       </GridItem>
-      {isPremium && (
-        <GridItem p={1} textAlign="end" alignSelf="center">
-          <Button
-            onClick={handleClaim}
-            isLoading={isLoading}
-            colorScheme="yellow"
-            fontSize="xs"
-            size="xs"
-          >
-            CLAIM
-          </Button>
-        </GridItem>
-      )}
+      {isPremium && <FarmActions actions={actions} staked={staked} />}
     </Grid>
   );
 };
