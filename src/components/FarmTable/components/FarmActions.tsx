@@ -1,17 +1,17 @@
+import React from "react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { Button, GridItem, HStack, IconButton } from "@chakra-ui/react";
-import React from "react";
+import useLoading from "../../../hooks/useLoading";
 import useNotification from "../../../hooks/useNotification";
 import { FarmActionProps } from "../../../utils/interfaces/components";
-import useLoader from "../../../hooks/useLoader";
 
 const FarmActions = ({ actions }: FarmActionProps) => {
-  const { isLoading, loadOff, loadOn } = useLoader();
+  const { isLoading, loadOff, loadOn } = useLoading();
   const {
     isLoading: isLoadingWithdraw,
     loadOff: loadOffWithdraw,
     loadOn: loadOnWithdraw,
-  } = useLoader();
+  } = useLoading();
   const { pendingTx, successTx, cancelTx } = useNotification();
   const { gaugeReward, gaugeExit } = actions;
 
