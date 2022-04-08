@@ -7,7 +7,6 @@ import {
   Button,
   IconButton,
   useDisclosure,
-  Image,
   Text,
 } from "@chakra-ui/react";
 import { PAGES } from "../utils/constants";
@@ -19,6 +18,7 @@ import Link from "next/link";
 import { PurshaseModal } from "../components/PurshaseModal";
 import { WalletRole } from "../components/WalletRole";
 import { UserMethods } from "../store/methods/user";
+import Image from "next/image";
 
 const Topbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -45,7 +45,13 @@ const Topbar = () => {
     >
       <Flex py={2} px={4} align="center" justify="space-between">
         <HStack>
-          <Image w={6} h={6} src="https://picsum.photos/id/237/40" alt="text" />
+          <Image
+            width="35px"
+            height="35px"
+            src="/wallets/coinbase.png"
+            alt="text"
+            loading="lazy"
+          />
           <Text fontSize="large" fontWeight={500} color="teal.300">
             StartSwap
           </Text>

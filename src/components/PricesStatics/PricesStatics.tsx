@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
-import { Box, HStack, Image, Skeleton, Text } from "@chakra-ui/react";
+import { Box, HStack, Skeleton, Text } from "@chakra-ui/react";
 import { NetworksMethods } from "../../store/methods/network";
 import { ADDRESS_ZERO, networksColors } from "../../utils/constants";
 import { formatAmount, priceStatus } from "../../utils/methods";
 import { TokensMethod } from "../../store/methods/tokens";
+import Image from "next/image";
 
 const PricesStatics = () => {
   const { network } = NetworksMethods();
@@ -30,8 +31,8 @@ const PricesStatics = () => {
             alt={network.label}
             loading="lazy"
             src={`/networks/${network.label}.png`}
-            w={6}
-            h={6}
+            width="30px"
+            height="30px"
           />
           <HStack>
             <Text display={displayMode} color="gray.200">

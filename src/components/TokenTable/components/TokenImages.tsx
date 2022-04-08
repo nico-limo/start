@@ -1,5 +1,5 @@
-import { QuestionIcon } from "@chakra-ui/icons";
-import { Flex, Image } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
+import Image from "next/image";
 import React from "react";
 
 interface TokenImageProps {
@@ -14,25 +14,25 @@ const TokenImages = ({ type, symbol }: TokenImageProps) => {
     <Image
       src={`/tokens/${symbol}.png`}
       alt={symbol}
-      fallback={<QuestionIcon w={6} h={6} />}
-      w={6}
-      h={6}
+      width="25px"
+      height="25px"
+      loading="lazy"
     />
   ) : (
     <Flex>
       <Image
         src={`/tokens/${symbolA}.png`}
         alt={symbolA}
-        fallback={<QuestionIcon w={6} h={6} />}
-        w={6}
-        h={6}
+        width="25px"
+        height="25px"
+        loading="lazy"
       />
       <Image
         src={`/tokens/${symbolB}.png`}
         alt={symbolB}
-        fallback={<QuestionIcon w={6} h={6} />}
-        w={6}
-        h={6}
+        width="25px"
+        height="25px"
+        loading="lazy"
       />
     </Flex>
   );

@@ -1,5 +1,5 @@
-import { QuestionIcon } from "@chakra-ui/icons";
-import { Grid, GridItem, HStack, Image, Text, Flex } from "@chakra-ui/react";
+import { Grid, GridItem, HStack, Text, Flex } from "@chakra-ui/react";
+import Image from "next/image";
 import { useMemo } from "react";
 import { TokensMethod } from "../../../store/methods/tokens";
 import { UserMethods } from "../../../store/methods/user";
@@ -35,16 +35,16 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
             <Image
               src={`/tokens/${symbolA}.png`}
               alt={symbolA}
-              fallback={<QuestionIcon w={6} h={6} />}
-              w={6}
-              h={6}
+              width="25px"
+              height="25px"
+              loading="lazy"
             />
             <Image
               src={`/tokens/${symbolB}.png`}
               alt={symbolB}
-              fallback={<QuestionIcon w={6} />}
-              w={6}
-              h={6}
+              width="25px"
+              height="25px"
+              loading="lazy"
             />
           </HStack>
           <Text fontSize={fontSize}>{`${symbolA}-${symbolB}`}</Text>

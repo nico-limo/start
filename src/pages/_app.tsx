@@ -3,11 +3,9 @@ import { ChakraProvider, Container } from "@chakra-ui/react";
 import { AppProps } from "next/app";
 import theme from "../theme";
 import { RecoilRoot } from "recoil";
-import Topbar from "../layouts/Topbar";
 import { memoize } from "lodash";
-import Web3Root from "../layouts/web3/Web3Root";
-import ApiRoot from "../layouts/apiRoot";
 import "../theme/global.css";
+import Layout from "../layouts";
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   const mutedConsole = memoize((console) => ({
@@ -19,14 +17,11 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <RecoilRoot>
       <ChakraProvider theme={theme}>
-        <Topbar />
-        <Web3Root>
-          <ApiRoot>
-            <Container maxW="container.xl" bg="gray.700" p={4}>
-              <Component {...pageProps} />
-            </Container>
-          </ApiRoot>
-        </Web3Root>
+        <Layout>
+          <Container maxW="container.xl" bg="gray.700" p={4}>
+            <Component {...pageProps} />
+          </Container>
+        </Layout>
       </ChakraProvider>
     </RecoilRoot>
   );

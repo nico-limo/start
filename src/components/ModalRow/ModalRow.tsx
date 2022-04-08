@@ -1,4 +1,5 @@
-import { HStack, Image } from "@chakra-ui/react";
+import { Box, HStack } from "@chakra-ui/react";
+import Image from "next/image";
 import React, { FC } from "react";
 import { ModalRowProps } from "../../utils/interfaces/components";
 
@@ -11,17 +12,21 @@ const ModalRow: FC<ModalRowProps> = ({
   return (
     <HStack spacing={6}>
       {list.map((item) => (
-        <Image
+        <Box
           key={`modal-${type}-${item.id}`}
-          alt={item.label}
           bg={selectedItem?.id === item.id ? "gray.900" : "none"}
-          src={`/${type}/${item.label}.png`}
-          onClick={() => onSelect(item)}
           cursor="pointer"
           _hover={{ bg: "gray.900", transition: "500ms ease" }}
-          w={20}
-          h={20}
-        />
+          onClick={() => onSelect(item)}
+        >
+          <Image
+            alt={item.label}
+            src={`/${type}/${item.label}.png`}
+            width="65px"
+            height="65px"
+            loading="lazy"
+          />
+        </Box>
       ))}
     </HStack>
   );
