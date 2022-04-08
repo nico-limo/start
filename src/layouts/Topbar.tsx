@@ -10,15 +10,22 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { PAGES } from "../utils/constants";
-import { MobileDrawer } from "./mobileDrawer";
 import { PricesStatics } from "../components/PricesStatics";
-import WalletModal from "../components/WalletModal/WalletModal";
 import { WalletConnection } from "../components/WalletConnection";
 import Link from "next/link";
-import { PurshaseModal } from "../components/PurshaseModal";
 import { WalletRole } from "../components/WalletRole";
 import { UserMethods } from "../store/methods/user";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+// Dinamic Components
+const WalletModal = dynamic(
+  () => import("../components/WalletModal/WalletModal")
+);
+const PurshaseModal = dynamic(
+  () => import("../components/PurshaseModal/PurshaseModal")
+);
+const MobileDrawer = dynamic(() => import("./mobileDrawer/MobileDrawer"));
 
 const Topbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -78,8 +85,12 @@ const Topbar = () => {
           icon={<HamburgerIcon />}
         ></IconButton>
       </Flex>
-      <WalletModal isOpen={isModalOpen} onClose={onModalClose} />
-      <PurshaseModal isOpen={isPurchaseOpen} onClose={onPurchaseClose} />
+      {isModalOpen && (
+        <WalletModal isOpen={isModalOpen} onClose={onModalClose} />
+      )}
+      {isPurchaseOpen && (
+        <PurshaseModal isOpen={isPurchaseOpen} onClose={onPurchaseClose} />
+      )}
       <MobileDrawer
         isOpen={isOpen}
         onClose={onClose}

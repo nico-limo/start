@@ -7,9 +7,9 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  Link,
   VStack,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import { FC, useRef } from "react";
 import { PricesStatics } from "../../components/PricesStatics";
 import { WalletConnection } from "../../components/WalletConnection";
@@ -46,7 +46,7 @@ const MobileDrawer: FC<MobileTopBar> = ({
               )}
 
               {PAGES.map((page) => (
-                <Link key={page.id} href={page.path}>
+                <Link key={page.id} href={page.path} passHref>
                   <Button variant="nav"> {page.label} </Button>
                 </Link>
               ))}

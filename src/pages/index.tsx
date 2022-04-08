@@ -1,8 +1,11 @@
+import dynamic from "next/dynamic";
 import { Stack, VStack } from "@chakra-ui/react";
-import { FarmTable } from "../components/FarmTable";
 import { TokenDashboard } from "../components/TokenDashboard";
 import { TokenTable } from "../components/TokenTable";
 import { TokensMethod } from "../store/methods/tokens";
+
+// Dinamic Components
+const FarmTable = dynamic(() => import("../components/FarmTable/FarmTable"));
 
 const Home = () => {
   const { farmsPortfolio, portfolio } = TokensMethod();
