@@ -35,10 +35,17 @@ const Topbar = () => {
   const btnRef = useRef();
   const { wallet } = UserMethods();
   return (
-    <chakra.header id="header" bg="gray.600" position="sticky" top={0} w="full">
+    <chakra.header
+      id="header"
+      bg="gray.600"
+      position="sticky"
+      top={0}
+      w="full"
+      zIndex={3}
+    >
       <Flex py={2} px={4} align="center" justify="space-between">
         <HStack>
-          <Image src="https://picsum.photos/id/237/40" alt="text" />
+          <Image w={6} h={6} src="https://picsum.photos/id/237/40" alt="text" />
           <Text fontSize="large" fontWeight={500} color="teal.300">
             StartSwap
           </Text>

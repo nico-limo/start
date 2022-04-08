@@ -1,3 +1,5 @@
+import { FarmActions } from "./index.";
+
 export interface PagesLabel {
   id: string;
   label: string;

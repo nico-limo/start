@@ -87,7 +87,7 @@ export interface TransactionResponse {
 export interface FarmActions {
   gaugeReward: () => Promise<TransactionResponse>;
   gaugeWithdraw: (_amount: string) => Promise<TransactionResponse>;
-  gaugeWithdrawAll: () => Promise<TransactionResponse>;
+  gaugeExit: () => Promise<TransactionResponse>;
   gaugeDeposit: (_amount: string) => Promise<TransactionResponse>;
   gaugeDepositAll: () => Promise<TransactionResponse>;
 }

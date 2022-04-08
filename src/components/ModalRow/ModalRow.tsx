@@ -20,6 +20,7 @@ const ModalRow: FC<ModalRowProps> = ({
           cursor="pointer"
           _hover={{ bg: "gray.900", transition: "500ms ease" }}
           w={20}
+          h={20}
         />
       ))}
     </HStack>
