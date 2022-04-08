@@ -15,8 +15,8 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
   const { spiritToken } = TokensMethod();
   const { isPremium } = UserMethods();
   const { earns, lpSymbol, staked, usd, actions } = farm;
-  const [symbolA, symbolB] = lpSymbol;
   const fontSize = { base: "xs", md: "md" };
+  const [symbolA, symbolB] = lpSymbol;
 
   const earn_USD = useMemo(() => {
     if (spiritToken.usd && earns) {
