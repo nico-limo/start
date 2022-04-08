@@ -14,8 +14,8 @@ const TokenImages = ({ type, symbol }: TokenImageProps) => {
     <Image
       src={`/tokens/${symbol}.png`}
       alt={symbol}
-      width="25px"
-      height="25px"
+      width={25}
+      height={25}
       loading="lazy"
     />
   ) : (
@@ -23,15 +23,15 @@ const TokenImages = ({ type, symbol }: TokenImageProps) => {
       <Image
         src={`/tokens/${symbolA}.png`}
         alt={symbolA}
-        width="25px"
-        height="25px"
+        width={25}
+        height={25}
         loading="lazy"
       />
       <Image
         src={`/tokens/${symbolB}.png`}
         alt={symbolB}
-        width="25px"
-        height="25px"
+        width={25}
+        height={25}
         loading="lazy"
       />
     </Flex>

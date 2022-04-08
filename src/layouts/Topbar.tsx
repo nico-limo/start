@@ -11,7 +11,6 @@ import {
 } from "@chakra-ui/react";
 import { PAGES } from "../utils/constants";
 import { PricesStatics } from "../components/PricesStatics";
-import { WalletConnection } from "../components/WalletConnection";
 import Link from "next/link";
 import { WalletRole } from "../components/WalletRole";
 import { UserMethods } from "../store/methods/user";
@@ -26,6 +25,9 @@ const PurshaseModal = dynamic(
   () => import("../components/PurshaseModal/PurshaseModal")
 );
 const MobileDrawer = dynamic(() => import("./mobileDrawer/MobileDrawer"));
+const WalletConnection = dynamic(
+  () => import("../components/WalletConnection/WalletConnection")
+);
 
 const Topbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,8 +55,8 @@ const Topbar = () => {
       <Flex py={2} px={4} align="center" justify="space-between">
         <HStack>
           <Image
-            width="35px"
-            height="35px"
+            width={30}
+            height={30}
             src="/wallets/coinbase.png"
             alt="text"
             loading="lazy"

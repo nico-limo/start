@@ -31,8 +31,8 @@ const PricesStatics = () => {
             alt={network.label}
             loading="lazy"
             src={`/networks/${network.label}.png`}
-            width="30px"
-            height="30px"
+            width={30}
+            height={30}
           />
           <HStack>
             <Text display={displayMode} color="gray.200">

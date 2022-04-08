@@ -24,7 +24,6 @@ import {
   ItemSelection,
   WalletModalProps,
 } from "../../utils/interfaces/components";
-
 import { ModalRow } from "../ModalRow";
 
 const WalletModal: FC<WalletModalProps> = ({ onClose, isOpen }) => {

@@ -1,12 +1,16 @@
 import { Grid, GridItem, HStack, Text, Flex } from "@chakra-ui/react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import { TokensMethod } from "../../../store/methods/tokens";
 import { UserMethods } from "../../../store/methods/user";
 import { getUSDBalance } from "../../../utils/cryptoMethods";
 import { FarmsPortfolio } from "../../../utils/interfaces/index.";
 import { formatAmount } from "../../../utils/methods";
-import FarmActions from "./FarmActions";
+
+// Dynamic
+const FarmActions = dynamic(() => import("./FarmActions"));
+
 interface FarmInfoProps {
   farm: FarmsPortfolio;
 }
@@ -35,15 +39,15 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
             <Image
               src={`/tokens/${symbolA}.png`}
               alt={symbolA}
-              width="25px"
-              height="25px"
+              width={25}
+              height={25}
               loading="lazy"
             />
             <Image
               src={`/tokens/${symbolB}.png`}
               alt={symbolB}
-              width="25px"
-              height="25px"
+              width={25}
+              height={25}
               loading="lazy"
             />
           </HStack>

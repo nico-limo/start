@@ -22,8 +22,8 @@ const ModalRow: FC<ModalRowProps> = ({
           <Image
             alt={item.label}
             src={`/${type}/${item.label}.png`}
-            width="65px"
-            height="65px"
+            width={65}
+            height={65}
             loading="lazy"
           />
         </Box>
