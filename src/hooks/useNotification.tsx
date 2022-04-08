@@ -3,18 +3,18 @@ import { useToast } from "@chakra-ui/react";
 const useNotification = () => {
   const toast = useToast();
 
-  const pendingTx = (symbol: string) =>
+  const pendingTx = () =>
     toast({
-      title: "Claiming Proccessing",
-      description: `Claiming SPIRIT from ${symbol}`,
+      title: "Transaction Proccessing",
+      description: "Your Transaction is proccessing",
       position: "top-right",
       status: "info",
       isClosable: true,
     });
   const successTx = () =>
     toast({
-      title: "Claim Success",
-      description: `Claimed rewards`,
+      title: "Transaction Success",
+      description: `Your transaction is completed`,
       position: "top-right",
       status: "success",
       isClosable: true,

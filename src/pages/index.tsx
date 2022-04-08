@@ -5,7 +5,7 @@ import { TokenTable } from "../components/TokenTable";
 import { TokensMethod } from "../store/methods/tokens";
 
 const Home = () => {
-  const { farmsPortfolio } = TokensMethod();
+  const { farmsPortfolio, portfolio } = TokensMethod();
 
   return (
     <VStack>
@@ -16,7 +16,15 @@ const Home = () => {
         w="full"
         justify="space-between"
       >
-        <TokenTable type="tokens" />
+        <TokenTable type="assets" />
+        {portfolio?.liquidity?.length && <TokenTable type="liquidity" />}
+      </Stack>
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        spacing={{ base: 4, md: 20 }}
+        w="full"
+        justify="space-between"
+      >
         {farmsPortfolio.length && <FarmTable />}
       </Stack>
     </VStack>

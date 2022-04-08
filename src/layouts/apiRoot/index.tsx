@@ -21,7 +21,13 @@ const ApiRoot = ({ children }) => {
   useEffect(() => {
     const fethData = async () => {
       let pricesPortfolio: TokenPortfolio[] = [],
-        covalentPortfolio: TokenPortfolio[] = [];
+        covalentPortfolio: {
+          tokens: TokenPortfolio[];
+          liquidity: TokenPortfolio[];
+        } = {
+          tokens: [],
+          liquidity: [],
+        };
 
       if (wallet.account) {
         try {
@@ -46,6 +52,7 @@ const ApiRoot = ({ children }) => {
           const { data: covalentData } = await axios("/api/covalentData", {
             params: { chainID, account: wallet.account },
           });
+
           covalentPortfolio = formatCovalentPortfolio(covalentData, chainID);
         } catch (error) {
           errorDB("covalent");

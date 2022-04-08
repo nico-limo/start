@@ -1,3 +1,5 @@
+import { FarmActions } from "./index.";
+
 export interface PagesLabel {
   id: string;
   label: string;
@@ -26,4 +28,10 @@ export interface ModalRowProps {
   list: ItemSelection[];
   onSelect: (value: ItemSelection) => void;
   selectedItem: ItemSelection;
+}
+
+export interface FarmActionProps {
+  actions: FarmActions;
+
+  staked: string;
 }
