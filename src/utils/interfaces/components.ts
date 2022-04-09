@@ -6,7 +6,7 @@ export interface PagesLabel {
   path: string;
 }
 
-export interface MobileTopBar {
+export interface MobileTopBarProps {
   isOpen: boolean;
   onModalOpen: () => void;
   onPurchaseOpen: () => void;
