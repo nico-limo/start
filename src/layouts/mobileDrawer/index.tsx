@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { FC, useRef } from "react";
+import { useRef } from "react";
 import PricesStatics from "../../components/PricesStatics";
 import WalletConnection from "../../components/WalletConnection";
 import { UserMethods } from "../../store/methods/user";
@@ -21,12 +21,12 @@ import { MobileTopBar } from "../../utils/interfaces/components";
 // Dynamic
 const WalletRole = dynamic(() => import("../../components/WalletRole"));
 
-const MobileDrawer: FC<MobileTopBar> = ({
+const MobileDrawer = ({
   isOpen,
   onClose,
   onModalOpen,
   onPurchaseOpen,
-}) => {
+}: MobileTopBar) => {
   const btnRef = useRef();
   const { wallet } = UserMethods();
   return (

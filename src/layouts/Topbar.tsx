@@ -15,11 +15,11 @@ import Link from "next/link";
 import { UserMethods } from "../store/methods/user";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import MobileDrawer from "./MobileDrawer";
 
 // Dinamic Components
 const WalletModal = dynamic(() => import("../components/WalletModal"));
 const PurshaseModal = dynamic(() => import("../components/PurshaseModal"));
+const MobileDrawer = dynamic(() => import("./MobileDrawer"));
 const WalletRole = dynamic(() => import("../components/WalletRole"));
 const WalletConnection = dynamic(
   () => import("../components/WalletConnection")
