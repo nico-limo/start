@@ -44,7 +44,7 @@ const TokenDashboard = () => {
       principalTokens.SPIRIT.USD
     ) {
       for (let i = 0; i < farmsPortfolio.spiritFarms.length; i++) {
-        const { earns, usd } = farmsPortfolio[i];
+        const { earns, usd } = farmsPortfolio.spiritFarms[i];
         const earnBalance = getUSDBalance(earns, principalTokens.SPIRIT.USD);
         const totalFarmBalance = sumAmounts(earnBalance, usd);
         farmBalance = sumAmounts(farmBalance, totalFarmBalance);

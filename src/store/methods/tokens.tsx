@@ -62,6 +62,7 @@ export const TokensMethod = () => {
       ((covalentPortfolio && !covalentPortfolio.tokens.length) ||
         !covalentPortfolio)
     ) {
+      setPrincipalTokens(pricesPortfolio.principal);
       setPortfolio({
         assets: pricesPortfolio.list,
         hasBalance: false,

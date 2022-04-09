@@ -9,7 +9,6 @@ import Image from "next/image";
 const PricesStatics = () => {
   const { network } = NetworksMethods();
   const { principalTokens } = TokensMethod();
-
   const symbol: string = NATIVE_TOKENS[network.chainID];
   const nativePrice: { USD: number; USD_24h: number } = principalTokens[symbol];
   const { USD, USD_24h } = nativePrice;
