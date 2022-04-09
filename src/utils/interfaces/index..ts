@@ -86,11 +86,14 @@ export interface TransactionResponse {
 
 export interface FarmActions {
   gaugeReward: () => Promise<TransactionResponse>;
-  gaugeWithdraw: (_amount: string) => Promise<TransactionResponse>;
   gaugeExit: () => Promise<TransactionResponse>;
-  gaugeDeposit: (_amount: string) => Promise<TransactionResponse>;
   gaugeDepositAll: () => Promise<TransactionResponse>;
 }
+export interface FarmsLiquidity extends Farm {
+  hasBalance: boolean;
+  gaugeDepositAll: () => Promise<TransactionResponse>;
+}
+
 export interface FarmsPortfolio extends Farm {
   usd: string;
   staked: string;
@@ -105,4 +108,12 @@ export interface SearchInputProps {
   onToggle: () => void;
   isVisible: boolean;
   type: string;
+}
+
+export interface PrincipalTokensProps {
+  ETH: { USD: number; USD_24h: number };
+  SPIRIT: { USD: number; USD_24h: number };
+  BOO: { USD: number; USD_24h: number };
+  BNB: { USD: number; USD_24h: number };
+  FTM: { USD: number; USD_24h: number };
 }

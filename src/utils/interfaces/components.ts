@@ -32,6 +32,5 @@ export interface ModalRowProps {
 
 export interface FarmActionProps {
   actions: FarmActions;
-
-  staked?: string;
+  address: string;
 }

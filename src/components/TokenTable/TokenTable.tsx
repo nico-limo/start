@@ -3,7 +3,7 @@ import { Box, HStack, Text, useDisclosure } from "@chakra-ui/react";
 import TokenInfo from "./components/TokenInfo";
 import Labels from "./components/Labels";
 import { TokensMethod } from "../../store/methods/tokens";
-import { SearchInput } from "../SearchInput";
+import SearchInput from "../SearchInput";
 
 interface TableProp {
   type: string;

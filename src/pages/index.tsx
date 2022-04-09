@@ -1,11 +1,11 @@
 import dynamic from "next/dynamic";
 import { Stack, VStack } from "@chakra-ui/react";
-import { TokenDashboard } from "../components/TokenDashboard";
+import TokenDashboard from "../components/TokenDashboard";
 import { TokenTable } from "../components/TokenTable";
 import { TokensMethod } from "../store/methods/tokens";
 
 // Dinamic Components
-const FarmTable = dynamic(() => import("../components/FarmTable/FarmTable"));
+const FarmTable = dynamic(() => import("../components/FarmTable"));
 
 const Home = () => {
   const { farmsPortfolio, portfolio } = TokensMethod();
@@ -28,7 +28,7 @@ const Home = () => {
         w="full"
         justify="space-between"
       >
-        {farmsPortfolio.length && <FarmTable />}
+        {farmsPortfolio.spiritFarms.length && <FarmTable />}
       </Stack>
     </VStack>
   );

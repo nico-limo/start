@@ -3,10 +3,15 @@ import {
   CoinMarket,
   CovalentData,
   PricesApiDB,
+  PrincipalTokensProps,
   Token,
   TokenPortfolio,
 } from "../../utils/interfaces/index.";
-import { ADDRESS_ZERO, NATIVES_TOKENS } from "../../utils/constants";
+import {
+  ADDRESS_ZERO,
+  NATIVES_TOKENS,
+  PRINCIPAL_TOKENS,
+} from "../../utils/constants";
 import { TOKENS_SCAM } from "../../utils/constants/tokens/scamTokens";
 import { IDs_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
 import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
@@ -18,11 +23,18 @@ export const formatCoingeckoPortfolio = (
 ) => {
   try {
     const networkTokens: TokenPortfolio[] = [];
+    const prinpalTokens = {};
     const defaultTokens: Token[] = TOKENS[chainID];
     for (let i = 0; i < defaultTokens.length; i++) {
       const defaultToken = defaultTokens[i];
       const tokenList = data.find((token) => token.path === defaultToken.path);
       if (tokenList) {
+        if (PRINCIPAL_TOKENS.includes(defaultToken.symbol)) {
+          prinpalTokens[defaultToken.symbol] = {
+            USD: tokenList.price,
+            USD_24h: tokenList.price24,
+          };
+        }
         const portfolioToken: TokenPortfolio = {
           ...defaultToken,
           address: defaultToken.address.toLowerCase(),
@@ -35,7 +47,11 @@ export const formatCoingeckoPortfolio = (
         networkTokens.push(portfolioToken);
       }
     }
-    return networkTokens;
+
+    return {
+      list: networkTokens,
+      principal: prinpalTokens as PrincipalTokensProps,
+    };
   } catch (error) {
     console.log("Error formating coingecko data ", error);
   }
@@ -121,7 +137,8 @@ export const formatCoinmarketPortfolio = (data, chainID: number) => {
   const coinMarketArr: [string, Array<CoinMarket>][] = Object.entries(data);
   const defaultTokens: Token[] = TOKENS[chainID];
 
-  const listArr = [];
+  const listArr: TokenPortfolio[] = [];
+  const prinpalTokens = {};
   for (let i = 0; i < coinMarketArr.length; i++) {
     const tokenArr = coinMarketArr[i];
     const token_id: number = IDs_COINMARKET[tokenArr[0]];
@@ -132,6 +149,12 @@ export const formatCoinmarketPortfolio = (data, chainID: number) => {
       (token) => token.id_coinMarket === token_id
     );
     if (tokenCoinMarket && defaultToken) {
+      if (PRINCIPAL_TOKENS.includes(defaultToken.symbol)) {
+        prinpalTokens[defaultToken.symbol] = {
+          USD: tokenCoinMarket.quote.USD.price,
+          USD_24h: tokenCoinMarket.quote.USD.percent_change_24h,
+        };
+      }
       const newTokenPortfolio: TokenPortfolio = {
         ...defaultToken,
         balance: "",
@@ -144,5 +167,5 @@ export const formatCoinmarketPortfolio = (data, chainID: number) => {
     }
   }
 
-  return listArr;
+  return { list: listArr, principal: prinpalTokens as PrincipalTokensProps };
 };

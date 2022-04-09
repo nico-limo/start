@@ -36,8 +36,24 @@ const useNotification = () => {
       status: "error",
       isClosable: true,
     });
+  const noBalanceTx = () =>
+    toast({
+      title: "Insufficient Balance",
+      description: "Don't have enought Balance",
+      position: "top-right",
+      status: "warning",
+      isClosable: true,
+    });
+  const noFarmExist = () =>
+    toast({
+      title: "Farm Not Exist",
+      description: "This Farm not exist on SpiritSwap",
+      position: "top-right",
+      status: "warning",
+      isClosable: true,
+    });
 
-  return { pendingTx, successTx, errorDB, cancelTx };
+  return { pendingTx, successTx, errorDB, cancelTx, noBalanceTx, noFarmExist };
 };
 
 export default useNotification;

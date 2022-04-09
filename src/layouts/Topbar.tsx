@@ -10,23 +10,19 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { PAGES } from "../utils/constants";
-import { PricesStatics } from "../components/PricesStatics";
+import PricesStatics from "../components/PricesStatics";
 import Link from "next/link";
-import { WalletRole } from "../components/WalletRole";
 import { UserMethods } from "../store/methods/user";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
 // Dinamic Components
-const WalletModal = dynamic(
-  () => import("../components/WalletModal/WalletModal")
-);
-const PurshaseModal = dynamic(
-  () => import("../components/PurshaseModal/PurshaseModal")
-);
-const MobileDrawer = dynamic(() => import("./mobileDrawer/MobileDrawer"));
+const WalletModal = dynamic(() => import("../components/WalletModal"));
+const PurshaseModal = dynamic(() => import("../components/PurshaseModal"));
+const MobileDrawer = dynamic(() => import("./MobileDrawer"));
+const WalletRole = dynamic(() => import("../components/WalletRole"));
 const WalletConnection = dynamic(
-  () => import("../components/WalletConnection/WalletConnection")
+  () => import("../components/WalletConnection")
 );
 
 const Topbar = () => {

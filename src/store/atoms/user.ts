@@ -1,6 +1,10 @@
 import { atom } from "recoil";
 import { ROLE } from "../../utils/constants";
-import { FarmsPortfolio, TokenPortfolio } from "../../utils/interfaces/index.";
+import {
+  FarmsLiquidity,
+  FarmsPortfolio,
+  TokenPortfolio,
+} from "../../utils/interfaces/index.";
 import { currentTokens } from "../../utils/methods";
 
 export const userState = atom({
@@ -23,5 +27,8 @@ export const portfolioState = atom({
 
 export const farmsState = atom({
   key: "farmsState",
-  default: [] as FarmsPortfolio[],
+  default: { spiritFarms: [], spiritLiquidity: [] } as {
+    spiritFarms: FarmsPortfolio[];
+    spiritLiquidity: FarmsLiquidity[];
+  },
 });

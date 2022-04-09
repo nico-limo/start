@@ -16,18 +16,18 @@ interface FarmInfoProps {
 }
 
 const FarmInfo = ({ farm }: FarmInfoProps) => {
-  const { spiritToken } = TokensMethod();
+  const { principalTokens } = TokensMethod();
   const { isPremium } = UserMethods();
-  const { earns, lpSymbol, staked, usd, actions } = farm;
+  const { earns, lpSymbol, staked, usd, actions, lpAddresses } = farm;
   const fontSize = { base: "xs", md: "md" };
   const [symbolA, symbolB] = lpSymbol;
 
   const earn_USD = useMemo(() => {
-    if (spiritToken.usd && earns) {
-      return getUSDBalance(earns, spiritToken.usd, 4);
+    if (principalTokens.SPIRIT && principalTokens.SPIRIT.USD && earns) {
+      return getUSDBalance(earns, principalTokens.SPIRIT.USD, 4);
     }
     return "0.00";
-  }, [earns, spiritToken]);
+  }, [earns, principalTokens]);
 
   const columns = isPremium ? "1fr 1fr 1fr 80px" : "1fr 1fr 1fr";
 
@@ -75,7 +75,9 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
           </Text>
         </Flex>
       </GridItem>
-      {isPremium && <FarmActions actions={actions} staked={staked} />}
+      {isPremium && (
+        <FarmActions actions={actions} address={lpAddresses[250]} />
+      )}
     </Grid>
   );
 };

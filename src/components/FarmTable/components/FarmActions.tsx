@@ -4,16 +4,24 @@ import { Button, GridItem, HStack, IconButton } from "@chakra-ui/react";
 import useNotification from "../../../hooks/useNotification";
 import { FarmActionProps } from "../../../utils/interfaces/components";
 import useLoading from "../../../hooks/useLoading";
+import { TokensMethod } from "../../../store/methods/tokens";
+import { checkAddresses } from "../../../utils/methods";
 
-const FarmActions = ({ actions }: FarmActionProps) => {
+const FarmActions = ({ actions, address }: FarmActionProps) => {
+  const { portfolio } = TokensMethod();
   const { isLoading, loadOff, loadOn } = useLoading();
   const {
     isLoading: isLoadingWithdraw,
     loadOff: loadOffWithdraw,
     loadOn: loadOnWithdraw,
   } = useLoading();
-  const { pendingTx, successTx, cancelTx } = useNotification();
-  const { gaugeReward, gaugeExit } = actions;
+  const {
+    isLoading: isLoadingDeposit,
+    loadOff: loadOfDeposit,
+    loadOn: loadOnDeposit,
+  } = useLoading();
+  const { pendingTx, successTx, cancelTx, noBalanceTx } = useNotification();
+  const { gaugeReward, gaugeExit, gaugeDepositAll } = actions;
 
   const handleClaim = async () => {
     try {
@@ -43,10 +51,37 @@ const FarmActions = ({ actions }: FarmActionProps) => {
     }
   };
 
+  const handleDeposit = async () => {
+    try {
+      const farmPool =
+        portfolio.hasBalance &&
+        portfolio.liquidity.find((lpPool) =>
+          checkAddresses(lpPool.address, address)
+        );
+
+      const hasBalance = farmPool ? true : false;
+      if (hasBalance) {
+        loadOnDeposit();
+        const tx = await gaugeDepositAll();
+        pendingTx();
+        await tx.wait();
+        loadOfDeposit();
+        successTx();
+      } else {
+        noBalanceTx();
+      }
+    } catch (error) {
+      loadOfDeposit();
+      cancelTx();
+    }
+  };
+
   return (
     <GridItem p={1} textAlign="end" alignSelf="center">
       <HStack justify="end">
         <IconButton
+          isLoading={isLoadingDeposit}
+          onClick={handleDeposit}
           aria-label="deposit"
           size="xs"
           colorScheme="blackAlpha"

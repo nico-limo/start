@@ -5,26 +5,32 @@ import { formatTokenAmount, getProvider } from "../../utils/cryptoMethods";
 import GAUGE_ABI from "../../utils/constants/abis/gauges.json";
 import PAIR_ABI from "../../utils/constants/abis/pair.json";
 import ERC_ABI from "../../utils/constants/abis/erc20.json";
-import { FarmsPortfolio, TokenPortfolio } from "../../utils/interfaces/index.";
+import {
+  FarmsLiquidity,
+  FarmsPortfolio,
+  TokenPortfolio,
+} from "../../utils/interfaces/index.";
 import { Contract } from "ethers-multicall";
 import { QUOTES } from "../../utils/constants/tokens/quoteFarms";
 
-export const formatSpiritFarms = (
-  calls,
-  prices: TokenPortfolio[]
-): FarmsPortfolio[] => {
+export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
   const spiritData: FarmsPortfolio[] = [];
+  const spiritLiquidity: FarmsLiquidity[] = [];
   const { signer } = getProvider();
 
   for (let i = 0; i < spiritFarms.length; i++) {
     const farm = spiritFarms[i];
-
-    const [balanceOfLP, lpSupply, gaugeSupply, staked, earned] = calls.splice(
-      0,
-      5
-    );
+    const [
+      balanceOfLP,
+      lpSupply,
+      gaugeSupply,
+      staked,
+      earned,
+      balanceOfAccount,
+    ] = calls.splice(0, 6);
     const stakeFormat = formatTokenAmount(staked.toString(), 18);
     const earnFormat = formatTokenAmount(earned.toString(), 18);
+    const balanceFormat = formatTokenAmount(balanceOfAccount.toString(), 18);
 
     const gaugeEtherContract = new ethers.Contract(
       farm.gaugeAddress,
@@ -34,12 +40,17 @@ export const formatSpiritFarms = (
 
     // Spiritswap actions
     const gaugeReward = async () => await gaugeEtherContract.getReward();
-    const gaugeWithdraw = async (_amount: string) =>
-      await gaugeEtherContract.withdraw(_amount);
     const gaugeExit = async () => await gaugeEtherContract.exit();
-    const gaugeDeposit = async (_amount: string) =>
-      await gaugeEtherContract.deposit(_amount);
     const gaugeDepositAll = async () => await gaugeEtherContract.depositAll();
+
+    if (balanceFormat !== "0.0") {
+      const liquidityFarm = {
+        ...farm,
+        hasBalance: true,
+        gaugeDepositAll,
+      };
+      spiritLiquidity.push(liquidityFarm);
+    }
 
     if (stakeFormat !== "0.0" || earnFormat !== "0.0") {
       const { usd, decimals } = prices.find(
@@ -78,9 +89,7 @@ export const formatSpiritFarms = (
         totalSupply: "100000",
         actions: {
           gaugeReward,
-          gaugeDeposit,
           gaugeDepositAll,
-          gaugeWithdraw,
           gaugeExit,
         },
       };
@@ -88,7 +97,7 @@ export const formatSpiritFarms = (
     }
   }
 
-  return spiritData;
+  return { spiritData, spiritLiquidity };
 };
 
 export const spiritCalls = (account: string) => {
@@ -104,6 +113,7 @@ export const spiritCalls = (account: string) => {
 
     const balanceOfLP = tokenContract.balanceOf(lpAddress);
     const lpSupply = lpContract.totalSupply();
+    const lpAccountBalance = lpContract.balanceOf(account);
     const gaugeSupply = gaugeContract.totalSupply();
 
     const staked = gaugeContract.balanceOf(account);
@@ -113,6 +123,7 @@ export const spiritCalls = (account: string) => {
     calls.push(gaugeSupply);
     calls.push(staked);
     calls.push(earned);
+    calls.push(lpAccountBalance);
   }
   return calls;
 };

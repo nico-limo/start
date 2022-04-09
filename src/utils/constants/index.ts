@@ -120,3 +120,17 @@ export enum ROLE {
   standard,
   premium,
 }
+
+export const PRINCIPAL_TOKENS = ["SPIRIT", "BOO", "ETH", "BNB", "FTM"];
+export const PRINCIPAL_DEFAULT = {
+  ETH: { USD: 0, USD_24h: 0 },
+  SPIRIT: { USD: 0, USD_24h: 0 },
+  BOO: { USD: 0, USD_24h: 0 },
+  BNB: { USD: 0, USD_24h: 0 },
+  FTM: { USD: 0, USD_24h: 0 },
+};
+export const NATIVE_TOKENS = {
+  1: "ETH",
+  56: "BNB",
+  250: "FTM",
+};

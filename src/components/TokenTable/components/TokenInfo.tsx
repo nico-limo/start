@@ -9,10 +9,17 @@ import {
   Stack,
   IconButton,
 } from "@chakra-ui/react";
+import useLoading from "../../../hooks/useLoading";
+import useNotification from "../../../hooks/useNotification";
+import { TokensMethod } from "../../../store/methods/tokens";
 import { UserMethods } from "../../../store/methods/user";
 import { formatTokenAmount, getUSDBalance } from "../../../utils/cryptoMethods";
 import { TokenPortfolio } from "../../../utils/interfaces/index.";
-import { formatAmount, priceStatus } from "../../../utils/methods";
+import {
+  checkAddresses,
+  formatAmount,
+  priceStatus,
+} from "../../../utils/methods";
 import TokenImages from "./TokenImages";
 interface TokenInfoProps {
   token: TokenPortfolio;
@@ -22,6 +29,9 @@ interface TokenInfoProps {
 
 const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
   const { isPremium } = UserMethods();
+  const { farmsPortfolio } = TokensMethod();
+  const { isLoading, loadOff, loadOn } = useLoading();
+  const { cancelTx, pendingTx, successTx, noFarmExist } = useNotification();
   const { symbol, balance, usd, usd_24h, decimals } = token;
   const { color_rate, symbol_rate } = priceStatus(usd_24h);
   const diffPrice = usd_24h ? usd_24h.toFixed(2) : "00.00";
@@ -32,10 +42,35 @@ const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
   const fontSize = { base: "xs", md: "md" };
   const isTokens = type === "assets";
   const columns = showBalance
-    ? isPremium && type === "liquidity"
+    ? isPremium && !isTokens
       ? "1fr 1fr 1fr 80px"
       : "1fr 1fr 1fr"
     : "1fr 1fr";
+
+  const handleDeposit = async () => {
+    try {
+      const spiritFarm =
+        farmsPortfolio.spiritLiquidity &&
+        farmsPortfolio.spiritLiquidity.find((lpPool) =>
+          checkAddresses(lpPool.lpAddresses[250], token.address)
+        );
+
+      if (spiritFarm) {
+        const { gaugeDepositAll } = spiritFarm;
+        loadOn();
+        const tx = await gaugeDepositAll();
+        pendingTx();
+        await tx.wait();
+        loadOff();
+        successTx();
+      } else {
+        noFarmExist();
+      }
+    } catch (error) {
+      loadOff();
+      cancelTx();
+    }
+  };
 
   return (
     <Grid templateColumns={columns} my={1} bg="gray.700">
@@ -84,6 +119,8 @@ const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
           justifyContent="flex-end"
         >
           <IconButton
+            isLoading={isLoading}
+            onClick={handleDeposit}
             aria-label="deposit"
             size="xs"
             colorScheme="blackAlpha"

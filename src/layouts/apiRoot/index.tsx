@@ -8,9 +8,13 @@ import {
   formatCoinmarketPortfolio,
   formatCovalentPortfolio,
 } from "./methods";
-import { TokenPortfolio } from "../../utils/interfaces/index.";
+import {
+  PrincipalTokensProps,
+  TokenPortfolio,
+} from "../../utils/interfaces/index.";
 import { PATH_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
 import useNotification from "../../hooks/useNotification";
+import { PRINCIPAL_DEFAULT } from "../../utils/constants";
 
 const ApiRoot = ({ children }) => {
   const { network } = NetworksMethods();
@@ -20,7 +24,10 @@ const ApiRoot = ({ children }) => {
   const { errorDB } = useNotification();
   useEffect(() => {
     const fethData = async () => {
-      let pricesPortfolio: TokenPortfolio[] = [],
+      let pricesPortfolio: {
+          list: TokenPortfolio[];
+          principal: PrincipalTokensProps;
+        } = { list: [], principal: PRINCIPAL_DEFAULT },
         covalentPortfolio: {
           tokens: TokenPortfolio[];
           liquidity: TokenPortfolio[];
@@ -60,7 +67,7 @@ const ApiRoot = ({ children }) => {
 
         updatePortfolio({ pricesPortfolio, covalentPortfolio });
         if (chainID === 250) {
-          getFarmsBalance(wallet.account, pricesPortfolio);
+          getFarmsBalance(wallet.account, pricesPortfolio.list);
         } else {
           cleanFarms();
         }

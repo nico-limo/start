@@ -1,7 +1,7 @@
 import { TOKENS } from "./constants/tokens/tokens";
 import { Token, TokenPortfolio } from "./interfaces/index.";
 
-export const formatAmount = (value: number | string, round = 18) => {
+export const formatAmount = (value: number | string = 0, round = 18) => {
   const stringValue = value.toString();
 
   const [integer, decimals] = stringValue.split(".");
@@ -23,25 +23,6 @@ export const currentTokens = (chainID: number): TokenPortfolio[] => {
     }));
   } catch (error) {
     console.log("fail TOKENS fn ", error);
-  }
-};
-
-export const getToken = (chainID: number, symbol: string): TokenPortfolio => {
-  try {
-    const token = TOKENS[chainID].find(
-      (token: Token) => token.symbol === symbol
-    );
-    return {
-      ...token,
-      balance: "",
-      balance_24h: "",
-      logo_url: "",
-      usd: 0,
-      usd_24h: 0,
-      type: "",
-    };
-  } catch (error) {
-    console.log("fail to get Token ", error);
   }
 };
 

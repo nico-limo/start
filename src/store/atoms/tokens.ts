@@ -1,8 +1,8 @@
 import { atom } from "recoil";
-import { TokenPortfolio } from "../../utils/interfaces/index.";
-import { getToken } from "../../utils/methods";
+import { PRINCIPAL_DEFAULT } from "../../utils/constants";
+import { PrincipalTokensProps } from "../../utils/interfaces/index.";
 
-export const spiritState = atom({
-  key: "spiritState",
-  default: getToken(250, "SPIRIT") as TokenPortfolio,
+export const principalTokensState = atom({
+  key: "principalTokensState",
+  default: PRINCIPAL_DEFAULT as PrincipalTokensProps,
 });
