@@ -19,7 +19,7 @@ import dynamic from "next/dynamic";
 // Dinamic Components
 const WalletModal = dynamic(() => import("../components/WalletModal"));
 const PurshaseModal = dynamic(() => import("../components/PurshaseModal"));
-const MobileDrawer = dynamic(() => import("./MobileDrawer/index"));
+const MobileDrawer = dynamic(() => import("./MobileDrawer/MobileDrawer"));
 const WalletRole = dynamic(() => import("../components/WalletRole"));
 const WalletConnection = dynamic(
   () => import("../components/WalletConnection")

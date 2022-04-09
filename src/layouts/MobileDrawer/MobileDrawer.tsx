@@ -16,7 +16,7 @@ import PricesStatics from "../../components/PricesStatics";
 import WalletConnection from "../../components/WalletConnection";
 import { UserMethods } from "../../store/methods/user";
 import { PAGES } from "../../utils/constants";
-import { MobileTopBar } from "../../utils/interfaces/components";
+import { MobileTopBarProps } from "../../utils/interfaces/components";
 
 // Dynamic
 const WalletRole = dynamic(() => import("../../components/WalletRole"));
@@ -26,7 +26,7 @@ const MobileDrawer = ({
   onClose,
   onModalOpen,
   onPurchaseOpen,
-}: MobileTopBar) => {
+}: MobileTopBarProps) => {
   const btnRef = useRef();
   const { wallet } = UserMethods();
   return (
