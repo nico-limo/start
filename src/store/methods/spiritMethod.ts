@@ -10,8 +10,9 @@ import {
   FarmsPortfolio,
   TokenPortfolio,
 } from "../../utils/interfaces/index.";
-import { Contract } from "ethers-multicall";
+import { Contract, Provider } from "ethers-multicall";
 import { QUOTES } from "../../utils/constants/tokens/quoteFarms";
+import { ADDRESS_ZERO } from "../../utils/constants";
 
 export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
   const spiritData: FarmsPortfolio[] = [];
@@ -128,14 +129,22 @@ export const spiritCalls = (account: string) => {
   return calls;
 };
 
-export const tokensCalls = (account: string, tokens: TokenPortfolio[]) => {
+export const tokensCalls = (
+  account: string,
+  tokens: TokenPortfolio[],
+  provider: Provider
+) => {
   const calls = [];
   for (let i = 0; i < tokens.length; i++) {
     const { address } = tokens[i];
-
-    const tokenContract = new Contract(address, ERC_ABI);
-    const balanceOf = tokenContract.balanceOf(account);
-    calls.push(balanceOf);
+    if (address === ADDRESS_ZERO) {
+      const nativeBalanceOf = provider.getEthBalance(account);
+      calls.push(nativeBalanceOf);
+    } else {
+      const tokenContract = new Contract(address, ERC_ABI);
+      const balanceOf = tokenContract.balanceOf(account);
+      calls.push(balanceOf);
+    }
   }
   return calls;
 };
