@@ -17,6 +17,7 @@ interface PortfolioProps {
   pricesPortfolio?: { list: TokenPortfolio[]; principal: PrincipalTokensProps };
   covalentPortfolio?: { tokens: TokenPortfolio[]; liquidity: TokenPortfolio[] };
   account: string;
+  chainID: number;
 }
 
 export const TokensMethod = () => {
@@ -32,6 +33,7 @@ export const TokensMethod = () => {
     pricesPortfolio,
     covalentPortfolio,
     account,
+    chainID,
   }: PortfolioProps) => {
     if (
       pricesPortfolio &&
@@ -58,8 +60,13 @@ export const TokensMethod = () => {
           userPortfolio.push(covaToken);
         }
       }
-      console.log("ENTRO ACA");
-      getTokensBalance(account, userPortfolio, covalentPortfolio.liquidity);
+
+      getTokensBalance(
+        account,
+        userPortfolio,
+        covalentPortfolio.liquidity,
+        chainID
+      );
     } else if (
       pricesPortfolio &&
       pricesPortfolio.list.length &&
@@ -111,15 +118,21 @@ export const TokensMethod = () => {
   const getTokensBalance = async (
     account: string,
     tokensBalance: TokenPortfolio[],
-    liquidity: TokenPortfolio[]
+    liquidity: TokenPortfolio[],
+    chainID: number
   ) => {
     try {
       if (account && tokensBalance.length) {
+        const provider = getProviderRPC(chainID);
+        const ethcallProvider = new Provider(provider);
         const web3TokensBalance: TokenPortfolio[] = [];
 
         await ethcallProvider.init();
+
         const calls = tokensCalls(account, tokensBalance, ethcallProvider);
+
         const result = await ethcallProvider.all(calls);
+
         for (let i = 0; i < tokensBalance.length; i++) {
           const token = tokensBalance[i];
           const balanceOf = result[i];

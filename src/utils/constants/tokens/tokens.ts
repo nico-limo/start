@@ -1,3 +1,4 @@
+import { ADDRESS_ZERO } from "..";
 import { Token } from "../../interfaces/index.";
 
 export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
@@ -29,7 +30,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
     {
       name: "Ethereum",
       symbol: "ETH",
-      address: "0x0000000000000000000000000000000000000000",
+      address: ADDRESS_ZERO,
       decimals: 18,
       path: "ethereum",
       id_coinMarket: 1027,
@@ -124,34 +125,34 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       path: "fantom",
       id_coinMarket: 3513,
     },
-    {
-      name: "Binance-Peg BTCB Token",
-      symbol: "WBTC",
-      address: "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
-      decimals: 18,
-      path: "wrapped-bitcoin",
-      id_coinMarket: 3717,
-    },
-    {
-      name: "Binance-Peg Ethereum Token",
-      symbol: "ETH",
-      address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
-      decimals: 18,
-      path: "ethereum",
-      id_coinMarket: 1027,
-    },
-    {
-      name: "Binance-Peg USD Coin",
-      symbol: "USDC",
-      address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
-      decimals: 18,
-      path: "usd-coin",
-      id_coinMarket: 3408,
-    },
+    // {
+    //   name: "Binance-Peg BTCB Token",
+    //   symbol: "WBTC",
+    //   address: "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+    //   decimals: 18,
+    //   path: "wrapped-bitcoin",
+    //   id_coinMarket: 3717,
+    // },
+    // {
+    //   name: "Binance-Peg Ethereum Token",
+    //   symbol: "ETH",
+    //   address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+    //   decimals: 18,
+    //   path: "ethereum",
+    //   id_coinMarket: 1027,
+    // },
+    // {
+    //   name: "Binance-Peg USD Coin",
+    //   symbol: "USDC",
+    //   address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+    //   decimals: 18,
+    //   path: "usd-coin",
+    //   id_coinMarket: 3408,
+    // },
     {
       name: "Binance",
       symbol: "BNB",
-      address: "0x0000000000000000000000000000000000000000",
+      address: ADDRESS_ZERO,
       decimals: 18,
       path: "binancecoin",
       id_coinMarket: 1839,
@@ -217,7 +218,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
     {
       name: "Fantom",
       symbol: "FTM",
-      address: "0x0000000000000000000000000000000000000000",
+      address: ADDRESS_ZERO,
       decimals: 18,
       path: "fantom",
       id_coinMarket: 3513,

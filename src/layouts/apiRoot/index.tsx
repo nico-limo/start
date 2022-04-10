@@ -69,6 +69,7 @@ const ApiRoot = ({ children }) => {
           pricesPortfolio,
           covalentPortfolio,
           account: wallet.account,
+          chainID,
         });
         if (chainID === 250) {
           getFarmsBalance(wallet.account, pricesPortfolio.list);
@@ -79,7 +80,11 @@ const ApiRoot = ({ children }) => {
         try {
           const { data: coingeckoPrices } = await axios("/api/coingeckoPrices");
           pricesPortfolio = formatCoingeckoPortfolio(coingeckoPrices, chainID);
-          updatePortfolio({ pricesPortfolio, account: wallet.account });
+          updatePortfolio({
+            pricesPortfolio,
+            account: wallet.account,
+            chainID,
+          });
         } catch (error) {
           errorDB("coingecko");
           try {
@@ -93,7 +98,11 @@ const ApiRoot = ({ children }) => {
               coinMarketPrices.data,
               chainID
             );
-            updatePortfolio({ pricesPortfolio, account: wallet.account });
+            updatePortfolio({
+              pricesPortfolio,
+              account: wallet.account,
+              chainID,
+            });
           } catch (error) {
             errorDB("coinmarket");
           }
