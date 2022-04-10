@@ -28,7 +28,8 @@ export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
       staked,
       earned,
       balanceOfAccount,
-    ] = calls.splice(0, 6);
+      allowance,
+    ] = calls.splice(0, 7);
     const stakeFormat = formatTokenAmount(staked.toString(), 18);
     const earnFormat = formatTokenAmount(earned.toString(), 18);
     const balanceFormat = formatTokenAmount(balanceOfAccount.toString(), 18);
@@ -48,8 +49,7 @@ export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
     const gaugeReward = async () => await gaugeEtherContract.getReward();
     const gaugeExit = async () => await gaugeEtherContract.exit();
     const gaugeDepositAll = async () => await gaugeEtherContract.depositAll();
-    const allowance = async (account: string) =>
-      await LPEtherContract.allowance(account, farm.gaugeAddress);
+
     const approve = async (amount) =>
       await LPEtherContract.approve(farm.gaugeAddress, amount);
 
@@ -126,6 +126,8 @@ export const spiritCalls = (account: string) => {
     const balanceOfLP = tokenContract.balanceOf(lpAddress);
     const lpSupply = lpContract.totalSupply();
     const lpAccountBalance = lpContract.balanceOf(account);
+    const lpAllowanceAccount = lpContract.allowance(account, farm.gaugeAddress);
+
     const gaugeSupply = gaugeContract.totalSupply();
 
     const staked = gaugeContract.balanceOf(account);
@@ -136,6 +138,7 @@ export const spiritCalls = (account: string) => {
     calls.push(staked);
     calls.push(earned);
     calls.push(lpAccountBalance);
+    calls.push(lpAllowanceAccount);
   }
   return calls;
 };

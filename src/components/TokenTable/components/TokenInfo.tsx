@@ -29,7 +29,7 @@ interface TokenInfoProps {
 }
 
 const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
-  const { isPremium, wallet } = UserMethods();
+  const { isPremium } = UserMethods();
   const { farmsPortfolio } = TokensMethod();
   const { isLoading, loadOff, loadOn } = useLoading();
   const {
@@ -65,10 +65,9 @@ const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
       if (spiritFarm) {
         const { gaugeDepositAll, allowance, approve } = spiritFarm;
         loadOn();
-        const hasAllowance = await allowance(wallet.account);
 
         const parseBalance = parseUnits(balance, token.decimals);
-        if (hasAllowance.lt(parseBalance)) {
+        if (allowance.lt(parseBalance)) {
           needApproveTx();
           const txApprove = await approve(parseBalance);
           await txApprove.wait();

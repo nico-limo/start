@@ -4,7 +4,8 @@ import { Token, TokenPortfolio } from "./interfaces/index.";
 export const formatAmount = (value: number | string = 0, round = 18) => {
   if (!value) return "0";
   const stringValue = value.toString();
-
+  if (!stringValue.includes("."))
+    return Number(stringValue).toLocaleString("en-US");
   const [integer, decimals] = stringValue.split(".");
   const newValue = Number(integer).toLocaleString("en-US");
   const newDecimals = decimals?.slice(0, round);

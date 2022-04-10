@@ -1,5 +1,6 @@
 import { ADDRESS_ZERO } from "..";
 import { Token } from "../../interfaces/index.";
+import { IDs_COINMARKET } from "./coinmarketTokens";
 
 export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
   1: [
@@ -9,7 +10,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x4E15361FD6b4BB609Fa63C81A2be19d873717870",
       decimals: 18,
       path: "fantom",
-      id_coinMarket: 3513,
+      id_coinMarket: IDs_COINMARKET.FTM,
     },
     {
       name: "SpookyToken",
@@ -17,7 +18,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x55aF5865807b196bD0197e0902746F31FBcCFa58",
       decimals: 18,
       path: "spookyswap",
-      id_coinMarket: 9608,
+      id_coinMarket: IDs_COINMARKET.BOO,
     },
     {
       name: "Wrapped BTC",
@@ -25,7 +26,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
       decimals: 8,
       path: "wrapped-bitcoin",
-      id_coinMarket: 3717,
+      id_coinMarket: IDs_COINMARKET.WBTC,
     },
     {
       name: "Ethereum",
@@ -33,7 +34,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: ADDRESS_ZERO,
       decimals: 18,
       path: "ethereum",
-      id_coinMarket: 1027,
+      id_coinMarket: IDs_COINMARKET.ETH,
     },
     {
       name: "USD Coin",
@@ -41,7 +42,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       decimals: 6,
       path: "usd-coin",
-      id_coinMarket: 3408,
+      id_coinMarket: IDs_COINMARKET.USDC,
     },
     {
       name: "Binance",
@@ -49,7 +50,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
       decimals: 18,
       path: "binancecoin",
-      id_coinMarket: 1839,
+      id_coinMarket: IDs_COINMARKET.BNB,
     },
     {
       name: "Dai Stablecoin",
@@ -57,7 +58,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       decimals: 18,
       path: "dai",
-      id_coinMarket: 4943,
+      id_coinMarket: IDs_COINMARKET.DAI,
     },
     {
       name: "Tether USD",
@@ -65,7 +66,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
       decimals: 6,
       path: "tether",
-      id_coinMarket: 10244,
+      id_coinMarket: IDs_COINMARKET.FUSDT,
     },
     {
       name: "Magic Internet Money",
@@ -73,7 +74,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
       decimals: 18,
       path: "magic-internet-money",
-      id_coinMarket: 162,
+      id_coinMarket: IDs_COINMARKET.MIM,
     },
     {
       name: "Governance OHM",
@@ -81,7 +82,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x0ab87046fBb341D058F17CBC4c1133F25a20a52f",
       decimals: 18,
       path: "governance-ohm",
-      id_coinMarket: 16388,
+      id_coinMarket: IDs_COINMARKET.GOHM,
     },
     {
       name: "Binance USD",
@@ -89,7 +90,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x4Fabb145d64652a948d72533023f6E7A623C7C53",
       decimals: 18,
       path: "binance-usd",
-      id_coinMarket: 4687,
+      id_coinMarket: IDs_COINMARKET.BUSD,
     },
     {
       name: "SushiToken",
@@ -97,7 +98,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
       decimals: 18,
       path: "sushi",
-      id_coinMarket: 6758,
+      id_coinMarket: IDs_COINMARKET.SUSHI,
     },
     {
       name: "Spell",
@@ -105,7 +106,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x090185f2135308BaD17527004364eBcC2D37e5F6",
       decimals: 18,
       path: "spell-token",
-      id_coinMarket: 11289,
+      id_coinMarket: IDs_COINMARKET.SPELL,
     },
     {
       name: "Multichain",
@@ -113,7 +114,23 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x65Ef703f5594D2573eb71Aaf55BC0CB548492df4",
       decimals: 18,
       path: "multichain",
-      id_coinMarket: 17050,
+      id_coinMarket: IDs_COINMARKET.MULTI,
+    },
+    {
+      name: "DEUS",
+      symbol: "DEUS",
+      address: "0xDE5ed76E7c05eC5e4572CfC88d1ACEA165109E44",
+      decimals: 18,
+      path: "deus-finance-2",
+      id_coinMarket: IDs_COINMARKET.DEUS,
+    },
+    {
+      name: "DEI",
+      symbol: "DEI",
+      address: "0xde12c7959e1a72bbe8a5f7a1dc8f8eef9ab011b3",
+      decimals: 18,
+      path: "dei-token",
+      id_coinMarket: IDs_COINMARKET.DEI,
     },
   ],
   56: [
@@ -123,39 +140,39 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xAD29AbB318791D579433D831ed122aFeAf29dcfe",
       decimals: 18,
       path: "fantom",
-      id_coinMarket: 3513,
+      id_coinMarket: IDs_COINMARKET.FTM,
     },
-    // {
-    //   name: "Binance-Peg BTCB Token",
-    //   symbol: "WBTC",
-    //   address: "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
-    //   decimals: 18,
-    //   path: "wrapped-bitcoin",
-    //   id_coinMarket: 3717,
-    // },
-    // {
-    //   name: "Binance-Peg Ethereum Token",
-    //   symbol: "ETH",
-    //   address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
-    //   decimals: 18,
-    //   path: "ethereum",
-    //   id_coinMarket: 1027,
-    // },
-    // {
-    //   name: "Binance-Peg USD Coin",
-    //   symbol: "USDC",
-    //   address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
-    //   decimals: 18,
-    //   path: "usd-coin",
-    //   id_coinMarket: 3408,
-    // },
+    {
+      name: "Binance-Peg BTCB Token",
+      symbol: "WBTC",
+      address: "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+      decimals: 18,
+      path: "wrapped-bitcoin",
+      id_coinMarket: IDs_COINMARKET.WBTC,
+    },
+    {
+      name: "Binance-Peg Ethereum Token",
+      symbol: "ETH",
+      address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+      decimals: 18,
+      path: "ethereum",
+      id_coinMarket: IDs_COINMARKET.ETH,
+    },
+    {
+      name: "Binance-Peg USD Coin",
+      symbol: "USDC",
+      address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+      decimals: 18,
+      path: "usd-coin",
+      id_coinMarket: IDs_COINMARKET.USDC,
+    },
     {
       name: "Binance",
       symbol: "BNB",
       address: ADDRESS_ZERO,
       decimals: 18,
       path: "binancecoin",
-      id_coinMarket: 1839,
+      id_coinMarket: IDs_COINMARKET.BNB,
     },
     {
       name: "Binance-Peg Dai Token",
@@ -163,7 +180,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
       decimals: 18,
       path: "dai",
-      id_coinMarket: 4943,
+      id_coinMarket: IDs_COINMARKET.DAI,
     },
     {
       name: "Binance-Peg BSC-USD",
@@ -171,7 +188,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x55d398326f99059fF775485246999027B3197955",
       decimals: 18,
       path: "tether",
-      id_coinMarket: 10244,
+      id_coinMarket: IDs_COINMARKET.FUSDT,
     },
     {
       name: "Binance-Peg BUSD Token",
@@ -179,7 +196,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
       decimals: 18,
       path: "binance-usd",
-      id_coinMarket: 4687,
+      id_coinMarket: IDs_COINMARKET.BUSD,
     },
     {
       name: "Beefy.Finance",
@@ -187,7 +204,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xCa3F508B8e4Dd382eE878A314789373D80A5190A",
       decimals: 18,
       path: "beefy-finance",
-      id_coinMarket: 7311,
+      id_coinMarket: IDs_COINMARKET.BIFI,
     },
     {
       name: "Binance-Peg SushiToken",
@@ -195,7 +212,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x947950BcC74888a40Ffa2593C5798F11Fc9124C4",
       decimals: 18,
       path: "sushi",
-      id_coinMarket: 6758,
+      id_coinMarket: IDs_COINMARKET.SUSHI,
     },
     {
       name: "Multichain",
@@ -203,7 +220,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x9Fb9a33956351cf4fa040f65A13b835A3C8764E3",
       decimals: 18,
       path: "multichain",
-      id_coinMarket: 17050,
+      id_coinMarket: IDs_COINMARKET.MULTI,
     },
     {
       name: "PancakeSwap Token",
@@ -211,7 +228,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
       decimals: 18,
       path: "pancakeswap-token",
-      id_coinMarket: 7186,
+      id_coinMarket: IDs_COINMARKET.CAKE,
     },
   ],
   250: [
@@ -221,7 +238,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: ADDRESS_ZERO,
       decimals: 18,
       path: "fantom",
-      id_coinMarket: 3513,
+      id_coinMarket: IDs_COINMARKET.FTM,
     },
     {
       name: "SpiritSwap Token",
@@ -229,7 +246,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x5Cc61A78F164885776AA610fb0FE1257df78E59B",
       decimals: 18,
       path: "spiritswap",
-      id_coinMarket: 10239,
+      id_coinMarket: IDs_COINMARKET.SPIRIT,
     },
     {
       name: "SpookyToken",
@@ -237,7 +254,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE",
       decimals: 18,
       path: "spookyswap",
-      id_coinMarket: 9608,
+      id_coinMarket: IDs_COINMARKET.BOO,
     },
     {
       name: "Bitcoin",
@@ -245,7 +262,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x321162Cd933E2Be498Cd2267a90534A804051b11",
       decimals: 8,
       path: "bitcoin",
-      id_coinMarket: 1,
+      id_coinMarket: IDs_COINMARKET.BTC,
     },
     {
       name: "Ethereum",
@@ -253,7 +270,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x74b23882a30290451A17c44f4F05243b6b58C76d",
       decimals: 18,
       path: "ethereum",
-      id_coinMarket: 1027,
+      id_coinMarket: IDs_COINMARKET.ETH,
     },
     {
       name: "Wrapped Fantom",
@@ -261,7 +278,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
       decimals: 18,
       path: "wrapped-fantom",
-      id_coinMarket: 10240,
+      id_coinMarket: IDs_COINMARKET.WFTM,
     },
     {
       name: "USD Coin",
@@ -269,7 +286,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x04068da6c83afcfa0e13ba15a6696662335d5b75",
       decimals: 6,
       path: "usd-coin",
-      id_coinMarket: 3408,
+      id_coinMarket: IDs_COINMARKET.USDC,
     },
     {
       name: "Binance",
@@ -277,7 +294,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xD67de0e0a0Fd7b15dC8348Bb9BE742F3c5850454",
       decimals: 18,
       path: "binancecoin",
-      id_coinMarket: 1839,
+      id_coinMarket: IDs_COINMARKET.BNB,
     },
     {
       name: "Tarot",
@@ -285,7 +302,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xC5e2B037D30a390e62180970B3aa4E91868764cD",
       decimals: 18,
       path: "tarot",
-      id_coinMarket: 11409,
+      id_coinMarket: IDs_COINMARKET.TAROT,
     },
     {
       name: "Dai Stablecoin",
@@ -293,7 +310,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
       decimals: 18,
       path: "dai",
-      id_coinMarket: 4943,
+      id_coinMarket: IDs_COINMARKET.DAI,
     },
     {
       name: "Frapped USDT",
@@ -301,7 +318,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x049d68029688eAbF473097a2fC38ef61633A3C7A",
       decimals: 6,
       path: "tether",
-      id_coinMarket: 10244,
+      id_coinMarket: IDs_COINMARKET.FUSDT,
     },
     {
       name: "Magic Internet Money",
@@ -309,7 +326,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x82f0B8B456c1A451378467398982d4834b6829c1",
       decimals: 18,
       path: "magic-internet-money",
-      id_coinMarket: 162,
+      id_coinMarket: IDs_COINMARKET.MIM,
     },
     {
       name: "Governance OHM",
@@ -317,7 +334,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x91fa20244Fb509e8289CA630E5db3E9166233FDc",
       decimals: 18,
       path: "governance-ohm",
-      id_coinMarket: 16388,
+      id_coinMarket: IDs_COINMARKET.GOHM,
     },
     {
       name: "Binance USD",
@@ -325,7 +342,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xC931f61B1534EB21D8c11B24f3f5Ab2471d4aB50",
       decimals: 18,
       path: "binance-usd",
-      id_coinMarket: 4687,
+      id_coinMarket: IDs_COINMARKET.BUSD,
     },
     {
       name: "Beefy.Finance",
@@ -333,7 +350,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xd6070ae98b8069de6B494332d1A1a81B6179D960",
       decimals: 18,
       path: "beefy-finance",
-      id_coinMarket: 7311,
+      id_coinMarket: IDs_COINMARKET.BIFI,
     },
     {
       name: "Sushi",
@@ -341,7 +358,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0xae75A438b2E0cB8Bb01Ec1E1e376De11D44477CC",
       decimals: 18,
       path: "sushi",
-      id_coinMarket: 6758,
+      id_coinMarket: IDs_COINMARKET.SUSHI,
     },
     {
       name: "Spell",
@@ -349,7 +366,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x468003B688943977e6130F4F68F23aad939a1040",
       decimals: 18,
       path: "spell-token",
-      id_coinMarket: 11289,
+      id_coinMarket: IDs_COINMARKET.SPELL,
     },
     {
       name: "Multichain",
@@ -357,32 +374,30 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       address: "0x9Fb9a33956351cf4fa040f65A13b835A3C8764E3",
       decimals: 18,
       path: "multichain",
-      id_coinMarket: 17050,
+      id_coinMarket: IDs_COINMARKET.MULTI,
+    },
+    {
+      name: "DEUS",
+      symbol: "DEUS",
+      address: "0xDE5ed76E7c05eC5e4572CfC88d1ACEA165109E44",
+      decimals: 18,
+      path: "deus-finance-2",
+      id_coinMarket: IDs_COINMARKET.DEUS,
+    },
+
+    {
+      name: "DEI",
+      symbol: "DEI",
+      address: "0xDE12c7959E1a72bbe8a5f7A1dc8f8EeF9Ab011B3",
+      decimals: 18,
+      path: "dei-token",
+      id_coinMarket: IDs_COINMARKET.DEI,
     },
   ],
 };
 
-// Added on the list
-// "bitcoin",
-// "ethereum",
-// "binancecoin",
-// "usd-coin",
-// "wrapped-bitcoin",
-// "fantom",
-// "spiritswap",
-// "spookyswap",
-// "tarot"
-// "wrapped-fantom"
-//   "dai",
-//   "tether",
-//   "magic-internet-money",
-//   "governance-ohm",
-//   "binance-usd",
-//   "beefy-finance",
-//   "sushi",
-//   "spell-token",
-//   "multichain",
-//   "pancakeswap-token",
+export const PATH_COINGECKO =
+  "bitcoin,ethereum,binancecoin,usd-coin,wrapped-bitcoin,fantom,spiritswap,spookyswap,tarot,wrapped-fantom,dai,tether,magic-internet-money,governance-ohm,binance-usd,beefy-finance,sushi,spell-token,multichain,pancakeswap-token,deus-finance-2, dei-token";
 
 // Need to add on the list
 

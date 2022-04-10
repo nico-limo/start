@@ -42,14 +42,19 @@ export const TokensMethod = () => {
       covalentPortfolio.tokens.length
     ) {
       setPrincipalTokens(pricesPortfolio.principal);
-
+      const covalentRestArr = covalentPortfolio.tokens;
       const userPortfolio: TokenPortfolio[] = [];
-      for (let i = 0; i < covalentPortfolio.tokens.length; i++) {
-        const covaToken = covalentPortfolio.tokens[i];
-        const priceToken = pricesPortfolio.list.find((priceItem) =>
-          checkAddresses(priceItem.address, covaToken.address)
+      for (let i = 0; i < pricesPortfolio.list.length; i++) {
+        const priceToken = pricesPortfolio.list[i];
+        const covaToken = covalentPortfolio.tokens.find((token) =>
+          checkAddresses(token.address, priceToken.address)
         );
-        if (priceToken) {
+        const covaTokenIndex = covalentPortfolio.tokens.findIndex((token) =>
+          checkAddresses(token.address, priceToken.address)
+        );
+
+        if (covaToken) {
+          covalentRestArr.splice(covaTokenIndex, 1);
           const mixToken: TokenPortfolio = {
             ...priceToken,
             balance: covaToken.balance,
@@ -57,13 +62,14 @@ export const TokensMethod = () => {
           };
           userPortfolio.push(mixToken);
         } else {
-          userPortfolio.push(covaToken);
+          userPortfolio.push(priceToken);
         }
       }
 
+      const totalTokens = userPortfolio.concat(covalentRestArr);
       getTokensBalance(
         account,
-        userPortfolio,
+        totalTokens,
         covalentPortfolio.liquidity,
         chainID
       );
@@ -137,10 +143,14 @@ export const TokensMethod = () => {
           const token = tokensBalance[i];
           const balanceOf = result[i];
           const formatBalance = formatUnits(balanceOf, token.decimals);
-          const newToken: TokenPortfolio = { ...token, balance: formatBalance };
-          web3TokensBalance.push(newToken);
+          if (formatBalance !== "0.0") {
+            const newToken: TokenPortfolio = {
+              ...token,
+              balance: formatBalance,
+            };
+            web3TokensBalance.push(newToken);
+          }
         }
-
         setPortfolio({
           assets: web3TokensBalance,
           hasBalance: true,

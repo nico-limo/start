@@ -23,12 +23,21 @@ export const formatCoingeckoPortfolio = (
   chainID: number
 ) => {
   try {
+    const prices = Object.entries(data).map((price) => {
+      return {
+        path: price[0],
+        price: price[1].usd,
+        price24: price[1].usd_24h_change,
+      };
+    });
     const networkTokens: TokenPortfolio[] = [];
     const prinpalTokens = {};
     const defaultTokens: Token[] = TOKENS[chainID];
     for (let i = 0; i < defaultTokens.length; i++) {
       const defaultToken = defaultTokens[i];
-      const tokenList = data.find((token) => token.path === defaultToken.path);
+      const tokenList = prices.find(
+        (token) => token.path === defaultToken.path
+      );
       if (tokenList) {
         if (PRINCIPAL_TOKENS.includes(defaultToken.symbol)) {
           prinpalTokens[defaultToken.symbol] = {

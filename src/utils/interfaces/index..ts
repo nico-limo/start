@@ -12,8 +12,8 @@ export interface Token {
 
 export interface PricesApiDB {
   path: string;
-  price: number;
-  price24: number;
+  usd: number;
+  usd_24h_change: number;
 }
 
 export interface TokenPortfolio extends Token {
@@ -93,7 +93,7 @@ export interface FarmActions {
 export interface FarmsLiquidity extends Farm {
   hasBalance: boolean;
   gaugeDepositAll: () => Promise<TransactionResponse>;
-  allowance: (account: string) => Promise<BigNumber>;
+  allowance: BigNumber;
   approve: (amount: BigNumber) => Promise<TransactionResponse>;
 }
 
