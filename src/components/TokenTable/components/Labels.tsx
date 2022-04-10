@@ -10,13 +10,13 @@ const Labels = ({
   type: string;
 }) => {
   const { isPremium } = UserMethods();
+  const isToken = type === "assets";
   const columns = showBalance
-    ? isPremium && type === "liquidity"
+    ? isPremium && !isToken
       ? "1fr 1fr 1fr 80px"
       : "1fr 1fr 1fr"
     : "1fr 1fr";
   const fontSize = { base: "xs", md: "md" };
-  const isToken = type === "assets";
   const labels = {
     asset: isToken ? "Token" : "Pool",
     market: "Price",
@@ -28,15 +28,17 @@ const Labels = ({
       <GridItem p={2} display="flex" alignItems="center" fontSize={fontSize}>
         {labels.asset}
       </GridItem>
-      <GridItem
-        p={2}
-        display="flex"
-        alignItems="center"
-        justifyContent="flex-end"
-        fontSize={fontSize}
-      >
-        {labels.market}
-      </GridItem>
+      {isToken && (
+        <GridItem
+          p={2}
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-end"
+          fontSize={fontSize}
+        >
+          {labels.market}
+        </GridItem>
+      )}
       {showBalance && (
         <GridItem
           p={2}

@@ -9,6 +9,7 @@ import {
   Stack,
   IconButton,
 } from "@chakra-ui/react";
+import { parseUnits } from "ethers/lib/utils";
 import useLoading from "../../../hooks/useLoading";
 import useNotification from "../../../hooks/useNotification";
 import { TokensMethod } from "../../../store/methods/tokens";
@@ -28,15 +29,22 @@ interface TokenInfoProps {
 }
 
 const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
-  const { isPremium } = UserMethods();
+  const { isPremium, wallet } = UserMethods();
   const { farmsPortfolio } = TokensMethod();
   const { isLoading, loadOff, loadOn } = useLoading();
-  const { cancelTx, pendingTx, successTx, noFarmExist } = useNotification();
+  const {
+    cancelTx,
+    pendingTx,
+    successTx,
+    noFarmExist,
+    needApproveTx,
+    successApproveTx,
+  } = useNotification();
   const { symbol, balance, usd, usd_24h } = token;
   const { color_rate, symbol_rate } = priceStatus(usd_24h);
   const diffPrice = usd_24h ? usd_24h.toFixed(2) : "00.00";
   const isPrice: boolean = usd > 0 ?? false;
-  const balanceFormatted = formatAmount(balance, 4);
+  const balanceFormatted = formatAmount(balance, 5);
   const balanceUSD = getUSDBalance(balance, usd);
   const fontSize = { base: "xs", md: "md" };
   const isTokens = type === "assets";
@@ -55,8 +63,18 @@ const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
         );
 
       if (spiritFarm) {
-        const { gaugeDepositAll } = spiritFarm;
+        const { gaugeDepositAll, allowance, approve } = spiritFarm;
         loadOn();
+        const hasAllowance = await allowance(wallet.account);
+
+        const parseBalance = parseUnits(balance, token.decimals);
+        if (hasAllowance.lt(parseBalance)) {
+          needApproveTx();
+          const txApprove = await approve(parseBalance);
+          await txApprove.wait();
+          successApproveTx();
+        }
+
         const tx = await gaugeDepositAll();
         pendingTx();
         await tx.wait();

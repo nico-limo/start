@@ -52,8 +52,33 @@ const useNotification = () => {
       status: "warning",
       isClosable: true,
     });
+  const needApproveTx = () =>
+    toast({
+      title: "Need Approve",
+      description: "This Pool is not approved",
+      position: "top-right",
+      status: "warning",
+      isClosable: true,
+    });
+  const successApproveTx = () =>
+    toast({
+      title: "Approved Success",
+      description: "The Pool was approved",
+      position: "top-right",
+      status: "success",
+      isClosable: true,
+    });
 
-  return { pendingTx, successTx, errorDB, cancelTx, noBalanceTx, noFarmExist };
+  return {
+    pendingTx,
+    successTx,
+    errorDB,
+    cancelTx,
+    noBalanceTx,
+    noFarmExist,
+    needApproveTx,
+    successApproveTx,
+  };
 };
 
 export default useNotification;

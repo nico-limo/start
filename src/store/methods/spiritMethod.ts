@@ -38,17 +38,28 @@ export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
       GAUGE_ABI,
       signer
     );
+    const LPEtherContract = new ethers.Contract(
+      farm.lpAddresses[250],
+      PAIR_ABI,
+      signer
+    );
 
     // Spiritswap actions
     const gaugeReward = async () => await gaugeEtherContract.getReward();
     const gaugeExit = async () => await gaugeEtherContract.exit();
     const gaugeDepositAll = async () => await gaugeEtherContract.depositAll();
+    const allowance = async (account: string) =>
+      await LPEtherContract.allowance(account, farm.gaugeAddress);
+    const approve = async (amount) =>
+      await LPEtherContract.approve(farm.gaugeAddress, amount);
 
     if (balanceFormat !== "0.0") {
       const liquidityFarm = {
         ...farm,
         hasBalance: true,
         gaugeDepositAll,
+        allowance,
+        approve,
       };
       spiritLiquidity.push(liquidityFarm);
     }

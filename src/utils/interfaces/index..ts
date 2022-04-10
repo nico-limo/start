@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import { ChangeEvent } from "react";
 
 export interface Token {
@@ -92,6 +93,8 @@ export interface FarmActions {
 export interface FarmsLiquidity extends Farm {
   hasBalance: boolean;
   gaugeDepositAll: () => Promise<TransactionResponse>;
+  allowance: (account: string) => Promise<BigNumber>;
+  approve: (amount: BigNumber) => Promise<TransactionResponse>;
 }
 
 export interface FarmsPortfolio extends Farm {

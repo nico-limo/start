@@ -246,7 +246,7 @@ export const spiritFarms = [
   },
   {
     pid: 31,
-    lpSymbol: ["DEI", "FTM"],
+    lpSymbol: ["DEI", "USDC"],
     lpAddresses: {
       250: "0x8eFD36aA4Afa9F4E157bec759F1744A7FeBaEA0e",
     },

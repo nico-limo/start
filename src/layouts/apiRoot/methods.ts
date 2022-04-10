@@ -16,6 +16,7 @@ import { TOKENS_SCAM } from "../../utils/constants/tokens/scamTokens";
 import { IDs_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
 import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
 import { checkAddresses } from "../../utils/methods";
+import { formatUnits } from "ethers/lib/utils";
 
 export const formatCoingeckoPortfolio = (
   data: PricesApiDB[],
@@ -59,6 +60,7 @@ export const formatCoingeckoPortfolio = (
 
 export const formatCovalentPortfolio = (data, chainID: number) => {
   const covalentData: CovalentData[] = data.data.items;
+
   const covalentArray: TokenPortfolio[] = [];
   const covalentLPArray: TokenPortfolio[] = [];
   for (let i = 0; i < covalentData.length; i++) {
@@ -83,12 +85,14 @@ export const formatCovalentPortfolio = (data, chainID: number) => {
       !TOKENS_SCAM.includes(contract_address) &&
       type === "cryptocurrency" &&
       quote_rate &&
-      quote_rate_24h
+      quote_rate_24h &&
+      quote
     ) {
       if (contract_name.includes("LP")) {
         const spiritFarm = spiritFarms.find((farm) =>
           checkAddresses(farm.lpAddresses[250], contract_address)
         );
+        const formatBalance = formatUnits(balance, 18);
         const newFarm: TokenPortfolio = {
           address: contract_address.toLowerCase(),
           symbol: spiritFarm
@@ -98,9 +102,9 @@ export const formatCovalentPortfolio = (data, chainID: number) => {
           name: spiritFarm
             ? `${spiritFarm.lpSymbol[0]}-${spiritFarm.lpSymbol[1]}`
             : contract_name,
-          balance,
+          balance: formatBalance,
           balance_24h: balance_24h ? balance_24h : balance,
-          usd: quote,
+          usd: quote > 100000 ? 0 : quote,
           usd_24h: 0,
           type,
           path: "",
