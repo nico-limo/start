@@ -18,13 +18,14 @@ const ModalRow: FC<ModalRowProps> = ({
           cursor="pointer"
           _hover={{ bg: "gray.900", transition: "500ms ease" }}
           onClick={() => onSelect(item)}
+          width={65}
+          height={65}
         >
           <Image
             alt={item.label}
             src={`/${type}/${item.label}.png`}
             width={65}
             height={65}
-            loading="lazy"
           />
         </Box>
       ))}

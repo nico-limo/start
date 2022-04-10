@@ -4,6 +4,8 @@ import TokenInfo from "./components/TokenInfo";
 import Labels from "./components/Labels";
 import { TokensMethod } from "../../store/methods/tokens";
 import SearchInput from "../SearchInput";
+import { TokenPortfolio } from "../../utils/interfaces/index.";
+import { sortItems } from "../../utils/methods";
 
 interface TableProp {
   type: string;
@@ -18,12 +20,13 @@ const TokenTable = ({ type }: TableProp) => {
     if (isOpen) setInputValue(e.target.value);
   };
 
-  const userPortfolio = portfolio[type].filter(
+  const userPortfolio: TokenPortfolio[] = portfolio[type].filter(
     (token) =>
       token.symbol.toLowerCase().includes(inputValue.toLowerCase()) ||
       token.name.toLowerCase().includes(inputValue.toLowerCase())
   );
 
+  const sortedUserPortfolio = sortItems(userPortfolio);
   const isTokens = type === "assets";
   const title = isTokens ? "ASSETS WALLETS" : "LIQUIDITY POOLS";
   return (
@@ -40,7 +43,7 @@ const TokenTable = ({ type }: TableProp) => {
       </HStack>
       <Labels showBalance={portfolio.hasBalance} type={type} />
       <Box overflowY="auto" maxH={250}>
-        {userPortfolio.map((token) => (
+        {sortedUserPortfolio.map((token) => (
           <Box key={`table-${token.address}`}>
             <TokenInfo
               token={token}

@@ -23,9 +23,8 @@ const TokenDashboard = () => {
       for (let i = 0; i < portfolio.assets.length; i++) {
         const { balance, balance_24h, decimals, usd, usd_24h } =
           portfolio.assets[i];
-        const formatBalance = formatTokenAmount(balance, decimals);
         const formatBalance_24h = formatTokenAmount(balance_24h, decimals);
-        const balanceUSD = getUSDBalance(formatBalance, usd);
+        const balanceUSD = getUSDBalance(balance, usd);
         const lastUSD = usd - (usd * usd_24h) / 100;
         const balance_24USD = getUSDBalance(formatBalance_24h, lastUSD);
 

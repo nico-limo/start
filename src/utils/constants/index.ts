@@ -15,6 +15,8 @@ export const WALLETS_ID = {
   },
 };
 
+export const CONTRACT_SPIRIT = "0x5Cc61A78F164885776AA610fb0FE1257df78E59B";
+
 export const NETWORKS_ID = {
   ethereum: {
     id: "0x1",

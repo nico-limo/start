@@ -1,7 +1,7 @@
 import { Grid, GridItem, HStack, Text, Flex } from "@chakra-ui/react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TokensMethod } from "../../../store/methods/tokens";
 import { UserMethods } from "../../../store/methods/user";
 import { getUSDBalance } from "../../../utils/cryptoMethods";
@@ -16,8 +16,9 @@ interface FarmInfoProps {
 }
 
 const FarmInfo = ({ farm }: FarmInfoProps) => {
-  const { principalTokens } = TokensMethod();
+  const { principalTokens, farmsPortfolio } = TokensMethod();
   const { isPremium } = UserMethods();
+  const [hasClaimed, setHasClaimed] = useState(false);
   const { earns, lpSymbol, staked, usd, actions, lpAddresses } = farm;
   const fontSize = { base: "xs", md: "md" };
   const [symbolA, symbolB] = lpSymbol;
@@ -30,6 +31,13 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
   }, [earns, principalTokens]);
 
   const columns = isPremium ? "1fr 1fr 1fr 80px" : "1fr 1fr 1fr";
+  const handleClaim = () => {
+    setHasClaimed(true);
+  };
+
+  useEffect(() => {
+    setHasClaimed((prevStatus) => (prevStatus === false ? prevStatus : false));
+  }, [farmsPortfolio]);
 
   return (
     <Grid templateColumns={columns} my={1} bg="gray.700">
@@ -69,14 +77,20 @@ const FarmInfo = ({ farm }: FarmInfoProps) => {
       </GridItem>
       <GridItem p={2}>
         <Flex direction="column" justify="end" align="flex-end">
-          <Text fontSize={fontSize}>{formatAmount(earns, 5)}</Text>
+          <Text fontSize={fontSize}>
+            {hasClaimed ? "0" : formatAmount(earns, 5)}
+          </Text>
           <Text color="teal.300" fontSize={fontSize}>
-            {`$${formatAmount(earn_USD)}`}
+            {`$${hasClaimed ? "0.00" : formatAmount(earn_USD)}`}
           </Text>
         </Flex>
       </GridItem>
       {isPremium && (
-        <FarmActions actions={actions} address={lpAddresses[250]} />
+        <FarmActions
+          actions={actions}
+          address={lpAddresses[250]}
+          onClaim={handleClaim}
+        />
       )}
     </Grid>
   );

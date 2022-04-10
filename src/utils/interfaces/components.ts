@@ -33,4 +33,5 @@ export interface ModalRowProps {
 export interface FarmActionProps {
   actions: FarmActions;
   address: string;
+  onClaim: () => void;
 }

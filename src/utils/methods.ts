@@ -2,6 +2,7 @@ import { TOKENS } from "./constants/tokens/tokens";
 import { Token, TokenPortfolio } from "./interfaces/index.";
 
 export const formatAmount = (value: number | string = 0, round = 18) => {
+  if (!value) return "0";
   const stringValue = value.toString();
 
   const [integer, decimals] = stringValue.split(".");
@@ -36,3 +37,12 @@ export const checkAddresses = (valueA: string, valueB: string): boolean => {
   if (valueA && valueB) return valueA.toLowerCase() === valueB.toLowerCase();
   return false;
 };
+
+export const sortItems = (items: TokenPortfolio[]): TokenPortfolio[] =>
+  items.sort((a, b) => {
+    const tokenA = a.name.toUpperCase();
+    const tokenB = b.name.toUpperCase();
+    if (tokenA > tokenB) return 1;
+    if (tokenA < tokenB) return -1;
+    return 0;
+  });

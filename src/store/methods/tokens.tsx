@@ -8,11 +8,16 @@ import { Provider } from "ethers-multicall";
 import { getProviderRPC } from "../../utils/cryptoMethods";
 import { checkAddresses } from "../../utils/methods";
 import { principalTokensState } from "../atoms/tokens";
-import { formatSpiritFarms, spiritCalls } from "./spiritMethod";
+import { formatSpiritFarms, spiritCalls, tokensCalls } from "./spiritMethod";
+import ERC20_ABI from "../../utils/constants/abis/erc20.json";
+import { ADDRESS_ZERO, CONTRACT_SPIRIT } from "../../utils/constants";
+import { formatUnits } from "ethers/lib/utils";
+import { ethers } from "ethers";
 
 interface PortfolioProps {
   pricesPortfolio?: { list: TokenPortfolio[]; principal: PrincipalTokensProps };
   covalentPortfolio?: { tokens: TokenPortfolio[]; liquidity: TokenPortfolio[] };
+  account: string;
 }
 
 export const TokensMethod = () => {
@@ -24,6 +29,7 @@ export const TokensMethod = () => {
   const updatePortfolio = ({
     pricesPortfolio,
     covalentPortfolio,
+    account,
   }: PortfolioProps) => {
     if (
       pricesPortfolio &&
@@ -50,12 +56,7 @@ export const TokensMethod = () => {
           userPortfolio.push(covaToken);
         }
       }
-
-      setPortfolio({
-        assets: userPortfolio,
-        hasBalance: true,
-        liquidity: covalentPortfolio.liquidity,
-      });
+      getTokensBalance(account, userPortfolio, covalentPortfolio.liquidity);
     } else if (
       pricesPortfolio &&
       pricesPortfolio.list.length &&
@@ -106,8 +107,89 @@ export const TokensMethod = () => {
     }
   };
 
+  const getTokensBalance = async (
+    account: string,
+    tokensBalance: TokenPortfolio[],
+    liquidity: TokenPortfolio[]
+  ) => {
+    try {
+      if (account && tokensBalance.length) {
+        const provider = getProviderRPC();
+        const ethcallProvider = new Provider(provider);
+        let native: TokenPortfolio[];
+        const web3TokensBalance: TokenPortfolio[] = [];
+        for (let i = 0; i < tokensBalance.length; i++) {
+          const token = tokensBalance[i];
+          if (token.address === ADDRESS_ZERO) {
+            native = tokensBalance.splice(i, 1);
+          }
+        }
+
+        await ethcallProvider.init();
+        const calls = tokensCalls(account, tokensBalance);
+
+        const result = await ethcallProvider.all(calls);
+
+        for (let i = 0; i < tokensBalance.length; i++) {
+          const token = tokensBalance[i];
+          const balanceOf = result[i];
+          const formatBalance = formatUnits(balanceOf, token.decimals);
+          const newToken: TokenPortfolio = { ...token, balance: formatBalance };
+          web3TokensBalance.push(newToken);
+        }
+        if (native.length) {
+          const nativeBalance = await provider.getBalance(account);
+          const formatBalance = formatUnits(nativeBalance, 18);
+
+          const newNative: TokenPortfolio = {
+            ...native[0],
+            balance: formatBalance,
+          };
+          web3TokensBalance.push(newNative);
+        }
+
+        setPortfolio({
+          assets: web3TokensBalance,
+          hasBalance: true,
+          liquidity,
+        });
+      }
+    } catch (error) {
+      console.log("error tokens multicall ", error);
+    }
+  };
+
   const cleanFarms = () => {
     setFarmsPortfolio({ spiritFarms: [], spiritLiquidity: [] });
+  };
+
+  const updateToken = async (account: string) => {
+    const provider = getProviderRPC();
+    const nativeBalance = await provider.getBalance(account);
+    const formatNative = formatUnits(nativeBalance, 18);
+
+    const tokenContract = new ethers.Contract(
+      CONTRACT_SPIRIT,
+      ERC20_ABI,
+      provider
+    );
+    const balanceOf = await tokenContract.balanceOf(account);
+    const formatBalance = formatUnits(balanceOf, 18);
+
+    const assets = portfolio.assets;
+    const newAssets = assets.map((token) => {
+      if (checkAddresses(token.address, CONTRACT_SPIRIT))
+        return { ...token, balance: formatBalance };
+      if (token.address === ADDRESS_ZERO)
+        return { ...token, balance: formatNative };
+      return token;
+    });
+
+    setPortfolio({
+      assets: newAssets,
+      hasBalance: true,
+      liquidity: portfolio.liquidity,
+    });
   };
 
   return {
@@ -116,6 +198,8 @@ export const TokensMethod = () => {
     principalTokens,
     updatePortfolio,
     getFarmsBalance,
+    getTokensBalance,
     cleanFarms,
+    updateToken,
   };
 };

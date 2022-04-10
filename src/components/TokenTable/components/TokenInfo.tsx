@@ -13,7 +13,7 @@ import useLoading from "../../../hooks/useLoading";
 import useNotification from "../../../hooks/useNotification";
 import { TokensMethod } from "../../../store/methods/tokens";
 import { UserMethods } from "../../../store/methods/user";
-import { formatTokenAmount, getUSDBalance } from "../../../utils/cryptoMethods";
+import { getUSDBalance } from "../../../utils/cryptoMethods";
 import { TokenPortfolio } from "../../../utils/interfaces/index.";
 import {
   checkAddresses,
@@ -32,13 +32,12 @@ const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
   const { farmsPortfolio } = TokensMethod();
   const { isLoading, loadOff, loadOn } = useLoading();
   const { cancelTx, pendingTx, successTx, noFarmExist } = useNotification();
-  const { symbol, balance, usd, usd_24h, decimals } = token;
+  const { symbol, balance, usd, usd_24h } = token;
   const { color_rate, symbol_rate } = priceStatus(usd_24h);
   const diffPrice = usd_24h ? usd_24h.toFixed(2) : "00.00";
   const isPrice: boolean = usd > 0 ?? false;
-  const balanceNotFormatted = formatTokenAmount(balance, decimals, 4);
-  const balanceFormatted = formatAmount(balanceNotFormatted, 4);
-  const balanceUSD = getUSDBalance(balanceNotFormatted, usd);
+  const balanceFormatted = formatAmount(balance, 4);
+  const balanceUSD = getUSDBalance(balance, usd);
   const fontSize = { base: "xs", md: "md" };
   const isTokens = type === "assets";
   const columns = showBalance

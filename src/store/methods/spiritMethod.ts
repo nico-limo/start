@@ -127,3 +127,15 @@ export const spiritCalls = (account: string) => {
   }
   return calls;
 };
+
+export const tokensCalls = (account: string, tokens: TokenPortfolio[]) => {
+  const calls = [];
+  for (let i = 0; i < tokens.length; i++) {
+    const { address } = tokens[i];
+
+    const tokenContract = new Contract(address, ERC_ABI);
+    const balanceOf = tokenContract.balanceOf(account);
+    calls.push(balanceOf);
+  }
+  return calls;
+};

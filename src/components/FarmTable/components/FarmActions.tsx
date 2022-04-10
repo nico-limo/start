@@ -6,9 +6,11 @@ import { FarmActionProps } from "../../../utils/interfaces/components";
 import useLoading from "../../../hooks/useLoading";
 import { TokensMethod } from "../../../store/methods/tokens";
 import { checkAddresses } from "../../../utils/methods";
+import { UserMethods } from "../../../store/methods/user";
 
-const FarmActions = ({ actions, address }: FarmActionProps) => {
-  const { portfolio } = TokensMethod();
+const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
+  const { portfolio, updateToken } = TokensMethod();
+  const { wallet } = UserMethods();
   const { isLoading, loadOff, loadOn } = useLoading();
   const {
     isLoading: isLoadingWithdraw,
@@ -31,6 +33,8 @@ const FarmActions = ({ actions, address }: FarmActionProps) => {
       await tx.wait();
       loadOff();
       successTx();
+      await updateToken(wallet.account);
+      onClaim();
     } catch (error) {
       loadOff();
       cancelTx();
@@ -45,6 +49,8 @@ const FarmActions = ({ actions, address }: FarmActionProps) => {
       await tx.wait();
       loadOffWithdraw();
       successTx();
+      await updateToken(wallet.account);
+      onClaim();
     } catch (error) {
       loadOffWithdraw();
       cancelTx();
