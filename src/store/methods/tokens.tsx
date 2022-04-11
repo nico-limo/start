@@ -8,7 +8,7 @@ import { Contract, Provider } from "ethers-multicall";
 import { getProviderRPC } from "../../utils/cryptoMethods";
 import { checkAddresses } from "../../utils/methods";
 import { principalTokensState } from "../atoms/tokens";
-import { formatSpiritFarms, spiritCalls, tokensCalls } from "./spiritMethod";
+import { formatSpiritFarms, spiritCalls, tokenCall } from "./spiritMethod";
 import ERC20_ABI from "../../utils/constants/abis/erc20.json";
 import { ADDRESS_ZERO, CONTRACT_SPIRIT } from "../../utils/constants";
 import { formatUnits } from "ethers/lib/utils";
@@ -21,15 +21,12 @@ interface PortfolioProps {
 }
 
 export const TokensMethod = () => {
-  const provider = getProviderRPC();
-  const ethcallProvider = new Provider(provider);
-
   const [portfolio, setPortfolio] = useRecoilState(portfolioState);
   const [farmsPortfolio, setFarmsPortfolio] = useRecoilState(farmsState);
   const [principalTokens, setPrincipalTokens] =
     useRecoilState(principalTokensState);
 
-  const updatePortfolio = ({
+  const updatePortfolio = async ({
     pricesPortfolio,
     covalentPortfolio,
     account,
@@ -44,6 +41,12 @@ export const TokensMethod = () => {
       setPrincipalTokens(pricesPortfolio.principal);
       const covalentRestArr = covalentPortfolio.tokens;
       const userPortfolio: TokenPortfolio[] = [];
+      const calls = [];
+
+      const provider = getProviderRPC(chainID);
+      const ethcallProvider = new Provider(provider);
+      await ethcallProvider.init();
+
       for (let i = 0; i < pricesPortfolio.list.length; i++) {
         const priceToken = pricesPortfolio.list[i];
         const covaToken = covalentPortfolio.tokens.find((token) =>
@@ -60,19 +63,37 @@ export const TokensMethod = () => {
             balance: covaToken.balance,
             balance_24h: covaToken.balance_24h,
           };
+          if (priceToken.address === ADDRESS_ZERO) {
+            const nativeBalanceOf = ethcallProvider.getEthBalance(account);
+            calls.push(nativeBalanceOf);
+          } else {
+            const call = tokenCall(account, priceToken, ethcallProvider);
+            calls.push(call);
+          }
           userPortfolio.push(mixToken);
         } else {
+          const call = tokenCall(account, priceToken, ethcallProvider);
+          calls.push(call);
           userPortfolio.push(priceToken);
         }
       }
 
+      for (let i = 0; i < covalentRestArr.length; i++) {
+        const call = tokenCall(account, covalentRestArr[i], ethcallProvider);
+        calls.push(call);
+      }
+
       const totalTokens = userPortfolio.concat(covalentRestArr);
-      getTokensBalance(
-        account,
-        totalTokens,
-        covalentPortfolio.liquidity,
-        chainID
-      );
+
+      if (totalTokens.length === calls.length) {
+        getTokensBalance(
+          account,
+          totalTokens,
+          covalentPortfolio.liquidity,
+          ethcallProvider,
+          calls
+        );
+      }
     } else if (
       pricesPortfolio &&
       pricesPortfolio.list.length &&
@@ -104,6 +125,8 @@ export const TokensMethod = () => {
   ) => {
     try {
       if (account && tokenPrices.length) {
+        const provider = getProviderRPC();
+        const ethcallProvider = new Provider(provider);
         await ethcallProvider.init();
         const calls = spiritCalls(account);
 
@@ -125,17 +148,12 @@ export const TokensMethod = () => {
     account: string,
     tokensBalance: TokenPortfolio[],
     liquidity: TokenPortfolio[],
-    chainID: number
+    ethcallProvider,
+    calls
   ) => {
     try {
       if (account && tokensBalance.length) {
-        const provider = getProviderRPC(chainID);
-        const ethcallProvider = new Provider(provider);
         const web3TokensBalance: TokenPortfolio[] = [];
-
-        await ethcallProvider.init();
-
-        const calls = tokensCalls(account, tokensBalance, ethcallProvider);
 
         const result = await ethcallProvider.all(calls);
 
@@ -166,7 +184,9 @@ export const TokensMethod = () => {
     setFarmsPortfolio({ spiritFarms: [], spiritLiquidity: [] });
   };
 
-  const updateToken = async (account: string) => {
+  const updateToken = async (account: string, chainID = 250) => {
+    const provider = getProviderRPC(chainID);
+    const ethcallProvider = new Provider(provider);
     await ethcallProvider.init();
     const nativeBalance = await ethcallProvider.getEthBalance(account);
     const tokenContract = new Contract(CONTRACT_SPIRIT, ERC20_ABI);

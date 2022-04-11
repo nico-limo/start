@@ -143,22 +143,18 @@ export const spiritCalls = (account: string) => {
   return calls;
 };
 
-export const tokensCalls = (
+export const tokenCall = (
   account: string,
-  tokens: TokenPortfolio[],
+  tokens: TokenPortfolio,
   provider: Provider
 ) => {
-  const calls = [];
-  for (let i = 0; i < tokens.length; i++) {
-    const { address } = tokens[i];
-    if (address === ADDRESS_ZERO) {
-      const nativeBalanceOf = provider.getEthBalance(account);
-      calls.push(nativeBalanceOf);
-    } else {
-      const tokenContract = new Contract(address, ERC_ABI);
-      const balanceOf = tokenContract.balanceOf(account);
-      calls.push(balanceOf);
-    }
+  const { address } = tokens;
+  if (address === ADDRESS_ZERO) {
+    const nativeBalanceOf = provider.getEthBalance(account);
+    return nativeBalanceOf;
+  } else {
+    const tokenContract = new Contract(address, ERC_ABI);
+    const balanceOf = tokenContract.balanceOf(account);
+    return balanceOf;
   }
-  return calls;
 };
