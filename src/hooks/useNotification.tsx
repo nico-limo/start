@@ -69,6 +69,14 @@ const useNotification = () => {
       isClosable: true,
     });
 
+  const donateSuccessTx = () =>
+    toast({
+      title: "Donation Success",
+      description: "Thanks for your donation!",
+      position: "top-right",
+      status: "success",
+      isClosable: true,
+    });
   return {
     pendingTx,
     successTx,
@@ -78,6 +86,7 @@ const useNotification = () => {
     noFarmExist,
     needApproveTx,
     successApproveTx,
+    donateSuccessTx,
   };
 };
 

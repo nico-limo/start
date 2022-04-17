@@ -27,4 +27,8 @@ export const QUOTES = {
     address: "0x91fa20244Fb509e8289CA630E5db3E9166233FDc",
     decimals: 18,
   },
+  DAI: {
+    address: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+    decimals: 18,
+  },
 };

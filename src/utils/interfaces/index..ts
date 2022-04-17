@@ -22,6 +22,7 @@ export interface TokenPortfolio extends Token {
   usd: number;
   usd_24h: number;
   type: string;
+  protocol?: string;
 }
 
 export interface CovalentApi {
@@ -86,15 +87,15 @@ export interface TransactionResponse {
 }
 
 export interface FarmActions {
-  gaugeReward: () => Promise<TransactionResponse>;
-  gaugeExit: () => Promise<TransactionResponse>;
-  gaugeDepositAll: () => Promise<TransactionResponse>;
+  getRewards: () => Promise<TransactionResponse>;
+  withdrawAll: () => Promise<TransactionResponse>;
+  depositAll: () => Promise<TransactionResponse>;
 }
 export interface FarmsLiquidity extends Farm {
   hasBalance: boolean;
-  gaugeDepositAll: () => Promise<TransactionResponse>;
+  depositAll: () => Promise<TransactionResponse>;
   allowance: BigNumber;
-  approve: (amount: BigNumber) => Promise<TransactionResponse>;
+  approve: () => Promise<TransactionResponse>;
 }
 
 export interface FarmsPortfolio extends Farm {

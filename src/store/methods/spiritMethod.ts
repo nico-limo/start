@@ -46,18 +46,21 @@ export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
     );
 
     // Spiritswap actions
-    const gaugeReward = async () => await gaugeEtherContract.getReward();
-    const gaugeExit = async () => await gaugeEtherContract.exit();
-    const gaugeDepositAll = async () => await gaugeEtherContract.depositAll();
+    const getRewards = async () => await gaugeEtherContract.getReward();
+    const withdrawAll = async () => await gaugeEtherContract.exit();
+    const depositAll = async () => await gaugeEtherContract.depositAll();
 
-    const approve = async (amount) =>
-      await LPEtherContract.approve(farm.gaugeAddress, amount);
+    const approve = async () =>
+      await LPEtherContract.approve(
+        farm.gaugeAddress,
+        ethers.constants.MaxUint256.toString()
+      );
 
     if (balanceFormat !== "0.0") {
       const liquidityFarm = {
         ...farm,
         hasBalance: true,
-        gaugeDepositAll,
+        depositAll,
         allowance,
         approve,
       };
@@ -100,9 +103,9 @@ export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
         usd: staked_usd,
         totalSupply: "100000",
         actions: {
-          gaugeReward,
-          gaugeDepositAll,
-          gaugeExit,
+          getRewards,
+          depositAll,
+          withdrawAll,
         },
       };
       spiritData.push(userFarm);

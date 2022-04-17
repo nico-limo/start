@@ -28,7 +28,8 @@ const Home = () => {
         w="full"
         justify="space-between"
       >
-        {farmsPortfolio.spiritFarms.length && <FarmTable />}
+        {farmsPortfolio.spiritFarms.length && <FarmTable pool="SPIRIT" />}
+        {farmsPortfolio.spookyFarms.length && <FarmTable pool="SPOOKY" />}
       </Stack>
     </VStack>
   );

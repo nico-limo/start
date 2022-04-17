@@ -5,11 +5,12 @@ import { TokensMethod } from "../../store/methods/tokens";
 import FarmInfo from "./components/FarmInfo";
 import SearchInput from "../SearchInput";
 
-const FarmTable = () => {
+const FarmTable = ({ pool }: { pool: string }) => {
   const { farmsPortfolio } = TokensMethod();
   const { isOpen, onToggle } = useDisclosure();
   const [inputValue, setInputValue] = useState("");
-  const filterFarms = farmsPortfolio.spiritFarms.filter(
+  const farmsProtocol = pool === "SPIRIT" ? "spiritFarms" : "spookyFarms";
+  const filterFarms = farmsPortfolio[farmsProtocol].filter(
     (farm) =>
       farm.lpSymbol[0].toLowerCase().includes(inputValue.toLowerCase()) ||
       farm.lpSymbol[1].toLowerCase().includes(inputValue.toLowerCase())
@@ -22,7 +23,7 @@ const FarmTable = () => {
   return (
     <Box bg="gray.800" borderRadius={5} p={2} w="full">
       <HStack w="full" justify="space-between" align="center">
-        <Text>FARMING REWARDS</Text>
+        <Text>{`${pool} FARMING REWARDS `}</Text>
         <SearchInput
           value={inputValue}
           isVisible={isOpen}
@@ -34,8 +35,8 @@ const FarmTable = () => {
       <Labels />
       <Box overflowY="auto" maxH={250}>
         {filterFarms.map((farm) => (
-          <Box key={`table-${farm.gaugeAddress}`}>
-            <FarmInfo farm={farm} />
+          <Box key={`table-${farm.lpAddresses[250]}`}>
+            <FarmInfo farm={farm} pool={pool} />
           </Box>
         ))}
       </Box>

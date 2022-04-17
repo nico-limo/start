@@ -27,8 +27,9 @@ export const portfolioState = atom({
 
 export const farmsState = atom({
   key: "farmsState",
-  default: { spiritFarms: [], spiritLiquidity: [] } as {
+  default: { spiritFarms: [], liquidity: [], spookyFarms: [] } as {
     spiritFarms: FarmsPortfolio[];
-    spiritLiquidity: FarmsLiquidity[];
+    spookyFarms: FarmsPortfolio[];
+    liquidity: FarmsLiquidity[];
   },
 });

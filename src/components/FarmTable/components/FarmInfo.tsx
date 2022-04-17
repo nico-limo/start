@@ -13,22 +13,23 @@ const FarmActions = dynamic(() => import("./FarmActions"));
 
 interface FarmInfoProps {
   farm: FarmsPortfolio;
+  pool: string;
 }
 
-const FarmInfo = ({ farm }: FarmInfoProps) => {
+const FarmInfo = ({ farm, pool }: FarmInfoProps) => {
   const { principalTokens, farmsPortfolio } = TokensMethod();
   const { isPremium } = UserMethods();
   const [hasClaimed, setHasClaimed] = useState(false);
   const { earns, lpSymbol, staked, usd, actions, lpAddresses } = farm;
   const fontSize = { base: "xs", md: "md" };
   const [symbolA, symbolB] = lpSymbol;
-
   const earn_USD = useMemo(() => {
-    if (principalTokens.SPIRIT && principalTokens.SPIRIT.USD && earns) {
-      return getUSDBalance(earns, principalTokens.SPIRIT.USD, 4);
+    const earnToken = pool === "SPIRIT" ? pool : "BOO";
+    if (principalTokens.SPIRIT && principalTokens[earnToken].USD && earns) {
+      return getUSDBalance(earns, principalTokens[earnToken].USD, 4);
     }
     return "0.00";
-  }, [earns, principalTokens]);
+  }, [earns, principalTokens, pool]);
 
   const columns = isPremium ? "1fr 1fr 1fr 80px" : "1fr 1fr 1fr";
   const handleClaim = () => {

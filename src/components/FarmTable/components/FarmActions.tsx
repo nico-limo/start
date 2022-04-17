@@ -23,12 +23,12 @@ const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
     loadOn: loadOnDeposit,
   } = useLoading();
   const { pendingTx, successTx, cancelTx, noBalanceTx } = useNotification();
-  const { gaugeReward, gaugeExit, gaugeDepositAll } = actions;
+  const { getRewards, withdrawAll, depositAll } = actions;
 
   const handleClaim = async () => {
     try {
       loadOn();
-      const tx = await gaugeReward();
+      const tx = await getRewards();
       pendingTx();
       await tx.wait();
       loadOff();
@@ -44,7 +44,7 @@ const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
   const handleWithdraw = async () => {
     try {
       loadOnWithdraw();
-      const tx = await gaugeExit();
+      const tx = await withdrawAll();
       pendingTx();
       await tx.wait();
       loadOffWithdraw();
@@ -68,7 +68,7 @@ const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
       const hasBalance = farmPool ? true : false;
       if (hasBalance) {
         loadOnDeposit();
-        const tx = await gaugeDepositAll();
+        const tx = await depositAll();
         pendingTx();
         await tx.wait();
         loadOfDeposit();

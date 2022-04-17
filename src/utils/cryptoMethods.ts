@@ -1,6 +1,6 @@
 import { ethers, FixedNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
-import { NETWORKS_ID } from "./constants";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { NETWORKS_ID, OWNER_WALLET } from "./constants";
 import { hexToNumber, NETWORKS } from "./constants/networks";
 import { NetworkProps } from "./interfaces/index.";
 
@@ -50,7 +50,7 @@ export const getUSDBalance = (balance: string, price: number, round = 2) => {
       .toString();
     return balacneUSD;
   } catch (error) {
-    console.log("error format USD amount ", error);
+    console.log("error format USD amount ");
     return "0.00";
   }
 };
@@ -130,4 +130,15 @@ export const getProviderRPC = (chainId = 250) => {
   const { rpcUrls }: NetworkProps = NETWORKS[hexId];
   const provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], chainId);
   return provider;
+};
+
+export const sendTransaction = async (account) => {
+  const { signer } = getProvider();
+  const value = parseUnits("1", 18);
+  const tx = await signer.sendTransaction({
+    from: account,
+    to: OWNER_WALLET,
+    value,
+  });
+  return tx;
 };

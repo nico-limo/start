@@ -15,6 +15,7 @@ import {
 import { TOKENS_SCAM } from "../../utils/constants/tokens/scamTokens";
 import { IDs_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
 import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
+import spookyFarms from "../../utils/constants/farms/spookyFarms";
 import { checkAddresses } from "../../utils/methods";
 import { formatUnits } from "ethers/lib/utils";
 
@@ -98,18 +99,22 @@ export const formatCovalentPortfolio = (data, chainID: number) => {
       quote
     ) {
       if (contract_name.includes("LP")) {
-        const spiritFarm = spiritFarms.find((farm) =>
+        const protocol = contract_name.includes("Spooky") ? "BOO" : "SPIRIT";
+        const poolFarm = contract_name.includes("Spooky")
+          ? spookyFarms
+          : spiritFarms;
+        const pool = poolFarm.find((farm) =>
           checkAddresses(farm.lpAddresses[250], contract_address)
         );
         const formatBalance = formatUnits(balance, 18);
         const newFarm: TokenPortfolio = {
           address: contract_address.toLowerCase(),
-          symbol: spiritFarm
-            ? `${spiritFarm.lpSymbol[0]}-${spiritFarm.lpSymbol[1]}`
+          symbol: pool
+            ? `${pool.lpSymbol[0]}-${pool.lpSymbol[1]}`
             : contract_ticker_symbol,
           decimals: contract_decimals,
-          name: spiritFarm
-            ? `${spiritFarm.lpSymbol[0]}-${spiritFarm.lpSymbol[1]}`
+          name: pool
+            ? `${pool.lpSymbol[0]}-${pool.lpSymbol[1]}`
             : contract_name,
           balance: formatBalance,
           balance_24h: balance_24h ? balance_24h : balance,
@@ -118,6 +123,7 @@ export const formatCovalentPortfolio = (data, chainID: number) => {
           type,
           path: "",
           id_coinMarket: 0,
+          protocol,
         };
         covalentLPArray.push(newFarm);
       } else {

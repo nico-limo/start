@@ -14,8 +14,10 @@ export const WALLETS_ID = {
     label: "coinbase",
   },
 };
+export const OWNER_WALLET = "0xAc4b0639A5b6509134fB3AB37A2BBc410974a0eb";
 
 export const CONTRACT_SPIRIT = "0x5Cc61A78F164885776AA610fb0FE1257df78E59B";
+export const CONTRACT_BOO = "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE";
 
 export const NETWORKS_ID = {
   ethereum: {

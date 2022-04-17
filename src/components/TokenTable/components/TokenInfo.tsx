@@ -10,6 +10,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { parseUnits } from "ethers/lib/utils";
+import Image from "next/image";
 import useLoading from "../../../hooks/useLoading";
 import useNotification from "../../../hooks/useNotification";
 import { TokensMethod } from "../../../store/methods/tokens";
@@ -56,25 +57,25 @@ const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
 
   const handleDeposit = async () => {
     try {
-      const spiritFarm =
-        farmsPortfolio.spiritLiquidity &&
-        farmsPortfolio.spiritLiquidity.find((lpPool) =>
+      const tokenPool =
+        farmsPortfolio.liquidity &&
+        farmsPortfolio.liquidity.find((lpPool) =>
           checkAddresses(lpPool.lpAddresses[250], token.address)
         );
 
-      if (spiritFarm) {
-        const { gaugeDepositAll, allowance, approve } = spiritFarm;
+      if (tokenPool) {
+        const { depositAll, allowance, approve } = tokenPool;
         loadOn();
 
         const parseBalance = parseUnits(balance, token.decimals);
         if (allowance.lt(parseBalance)) {
           needApproveTx();
-          const txApprove = await approve(parseBalance);
+          const txApprove = await approve();
           await txApprove.wait();
           successApproveTx();
         }
 
-        const tx = await gaugeDepositAll();
+        const tx = await depositAll();
         pendingTx();
         await tx.wait();
         loadOff();
@@ -93,7 +94,18 @@ const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
       <GridItem p={2} display="flex" alignItems="center">
         <Stack direction={isTokens ? "row" : "column"} spacing={1}>
           <TokenImages type={type} symbol={symbol} />
-          <Text fontSize={fontSize}>{symbol}</Text>
+
+          <HStack>
+            <Text fontSize={fontSize}>{symbol}</Text>
+            {token.protocol && (
+              <Image
+                src={`/tokens/${token.protocol}.png`}
+                width={12}
+                height={12}
+                alt={token.protocol}
+              />
+            )}
+          </HStack>
         </Stack>
       </GridItem>
       <GridItem

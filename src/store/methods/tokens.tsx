@@ -10,8 +10,13 @@ import { checkAddresses } from "../../utils/methods";
 import { principalTokensState } from "../atoms/tokens";
 import { formatSpiritFarms, spiritCalls, tokenCall } from "./spiritMethod";
 import ERC20_ABI from "../../utils/constants/abis/erc20.json";
-import { ADDRESS_ZERO, CONTRACT_SPIRIT } from "../../utils/constants";
+import {
+  ADDRESS_ZERO,
+  CONTRACT_BOO,
+  CONTRACT_SPIRIT,
+} from "../../utils/constants";
 import { formatUnits } from "ethers/lib/utils";
+import { formatSpookyFarms, spookyCalls } from "./spookyMethods";
 
 interface PortfolioProps {
   pricesPortfolio?: { list: TokenPortfolio[]; principal: PrincipalTokensProps };
@@ -129,15 +134,29 @@ export const TokensMethod = () => {
         const ethcallProvider = new Provider(provider);
         await ethcallProvider.init();
         const calls = spiritCalls(account);
+        const booCalls = spookyCalls(account);
+        const spiritLength = calls.length;
+        const globalCalls = calls.concat(booCalls);
+        const result = await ethcallProvider.all(globalCalls);
+        const spiritResult = result.splice(0, spiritLength);
 
-        const result = await ethcallProvider.all(calls);
-
-        const { spiritData, spiritLiquidity } = formatSpiritFarms(
+        const { spookyData, spookyLiquidity } = formatSpookyFarms(
           result,
           tokenPrices
         );
 
-        setFarmsPortfolio({ spiritFarms: spiritData, spiritLiquidity });
+        const { spiritData, spiritLiquidity } = formatSpiritFarms(
+          spiritResult,
+          tokenPrices
+        );
+
+        const generalLiquidity = spookyLiquidity.concat(spiritLiquidity);
+
+        setFarmsPortfolio({
+          spiritFarms: spiritData,
+          spookyFarms: spookyData,
+          liquidity: generalLiquidity,
+        });
       }
     } catch (error) {
       console.log("error multicall ", error);
@@ -181,7 +200,7 @@ export const TokensMethod = () => {
   };
 
   const cleanFarms = () => {
-    setFarmsPortfolio({ spiritFarms: [], spiritLiquidity: [] });
+    setFarmsPortfolio({ spiritFarms: [], liquidity: [], spookyFarms: [] });
   };
 
   const updateToken = async (account: string, chainID = 250) => {
@@ -189,18 +208,25 @@ export const TokensMethod = () => {
     const ethcallProvider = new Provider(provider);
     await ethcallProvider.init();
     const nativeBalance = await ethcallProvider.getEthBalance(account);
-    const tokenContract = new Contract(CONTRACT_SPIRIT, ERC20_ABI);
-    const balanceOf = await tokenContract.balanceOf(account);
-    const [nativeBalanceOf, tokenBalanceOf] = await ethcallProvider.all([
-      nativeBalance,
-      balanceOf,
-    ]);
-    const formatBalance = formatUnits(tokenBalanceOf, 18);
+    const spiritContract = new Contract(CONTRACT_SPIRIT, ERC20_ABI);
+    const spookyContract = new Contract(CONTRACT_BOO, ERC20_ABI);
+    const balanceOfSpirit = await spiritContract.balanceOf(account);
+    const balanceOfSpooky = await spookyContract.balanceOf(account);
+    const [nativeBalanceOf, spiritBalanceOf, booBalanceOf] =
+      await ethcallProvider.all([
+        nativeBalance,
+        balanceOfSpirit,
+        balanceOfSpooky,
+      ]);
+    const formatBalanceSPIRIT = formatUnits(spiritBalanceOf, 18);
+    const formatBalanceBOO = formatUnits(booBalanceOf, 18);
     const formatNativeBalance = formatUnits(nativeBalanceOf, 18);
     const assets = portfolio.assets;
     const newAssets = assets.map((token) => {
       if (checkAddresses(token.address, CONTRACT_SPIRIT))
-        return { ...token, balance: formatBalance };
+        return { ...token, balance: formatBalanceSPIRIT };
+      if (checkAddresses(token.address, CONTRACT_BOO))
+        return { ...token, balance: formatBalanceBOO };
       if (token.address === ADDRESS_ZERO)
         return { ...token, balance: formatNativeBalance };
       return token;
