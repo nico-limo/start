@@ -5,19 +5,7 @@ export const WALLETS_ID = {
     id: "1xmeta",
     label: "metamask",
   },
-  trustWallet: {
-    id: "1xtrust",
-    label: "trustWallet",
-  },
-  coinbase: {
-    id: "1xcoin",
-    label: "coinbase",
-  },
 };
-export const OWNER_WALLET = "0xAc4b0639A5b6509134fB3AB37A2BBc410974a0eb";
-
-export const CONTRACT_SPIRIT = "0x5Cc61A78F164885776AA610fb0FE1257df78E59B";
-export const CONTRACT_BOO = "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE";
 
 export const NETWORKS_ID = {
   ethereum: {
@@ -63,11 +51,7 @@ export const NETWORKS_LIST = [
   NETWORKS_ID.fantom,
   NETWORKS_ID.binance,
 ];
-export const WALLETS_LIST = [
-  WALLETS_ID.metamask,
-  WALLETS_ID.trustWallet,
-  WALLETS_ID.coinbase,
-];
+export const WALLETS_LIST = [WALLETS_ID.metamask];
 
 export const DEFAULT_NETWORK = NETWORKS_ID.fantom;
 export const DEFAULT_WALLET = WALLETS_ID.metamask;
@@ -75,7 +59,7 @@ export const DEFAULT_WALLET = WALLETS_ID.metamask;
 export const API_COVALENT = "https://api.covalenthq.com/v1";
 export const API_COINMARKET =
   "https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest";
-export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
+
 export const AMOUNT_ZERO = "0";
 export const networksColors = {
   1: {
@@ -137,4 +121,10 @@ export const NATIVE_TOKENS = {
   1: "ETH",
   56: "BNB",
   250: "FTM",
+};
+
+export const SCANS = {
+  1: { scanName: "EtherScan", scanPath: "https://etherscan.io/token/" },
+  56: { scanName: "BSCScan", scanPath: "https://bscscan.com/token/" },
+  250: { scanName: "FTMScan", scanPath: "https://ftmscan.com/token/" },
 };

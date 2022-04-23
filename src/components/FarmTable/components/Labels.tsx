@@ -1,10 +1,11 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import React from "react";
-import { UserMethods } from "../../../store/methods/user";
+import { useUserMethods } from "../../../store/methods/user";
+import { getColumns } from "../../../utils/methods";
 
 const Labels = () => {
-  const { isPremium } = UserMethods();
-  const columns = isPremium ? "1fr 1fr 1fr 80px" : "1fr 1fr 1fr";
+  const { isPremium } = useUserMethods();
+  const columns = getColumns(true, isPremium);
   const fontSize = { base: "xs", md: "md" };
   const labels = {
     asset: "Farm",

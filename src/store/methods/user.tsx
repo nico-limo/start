@@ -4,7 +4,7 @@ import { ROLE } from "../../utils/constants";
 import { walletConnect } from "../../utils/cryptoMethods";
 import { userState } from "../atoms/user";
 
-export const UserMethods = () => {
+export const useUserMethods = () => {
   const toast = useToast();
   const setuser = useSetRecoilState(userState);
   const logOut = useResetRecoilState(userState);

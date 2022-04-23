@@ -11,11 +11,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { FC } from "react";
-import { UserMethods } from "../../store/methods/user";
+import { useUserMethods } from "../../store/methods/user";
 import { WalletModalProps } from "../../utils/interfaces/components";
 
 const PurshaseModal: FC<WalletModalProps> = ({ onClose, isOpen }) => {
-  const { upgradeRole } = UserMethods();
+  const { upgradeRole } = useUserMethods();
 
   const handleUpgrade = () => {
     upgradeRole();

@@ -7,17 +7,14 @@ import {
   Token,
   TokenPortfolio,
 } from "../../utils/interfaces/index.";
-import {
-  ADDRESS_ZERO,
-  NATIVES_TOKENS,
-  PRINCIPAL_TOKENS,
-} from "../../utils/constants";
+import { NATIVES_TOKENS, PRINCIPAL_TOKENS } from "../../utils/constants";
 import { TOKENS_SCAM } from "../../utils/constants/tokens/scamTokens";
 import { IDs_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
 import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
 import spookyFarms from "../../utils/constants/farms/spookyFarms";
 import { checkAddresses } from "../../utils/methods";
 import { formatUnits } from "ethers/lib/utils";
+import { ADDRESS_ZERO } from "../../utils/constants/contracts";
 
 export const formatCoingeckoPortfolio = (
   data: PricesApiDB[],
@@ -70,9 +67,9 @@ export const formatCoingeckoPortfolio = (
 
 export const formatCovalentPortfolio = (data, chainID: number) => {
   const covalentData: CovalentData[] = data.data.items;
-
   const covalentArray: TokenPortfolio[] = [];
   const covalentLPArray: TokenPortfolio[] = [];
+  const covalentFarmsArray: TokenPortfolio[] = [];
   for (let i = 0; i < covalentData.length; i++) {
     const {
       balance,
@@ -87,7 +84,37 @@ export const formatCovalentPortfolio = (data, chainID: number) => {
       contract_decimals,
       contract_ticker_symbol,
     } = covalentData[i];
+    // SPOOKY FARM
+    if (
+      contract_name &&
+      balance === "0" &&
+      quote_24h !== Infinity &&
+      !TOKENS_SCAM.includes(contract_address) &&
+      quote_rate &&
+      contract_name.includes("Spooky")
+    ) {
+      const pool = spookyFarms.find((farm) =>
+        checkAddresses(farm.lpAddresses[250], contract_address)
+      );
+      const newFarm: TokenPortfolio = {
+        address: contract_address.toLowerCase(),
+        symbol: pool
+          ? `${pool.lpSymbol[0]}-${pool.lpSymbol[1]}`
+          : contract_ticker_symbol,
+        decimals: contract_decimals,
+        name: pool ? `${pool.lpSymbol[0]}-${pool.lpSymbol[1]}` : contract_name,
+        balance: "",
+        balance_24h: "",
+        usd: quote_rate > 1000000 ? 0 : quote_rate,
+        usd_24h: 0,
+        type,
+        path: "",
+        id_coinMarket: 0,
+      };
+      covalentFarmsArray.push(newFarm);
+    }
 
+    // LIQUIDITY POOLS
     if (
       contract_name &&
       balance !== "0" &&
@@ -149,7 +176,11 @@ export const formatCovalentPortfolio = (data, chainID: number) => {
     }
   }
 
-  return { tokens: covalentArray, liquidity: covalentLPArray };
+  return {
+    tokens: covalentArray,
+    liquidity: covalentLPArray,
+    spookyFarms: covalentFarmsArray,
+  };
 };
 
 export const formatCoinmarketPortfolio = (data, chainID: number) => {

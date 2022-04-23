@@ -1,12 +1,12 @@
 import { ethers } from "ethers";
 import { useEffect } from "react";
-import { UserMethods } from "../../store/methods/user";
+import { useUserMethods } from "../../store/methods/user";
 import { NetworksMethods } from "../../store/methods/network";
 import { hexToNumber } from "../../utils/constants/networks";
 import { TokensMethod } from "../../store/methods/tokens";
 
 const Web3Root = ({ children }) => {
-  const { logIn } = UserMethods();
+  const { logIn } = useUserMethods();
   const { connectNetwork, network } = NetworksMethods();
   const { cleanFarms } = TokensMethod();
 

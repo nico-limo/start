@@ -10,14 +10,14 @@ import {
   sumAmounts,
 } from "../../utils/cryptoMethods";
 import { formatAmount } from "../../utils/methods";
-import { UserMethods } from "../../store/methods/user";
+import { useUserMethods } from "../../store/methods/user";
 import { AMOUNT_ZERO } from "../../utils/constants";
 import useLoading from "../../hooks/useLoading";
 import useNotification from "../../hooks/useNotification";
 
 const TokenDashboard = () => {
   const { portfolio, farmsPortfolio, principalTokens } = TokensMethod();
-  const { wallet } = UserMethods();
+  const { wallet } = useUserMethods();
   const { isLoading, loadOff, loadOn } = useLoading();
   const { cancelTx, pendingTx, donateSuccessTx } = useNotification();
   const { tokensBalance, tokensBalance_24h } = useMemo(() => {

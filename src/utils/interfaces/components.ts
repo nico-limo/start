@@ -1,4 +1,4 @@
-import { FarmActions } from "./index.";
+import { FarmActions, OptionsActionsProps, TokenPortfolio } from "./index.";
 
 export interface PagesLabel {
   id: string;
@@ -34,4 +34,21 @@ export interface FarmActionProps {
   actions: FarmActions;
   address: string;
   onClaim: () => void;
+}
+
+export interface TokenImageProps {
+  symbol: string;
+  w?: number;
+  h?: number;
+}
+
+export interface TokenActionsProps {
+  token: TokenPortfolio;
+  isTokens: boolean;
+}
+
+export interface PopupActionsProps {
+  token: TokenPortfolio;
+  isLoading: boolean;
+  label: OptionsActionsProps;
 }

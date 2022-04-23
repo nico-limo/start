@@ -6,11 +6,11 @@ import { FarmActionProps } from "../../../utils/interfaces/components";
 import useLoading from "../../../hooks/useLoading";
 import { TokensMethod } from "../../../store/methods/tokens";
 import { checkAddresses } from "../../../utils/methods";
-import { UserMethods } from "../../../store/methods/user";
+import { useUserMethods } from "../../../store/methods/user";
 
 const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
   const { portfolio, updateToken } = TokensMethod();
-  const { wallet } = UserMethods();
+  const { wallet } = useUserMethods();
   const { isLoading, loadOff, loadOn } = useLoading();
   const {
     isLoading: isLoadingWithdraw,

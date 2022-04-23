@@ -12,7 +12,7 @@ import {
 import { PAGES } from "../utils/constants";
 import PricesStatics from "../components/PricesStatics";
 import Link from "next/link";
-import { UserMethods } from "../store/methods/user";
+import { useUserMethods } from "../store/methods/user";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
@@ -38,7 +38,7 @@ const Topbar = () => {
     onClose: onPurchaseClose,
   } = useDisclosure();
   const btnRef = useRef();
-  const { wallet } = UserMethods();
+  const { wallet } = useUserMethods();
   return (
     <chakra.header
       id="header"

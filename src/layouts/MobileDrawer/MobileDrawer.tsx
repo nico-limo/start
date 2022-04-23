@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import PricesStatics from "../../components/PricesStatics";
 import WalletConnection from "../../components/WalletConnection";
-import { UserMethods } from "../../store/methods/user";
+import { useUserMethods } from "../../store/methods/user";
 import { PAGES } from "../../utils/constants";
 import { MobileTopBarProps } from "../../utils/interfaces/components";
 
@@ -28,7 +28,7 @@ const MobileDrawer = ({
   onPurchaseOpen,
 }: MobileTopBarProps) => {
   const btnRef = useRef();
-  const { wallet } = UserMethods();
+  const { wallet } = useUserMethods();
   return (
     <>
       <Drawer

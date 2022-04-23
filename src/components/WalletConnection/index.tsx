@@ -3,14 +3,14 @@ import React, { FC } from "react";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../store/atoms/user";
 import { TokensMethod } from "../../store/methods/tokens";
-import { UserMethods } from "../../store/methods/user";
+import { useUserMethods } from "../../store/methods/user";
 
 interface Props {
   onModalOpen: () => void;
 }
 
 const WalletConnection: FC<Props> = ({ onModalOpen }) => {
-  const { logOut } = UserMethods();
+  const { logOut } = useUserMethods();
   const { cleanFarms } = TokensMethod();
 
   const handleLogOut = () => {

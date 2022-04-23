@@ -121,3 +121,21 @@ export interface PrincipalTokensProps {
   BNB: { USD: number; USD_24h: number };
   FTM: { USD: number; USD_24h: number };
 }
+
+export interface OptionsActionsProps {
+  header: string;
+  options: optionProps[];
+}
+
+interface optionProps {
+  label: string;
+  id: string;
+  icon: JSX.Element;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  action: () => any;
+}
+
+export interface ScanProps {
+  scanName: string;
+  scanPath: string;
+}

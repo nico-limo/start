@@ -1,4 +1,3 @@
-import { AddIcon } from "@chakra-ui/icons";
 import {
   Grid,
   GridItem,
@@ -7,21 +6,13 @@ import {
   Skeleton,
   Flex,
   Stack,
-  IconButton,
 } from "@chakra-ui/react";
-import { parseUnits } from "ethers/lib/utils";
 import Image from "next/image";
-import useLoading from "../../../hooks/useLoading";
-import useNotification from "../../../hooks/useNotification";
-import { TokensMethod } from "../../../store/methods/tokens";
-import { UserMethods } from "../../../store/methods/user";
+import { useUserMethods } from "../../../store/methods/user";
 import { getUSDBalance } from "../../../utils/cryptoMethods";
 import { TokenPortfolio } from "../../../utils/interfaces/index.";
-import {
-  checkAddresses,
-  formatAmount,
-  priceStatus,
-} from "../../../utils/methods";
+import { formatAmount, getColumns, priceStatus } from "../../../utils/methods";
+import TokenActions from "./TokenActions";
 import TokenImages from "./TokenImages";
 interface TokenInfoProps {
   token: TokenPortfolio;
@@ -30,17 +21,7 @@ interface TokenInfoProps {
 }
 
 const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
-  const { isPremium } = UserMethods();
-  const { farmsPortfolio } = TokensMethod();
-  const { isLoading, loadOff, loadOn } = useLoading();
-  const {
-    cancelTx,
-    pendingTx,
-    successTx,
-    noFarmExist,
-    needApproveTx,
-    successApproveTx,
-  } = useNotification();
+  const { isPremium } = useUserMethods();
   const { symbol, balance, usd, usd_24h } = token;
   const { color_rate, symbol_rate } = priceStatus(usd_24h);
   const diffPrice = usd_24h ? usd_24h.toFixed(2) : "00.00";
@@ -49,45 +30,8 @@ const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
   const balanceUSD = getUSDBalance(balance, usd);
   const fontSize = { base: "xs", md: "md" };
   const isTokens = type === "assets";
-  const columns = showBalance
-    ? isPremium && !isTokens
-      ? "1fr 1fr 1fr 80px"
-      : "1fr 1fr 1fr"
-    : "1fr 1fr";
-
-  const handleDeposit = async () => {
-    try {
-      const tokenPool =
-        farmsPortfolio.liquidity &&
-        farmsPortfolio.liquidity.find((lpPool) =>
-          checkAddresses(lpPool.lpAddresses[250], token.address)
-        );
-
-      if (tokenPool) {
-        const { depositAll, allowance, approve } = tokenPool;
-        loadOn();
-
-        const parseBalance = parseUnits(balance, token.decimals);
-        if (allowance.lt(parseBalance)) {
-          needApproveTx();
-          const txApprove = await approve();
-          await txApprove.wait();
-          successApproveTx();
-        }
-
-        const tx = await depositAll();
-        pendingTx();
-        await tx.wait();
-        loadOff();
-        successTx();
-      } else {
-        noFarmExist();
-      }
-    } catch (error) {
-      loadOff();
-      cancelTx();
-    }
-  };
+  const columns = getColumns(showBalance, isPremium);
+  const showActions = showBalance && isPremium;
 
   return (
     <Grid templateColumns={columns} my={1} bg="gray.700">
@@ -139,23 +83,7 @@ const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
           </Flex>
         </GridItem>
       )}
-      {isPremium && !isTokens && (
-        <GridItem
-          p={2}
-          display="flex"
-          alignItems="center"
-          justifyContent="flex-end"
-        >
-          <IconButton
-            isLoading={isLoading}
-            onClick={handleDeposit}
-            aria-label="deposit"
-            size="xs"
-            colorScheme="blackAlpha"
-            icon={<AddIcon />}
-          />
-        </GridItem>
-      )}
+      {showActions && <TokenActions token={token} isTokens={isTokens} />}
     </Grid>
   );
 };

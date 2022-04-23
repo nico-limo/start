@@ -47,3 +47,9 @@ export const sortItems = (items: TokenPortfolio[]): TokenPortfolio[] =>
     if (tokenA < tokenB) return -1;
     return 0;
   });
+
+export const getColumns = (balance: boolean, premium: boolean) => {
+  if (!balance) return "1fr 1fr";
+  if (balance && premium) return "1fr 1fr 1fr 80px";
+  return "1fr 1fr 1fr";
+};

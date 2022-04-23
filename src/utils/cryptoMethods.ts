@@ -1,8 +1,9 @@
 import { ethers, FixedNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
-import { NETWORKS_ID, OWNER_WALLET } from "./constants";
+import { NETWORKS_ID } from "./constants";
+import { ADDRESS_ZERO, OWNER_WALLET } from "./constants/contracts";
 import { hexToNumber, NETWORKS } from "./constants/networks";
-import { NetworkProps } from "./interfaces/index.";
+import { NetworkProps, TokenPortfolio } from "./interfaces/index.";
 
 export const formatTokenAmount = (
   amount: string,
@@ -61,6 +62,24 @@ export const walletConnect = async () => {
       method: "eth_requestAccounts",
     });
     return account;
+  }
+};
+
+export const addToken = async (token: TokenPortfolio) => {
+  const { address, symbol, decimals } = token;
+  if (window.ethereum && address !== ADDRESS_ZERO) {
+    await window.ethereum.request({
+      method: "wallet_watchAsset",
+      params: {
+        type: "ERC20",
+        options: {
+          address,
+          symbol,
+          decimals,
+          image: `https://assets.spookyswap.finance/tokens/${symbol}.png`,
+        },
+      },
+    });
   }
 };
 

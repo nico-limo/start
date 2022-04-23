@@ -1,5 +1,10 @@
-import { ADDRESS_ZERO } from "..";
 import { Token } from "../../interfaces/index.";
+import {
+  BOO_TOKEN,
+  SPIRIT_TOKEN,
+  ADDRESS_ZERO,
+  WFTM_TOKEN,
+} from "../contracts";
 import { IDs_COINMARKET } from "./coinmarketTokens";
 
 export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
@@ -243,7 +248,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
     {
       name: "SpiritSwap Token",
       symbol: "SPIRIT",
-      address: "0x5Cc61A78F164885776AA610fb0FE1257df78E59B",
+      address: SPIRIT_TOKEN,
       decimals: 18,
       path: "spiritswap",
       id_coinMarket: IDs_COINMARKET.SPIRIT,
@@ -251,7 +256,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
     {
       name: "SpookyToken",
       symbol: "BOO",
-      address: "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE",
+      address: BOO_TOKEN,
       decimals: 18,
       path: "spookyswap",
       id_coinMarket: IDs_COINMARKET.BOO,
@@ -275,7 +280,7 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
     {
       name: "Wrapped Fantom",
       symbol: "WFTM",
-      address: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
+      address: WFTM_TOKEN,
       decimals: 18,
       path: "wrapped-fantom",
       id_coinMarket: IDs_COINMARKET.WFTM,

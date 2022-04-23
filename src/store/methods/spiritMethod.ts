@@ -12,7 +12,7 @@ import {
 } from "../../utils/interfaces/index.";
 import { Contract, Provider } from "ethers-multicall";
 import { QUOTES } from "../../utils/constants/tokens/quoteFarms";
-import { ADDRESS_ZERO } from "../../utils/constants";
+import { ADDRESS_ZERO } from "../../utils/constants/contracts";
 
 export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
   const spiritData: FarmsPortfolio[] = [];

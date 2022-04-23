@@ -1,8 +1,6 @@
 import PAIR_ABI from "../../utils/constants/abis/pair.json";
-import ERC_ABI from "../../utils/constants/abis/erc20.json";
 import SPOOKY_ABI from "../../utils/constants/abis/spookyMaster.json";
 import { Contract } from "ethers-multicall";
-import { QUOTES } from "../../utils/constants/tokens/quoteFarms";
 import { BOO_MASTERCHEF } from "../../utils/constants/contracts";
 import SPOOKYFARMS from "../../utils/constants/farms/spookyFarms";
 import { ethers } from "ethers";
@@ -12,17 +10,19 @@ import {
   FarmsPortfolio,
   TokenPortfolio,
 } from "../../utils/interfaces/index.";
+import { checkAddresses } from "../../utils/methods";
 
-export const formatSpookyFarms = (calls, prices: TokenPortfolio[]) => {
+export const formatSpookyFarms = (calls, spookyFarms: TokenPortfolio[]) => {
   const spookyData: FarmsPortfolio[] = [];
   const spookyLiquidity: FarmsLiquidity[] = [];
   const { signer } = getProvider();
 
   for (let i = 0; i < SPOOKYFARMS.length; i++) {
     const farm = SPOOKYFARMS[i];
-    const [balanceOfLP, lpSupply, staked, earns, balanceOfAccount, allowance] =
-      calls.splice(0, 6);
-
+    const [staked, earns, balanceOfAccount, allowance] = calls.splice(0, 4);
+    const covalent_farm = spookyFarms.find((covaFarm) =>
+      checkAddresses(covaFarm.address, farm.lpAddresses[250])
+    );
     const stakeFormat = formatTokenAmount(staked[0].toString(), 18);
     const earnFormat = formatTokenAmount(earns.toString(), 18);
     const balanceFormat = formatTokenAmount(balanceOfAccount.toString(), 18);
@@ -64,11 +64,16 @@ export const formatSpookyFarms = (calls, prices: TokenPortfolio[]) => {
     }
 
     if (stakeFormat !== "0.0" || earnFormat !== "0.0") {
+      const getlpPrice = (): number => {
+        if (covalent_farm && covalent_farm.usd > 0) return covalent_farm.usd;
+        return 1;
+      };
+      const priceLP = Number(stakeFormat) * getlpPrice();
       const userFarm = {
         ...farm,
         staked: stakeFormat,
         earns: earnFormat,
-        usd: "1",
+        usd: priceLP.toString(),
         totalSupply: "100000",
         allowance,
         actions: {
@@ -89,22 +94,15 @@ export const spookyCalls = (account: string) => {
 
   for (let i = 0; i < SPOOKYFARMS.length; i++) {
     const farm = SPOOKYFARMS[i];
-    const tokenAddress: string = QUOTES[farm.lpSymbol[1]]?.address;
     const lpAddress: string = farm.lpAddresses[250];
 
-    const tokenContract = new Contract(tokenAddress, ERC_ABI);
     const lpContract = new Contract(lpAddress, PAIR_ABI);
     const masterChef = new Contract(BOO_MASTERCHEF, SPOOKY_ABI);
-
     const staked = masterChef.userInfo(farm.pid, account);
     const earn = masterChef.pendingBOO(farm.pid, account);
-    const balanceOfLP = tokenContract.balanceOf(lpAddress);
     const lpAccountBalance = lpContract.balanceOf(account);
     const lpAllowanceAccount = lpContract.allowance(account, BOO_MASTERCHEF);
-    const lpSupply = lpContract.totalSupply();
 
-    calls.push(balanceOfLP);
-    calls.push(lpSupply);
     calls.push(staked);
     calls.push(earn);
     calls.push(lpAccountBalance);

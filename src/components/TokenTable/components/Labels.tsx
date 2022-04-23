@@ -1,6 +1,7 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import React from "react";
-import { UserMethods } from "../../../store/methods/user";
+import { useUserMethods } from "../../../store/methods/user";
+import { getColumns } from "../../../utils/methods";
 
 const Labels = ({
   showBalance,
@@ -9,36 +10,32 @@ const Labels = ({
   showBalance: boolean;
   type: string;
 }) => {
-  const { isPremium } = UserMethods();
+  const { isPremium } = useUserMethods();
   const isToken = type === "assets";
-  const columns = showBalance
-    ? isPremium && !isToken
-      ? "1fr 1fr 1fr 80px"
-      : "1fr 1fr 1fr"
-    : "1fr 1fr";
+  const columns = getColumns(showBalance, isPremium);
+
   const fontSize = { base: "xs", md: "md" };
   const labels = {
     asset: isToken ? "Token" : "Pool",
-    market: "Price",
+    market: isToken ? "Balance" : "Price",
     user: "Balance",
-    stake: "Stake",
   };
   return (
     <Grid templateColumns={columns} borderBottom="2px solid white">
       <GridItem p={2} display="flex" alignItems="center" fontSize={fontSize}>
         {labels.asset}
       </GridItem>
-      {isToken && (
-        <GridItem
-          p={2}
-          display="flex"
-          alignItems="center"
-          justifyContent="flex-end"
-          fontSize={fontSize}
-        >
-          {labels.market}
-        </GridItem>
-      )}
+
+      <GridItem
+        p={2}
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        fontSize={fontSize}
+      >
+        {labels.market}
+      </GridItem>
+
       {showBalance && (
         <GridItem
           p={2}
@@ -48,17 +45,6 @@ const Labels = ({
           fontSize={fontSize}
         >
           {labels.user}
-        </GridItem>
-      )}
-      {isPremium && type === "liquidity" && (
-        <GridItem
-          p={2}
-          display="flex"
-          alignItems="center"
-          justifyContent="flex-end"
-          fontSize={fontSize}
-        >
-          {labels.stake}
         </GridItem>
       )}
     </Grid>

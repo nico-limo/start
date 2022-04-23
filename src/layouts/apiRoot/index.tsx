@@ -2,24 +2,21 @@ import { useEffect } from "react";
 import axios from "axios";
 import { NetworksMethods } from "../../store/methods/network";
 import { TokensMethod } from "../../store/methods/tokens";
-import { UserMethods } from "../../store/methods/user";
-import {
-  formatCoingeckoPortfolio,
-  formatCoinmarketPortfolio,
-  formatCovalentPortfolio,
-} from "./methods";
+import { useUserMethods } from "../../store/methods/user";
+import { formatCovalentPortfolio } from "./methods";
 import {
   PrincipalTokensProps,
   TokenPortfolio,
 } from "../../utils/interfaces/index.";
-import { PATH_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
 import useNotification from "../../hooks/useNotification";
 import { PRINCIPAL_DEFAULT } from "../../utils/constants";
+import useGetPrice from "./useGetPrice";
 
 const ApiRoot = ({ children }) => {
   const { network } = NetworksMethods();
   const { chainID } = network;
-  const { wallet } = UserMethods();
+  const { wallet } = useUserMethods();
+  const { getPrices } = useGetPrice(chainID);
   const { updatePortfolio, getFarmsBalance, cleanFarms } = TokensMethod();
   const { errorDB } = useNotification();
   useEffect(() => {
@@ -31,29 +28,15 @@ const ApiRoot = ({ children }) => {
         covalentPortfolio: {
           tokens: TokenPortfolio[];
           liquidity: TokenPortfolio[];
+          spookyFarms: TokenPortfolio[];
         } = {
           tokens: [],
           liquidity: [],
+          spookyFarms: [],
         };
 
       if (wallet.account) {
-        try {
-          const { data: coingeckoPrices } = await axios("/api/coingeckoPrices");
-          pricesPortfolio = formatCoingeckoPortfolio(coingeckoPrices, chainID);
-        } catch (error) {
-          errorDB("coingecko");
-
-          const { data: coinMarketPrices } = await axios(
-            "/api/coinmarketPrices",
-            {
-              params: { tokens: PATH_COINMARKET },
-            }
-          );
-          pricesPortfolio = formatCoinmarketPortfolio(
-            coinMarketPrices.data,
-            chainID
-          );
-        }
+        pricesPortfolio = await getPrices();
 
         try {
           const { data: covalentData } = await axios("/api/covalentData", {
@@ -72,47 +55,27 @@ const ApiRoot = ({ children }) => {
           chainID,
         });
         if (chainID === 250) {
-          getFarmsBalance(wallet.account, pricesPortfolio.list);
+          getFarmsBalance(
+            wallet.account,
+            pricesPortfolio.list,
+            covalentPortfolio.spookyFarms
+          );
         } else {
           cleanFarms();
         }
       } else {
-        try {
-          const { data: coingeckoPrices } = await axios("/api/coingeckoPrices");
-          pricesPortfolio = formatCoingeckoPortfolio(coingeckoPrices, chainID);
-          updatePortfolio({
-            pricesPortfolio,
-            account: wallet.account,
-            chainID,
-          });
-        } catch (error) {
-          errorDB("coingecko");
-          try {
-            const { data: coinMarketPrices } = await axios(
-              "/api/coinmarketPrices",
-              {
-                params: { tokens: PATH_COINMARKET },
-              }
-            );
-            pricesPortfolio = formatCoinmarketPortfolio(
-              coinMarketPrices.data,
-              chainID
-            );
-            updatePortfolio({
-              pricesPortfolio,
-              account: wallet.account,
-              chainID,
-            });
-          } catch (error) {
-            errorDB("coinmarket");
-          }
-        }
+        pricesPortfolio = await getPrices();
+        updatePortfolio({
+          pricesPortfolio,
+          account: wallet.account,
+          chainID,
+        });
       }
     };
     fethData();
     const interval = setInterval(() => {
       fethData();
-    }, 12000);
+    }, 18000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet, chainID]);

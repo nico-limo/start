@@ -10,13 +10,13 @@ import { checkAddresses } from "../../utils/methods";
 import { principalTokensState } from "../atoms/tokens";
 import { formatSpiritFarms, spiritCalls, tokenCall } from "./spiritMethod";
 import ERC20_ABI from "../../utils/constants/abis/erc20.json";
-import {
-  ADDRESS_ZERO,
-  CONTRACT_BOO,
-  CONTRACT_SPIRIT,
-} from "../../utils/constants";
 import { formatUnits } from "ethers/lib/utils";
 import { formatSpookyFarms, spookyCalls } from "./spookyMethods";
+import {
+  ADDRESS_ZERO,
+  BOO_TOKEN,
+  SPIRIT_TOKEN,
+} from "../../utils/constants/contracts";
 
 interface PortfolioProps {
   pricesPortfolio?: { list: TokenPortfolio[]; principal: PrincipalTokensProps };
@@ -126,7 +126,8 @@ export const TokensMethod = () => {
 
   const getFarmsBalance = async (
     account: string,
-    tokenPrices: TokenPortfolio[]
+    tokenPrices: TokenPortfolio[],
+    spookyFarms: TokenPortfolio[]
   ) => {
     try {
       if (account && tokenPrices.length) {
@@ -142,7 +143,7 @@ export const TokensMethod = () => {
 
         const { spookyData, spookyLiquidity } = formatSpookyFarms(
           result,
-          tokenPrices
+          spookyFarms
         );
 
         const { spiritData, spiritLiquidity } = formatSpiritFarms(
@@ -208,8 +209,8 @@ export const TokensMethod = () => {
     const ethcallProvider = new Provider(provider);
     await ethcallProvider.init();
     const nativeBalance = await ethcallProvider.getEthBalance(account);
-    const spiritContract = new Contract(CONTRACT_SPIRIT, ERC20_ABI);
-    const spookyContract = new Contract(CONTRACT_BOO, ERC20_ABI);
+    const spiritContract = new Contract(SPIRIT_TOKEN, ERC20_ABI);
+    const spookyContract = new Contract(BOO_TOKEN, ERC20_ABI);
     const balanceOfSpirit = await spiritContract.balanceOf(account);
     const balanceOfSpooky = await spookyContract.balanceOf(account);
     const [nativeBalanceOf, spiritBalanceOf, booBalanceOf] =
@@ -223,9 +224,9 @@ export const TokensMethod = () => {
     const formatNativeBalance = formatUnits(nativeBalanceOf, 18);
     const assets = portfolio.assets;
     const newAssets = assets.map((token) => {
-      if (checkAddresses(token.address, CONTRACT_SPIRIT))
+      if (checkAddresses(token.address, SPIRIT_TOKEN))
         return { ...token, balance: formatBalanceSPIRIT };
-      if (checkAddresses(token.address, CONTRACT_BOO))
+      if (checkAddresses(token.address, BOO_TOKEN))
         return { ...token, balance: formatBalanceBOO };
       if (token.address === ADDRESS_ZERO)
         return { ...token, balance: formatNativeBalance };

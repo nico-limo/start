@@ -1,14 +1,16 @@
+import { BOO_TOKEN, SPIRIT_TOKEN, WFTM_TOKEN } from "../contracts";
+
 export const QUOTES = {
   FTM: {
-    address: "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83",
+    address: WFTM_TOKEN,
     decimals: 18,
   },
   WFTM: {
-    address: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
+    address: WFTM_TOKEN,
     decimals: 18,
   },
   SPIRIT: {
-    address: "0x5Cc61A78F164885776AA610fb0FE1257df78E59B",
+    address: SPIRIT_TOKEN,
     decimals: 18,
   },
   ETH: {
@@ -29,6 +31,10 @@ export const QUOTES = {
   },
   DAI: {
     address: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+    decimals: 18,
+  },
+  BOO: {
+    address: BOO_TOKEN,
     decimals: 18,
   },
 };
