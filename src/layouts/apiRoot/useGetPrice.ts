@@ -1,10 +1,16 @@
 import axios from "axios";
 import useNotification from "../../hooks/useNotification";
+import { useUserMethods } from "../../store/methods/user";
 import { PATH_COINMARKET } from "../../utils/constants/tokens/coinmarketTokens";
-import { formatCoingeckoPortfolio, formatCoinmarketPortfolio } from "./methods";
+import {
+  formatCoingeckoPortfolio,
+  formatCoinmarketPortfolio,
+  formatCovalentPortfolio,
+} from "./methods";
 
 const useGetPrice = (chainID: number) => {
   const { errorDB } = useNotification();
+  const { wallet } = useUserMethods();
 
   const getPrices = async () => {
     try {
@@ -25,7 +31,19 @@ const useGetPrice = (chainID: number) => {
       }
     }
   };
-  return { getPrices };
+
+  const getBalances = async () => {
+    try {
+      const { data: covalentData } = await axios("/api/covalentData", {
+        params: { chainID, account: wallet.account },
+      });
+
+      return formatCovalentPortfolio(covalentData, chainID);
+    } catch (error) {
+      errorDB("covalent");
+    }
+  };
+  return { getPrices, getBalances };
 };
 
 export default useGetPrice;

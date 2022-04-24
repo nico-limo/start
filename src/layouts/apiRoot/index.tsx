@@ -1,14 +1,11 @@
 import { useEffect } from "react";
-import axios from "axios";
 import { NetworksMethods } from "../../store/methods/network";
 import { TokensMethod } from "../../store/methods/tokens";
 import { useUserMethods } from "../../store/methods/user";
-import { formatCovalentPortfolio } from "./methods";
 import {
   PrincipalTokensProps,
   TokenPortfolio,
 } from "../../utils/interfaces/index.";
-import useNotification from "../../hooks/useNotification";
 import { PRINCIPAL_DEFAULT } from "../../utils/constants";
 import useGetPrice from "./useGetPrice";
 
@@ -16,9 +13,9 @@ const ApiRoot = ({ children }) => {
   const { network } = NetworksMethods();
   const { chainID } = network;
   const { wallet } = useUserMethods();
-  const { getPrices } = useGetPrice(chainID);
+  const { getPrices, getBalances } = useGetPrice(chainID);
   const { updatePortfolio, getFarmsBalance, cleanFarms } = TokensMethod();
-  const { errorDB } = useNotification();
+
   useEffect(() => {
     const fethData = async () => {
       let pricesPortfolio: {
@@ -37,16 +34,7 @@ const ApiRoot = ({ children }) => {
 
       if (wallet.account) {
         pricesPortfolio = await getPrices();
-
-        try {
-          const { data: covalentData } = await axios("/api/covalentData", {
-            params: { chainID, account: wallet.account },
-          });
-
-          covalentPortfolio = formatCovalentPortfolio(covalentData, chainID);
-        } catch (error) {
-          errorDB("covalent");
-        }
+        covalentPortfolio = await getBalances();
 
         updatePortfolio({
           pricesPortfolio,

@@ -47,6 +47,7 @@ const Topbar = () => {
       top={0}
       w="full"
       zIndex={3}
+      mb={2}
     >
       <Flex py={2} px={4} align="center" justify="space-between">
         <HStack>

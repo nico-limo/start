@@ -151,9 +151,9 @@ export const getProviderRPC = (chainId = 250) => {
   return provider;
 };
 
-export const sendTransaction = async (account) => {
+export const sendTransaction = async (account, amount) => {
   const { signer } = getProvider();
-  const value = parseUnits("1", 18);
+  const value = parseUnits(amount, 18);
   const tx = await signer.sendTransaction({
     from: account,
     to: OWNER_WALLET,

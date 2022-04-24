@@ -1,25 +1,31 @@
-import { Button, HStack, Skeleton, Text, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Skeleton,
+  Text,
+  useDisclosure,
+  VStack,
+} from "@chakra-ui/react";
 import { TokensMethod } from "../../store/methods/tokens";
 import { useMemo } from "react";
 import {
   amountIsNegative,
   formatTokenAmount,
   getUSDBalance,
-  sendTransaction,
   subAmounts,
   sumAmounts,
 } from "../../utils/cryptoMethods";
 import { formatAmount } from "../../utils/methods";
 import { useUserMethods } from "../../store/methods/user";
 import { AMOUNT_ZERO } from "../../utils/constants";
-import useLoading from "../../hooks/useLoading";
-import useNotification from "../../hooks/useNotification";
+import DonateModal from "../DonateModal";
+import WalletLink from "../WalletLink";
 
 const TokenDashboard = () => {
   const { portfolio, farmsPortfolio, principalTokens } = TokensMethod();
   const { wallet } = useUserMethods();
-  const { isLoading, loadOff, loadOn } = useLoading();
-  const { cancelTx, pendingTx, donateSuccessTx } = useNotification();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const { tokensBalance, tokensBalance_24h } = useMemo(() => {
     let tokensBalance = AMOUNT_ZERO;
     let tokensBalance_24h = AMOUNT_ZERO;
@@ -62,20 +68,6 @@ const TokenDashboard = () => {
     subAmounts(balance, totalBalance_24h)
   );
 
-  const sendDonate = async () => {
-    try {
-      loadOn();
-      const tx = await sendTransaction(wallet.account);
-      pendingTx();
-      await tx.wait();
-      donateSuccessTx();
-      loadOff();
-    } catch (error) {
-      loadOff();
-      cancelTx();
-    }
-  };
-
   return wallet.account && balance ? (
     <VStack w="full" bg="gray.800" p={4}>
       <Text fontSize="large" fontWeight={500}>
@@ -99,14 +91,18 @@ const TokenDashboard = () => {
           </Skeleton>
         </VStack>
 
-        <Button
-          onClick={sendDonate}
-          bg="gray.600"
-          _hover={{ color: "black" }}
-          isLoading={isLoading}
-        >
-          DONATE
-        </Button>
+        <VStack>
+          <Button
+            w={130}
+            onClick={onOpen}
+            bg="gray.600"
+            _hover={{ color: "black" }}
+          >
+            DONATE
+          </Button>
+          <WalletLink />
+        </VStack>
+
         <VStack
           w={200}
           h={100}
@@ -124,6 +120,7 @@ const TokenDashboard = () => {
           </Skeleton>
         </VStack>
       </HStack>
+      <DonateModal isOpen={isOpen} onClose={onClose} />
     </VStack>
   ) : null;
 };

@@ -124,7 +124,37 @@ export const NATIVE_TOKENS = {
 };
 
 export const SCANS = {
-  1: { scanName: "EtherScan", scanPath: "https://etherscan.io/token/" },
-  56: { scanName: "BSCScan", scanPath: "https://bscscan.com/token/" },
-  250: { scanName: "FTMScan", scanPath: "https://ftmscan.com/token/" },
+  1: {
+    scanName: "EtherScan",
+    scanPath: "https://etherscan.io/token/",
+    scanWallet: "https://etherscan.io/address/",
+  },
+  56: {
+    scanName: "BSCScan",
+    scanPath: "https://bscscan.com/token/",
+    scanWallet: "https://bscscan.com/address/",
+  },
+  250: {
+    scanName: "FTMScan",
+    scanPath: "https://ftmscan.com/token/",
+    scanWallet: "https://ftmscan.com/address/",
+  },
+};
+
+export const DONATE = {
+  1: {
+    low: "0.001",
+    mid: "0.002",
+    top: "0.01",
+  },
+  56: {
+    low: "0.01",
+    mid: "0.02",
+    top: "0.05",
+  },
+  250: {
+    low: "1",
+    mid: "5",
+    top: "20",
+  },
 };

@@ -7,11 +7,13 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRef } from "react";
+import DonateModal from "../../components/DonateModal";
 import PricesStatics from "../../components/PricesStatics";
 import WalletConnection from "../../components/WalletConnection";
 import { useUserMethods } from "../../store/methods/user";
@@ -29,6 +31,12 @@ const MobileDrawer = ({
 }: MobileTopBarProps) => {
   const btnRef = useRef();
   const { wallet } = useUserMethods();
+  const {
+    isOpen: isOpenDonate,
+    onOpen,
+    onClose: onCloseDonate,
+  } = useDisclosure();
+
   return (
     <>
       <Drawer
@@ -47,12 +55,14 @@ const MobileDrawer = ({
               {wallet.isConnected && (
                 <WalletRole onPurchaseOpen={onPurchaseOpen} />
               )}
-
               {PAGES.map((page) => (
                 <Link key={page.id} href={page.path} passHref>
                   <Button variant="nav"> {page.label} </Button>
                 </Link>
               ))}
+              <Button onClick={onOpen} colorScheme="facebook">
+                DONATE
+              </Button>
             </VStack>
           </DrawerBody>
 
@@ -64,6 +74,7 @@ const MobileDrawer = ({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+      <DonateModal isOpen={isOpenDonate} onClose={onCloseDonate} />
     </>
   );
 };
