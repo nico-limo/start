@@ -6,7 +6,6 @@ export default extendTheme({
       body: {
         backgroundColor: "gray.900",
         color: "white",
-        w: "full",
       },
     },
   },

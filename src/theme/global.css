@@ -10,3 +10,7 @@
   border-radius: 25px;
   background-color: darkgrey;
 }
+
+main {
+  min-height: 77vh;
+}
