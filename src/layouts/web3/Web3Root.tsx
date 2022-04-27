@@ -1,14 +1,14 @@
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import { useUserMethods } from "../../store/methods/user";
-import { NetworksMethods } from "../../store/methods/network";
 import { hexToNumber } from "../../utils/constants/networks";
-import { TokensMethod } from "../../store/methods/tokens";
+import useNetwork from "../../store/methods/useNetwork";
+import useTokens from "../../store/methods/useTokens";
 
 const Web3Root = ({ children }) => {
   const { logIn } = useUserMethods();
-  const { connectNetwork, network } = NetworksMethods();
-  const { cleanFarms } = TokensMethod();
+  const { connectNetwork, chainID } = useNetwork();
+  const { cleanFarms } = useTokens();
 
   useEffect(() => {
     const fetchWeb3 = async () => {
@@ -23,7 +23,7 @@ const Web3Root = ({ children }) => {
 
           const { chainId: web3ChainId } = await provider.getNetwork();
 
-          if (web3ChainId !== network.chainID) {
+          if (web3ChainId !== chainID) {
             const hexId: string = hexToNumber[web3ChainId];
             connectNetwork(hexId);
           }

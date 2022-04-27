@@ -2,14 +2,14 @@ import dynamic from "next/dynamic";
 import { Stack, VStack } from "@chakra-ui/react";
 import TokenDashboard from "../components/TokenDashboard";
 import { TokenTable } from "../components/TokenTable";
-import { TokensMethod } from "../store/methods/tokens";
 import { useUserMethods } from "../store/methods/user";
+import useTokens from "../store/methods/useTokens";
 
 // Dinamic Components
 const FarmTable = dynamic(() => import("../components/FarmTable"));
 
 const Home = () => {
-  const { farmsPortfolio, portfolio } = TokensMethod();
+  const { farmsPortfolio, portfolio } = useTokens();
   const { wallet } = useUserMethods();
 
   return (

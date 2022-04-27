@@ -4,8 +4,8 @@ import { parseUnits } from "ethers/lib/utils";
 import React from "react";
 import useLoading from "../../../hooks/useLoading";
 import useNotification from "../../../hooks/useNotification";
-import { NetworksMethods } from "../../../store/methods/network";
-import { TokensMethod } from "../../../store/methods/tokens";
+import useNetwork from "../../../store/methods/useNetwork";
+import useTokens from "../../../store/methods/useTokens";
 import { SCANS } from "../../../utils/constants";
 import { addToken } from "../../../utils/cryptoMethods";
 import { TokenActionsProps } from "../../../utils/interfaces/components";
@@ -17,8 +17,8 @@ import { checkAddresses } from "../../../utils/methods";
 import PopupActions from "./PopupActions";
 
 const TokenActions = ({ token, isTokens }: TokenActionsProps) => {
-  const { farmsPortfolio } = TokensMethod();
-  const { network } = NetworksMethods();
+  const { farmsPortfolio } = useTokens();
+  const { chainID } = useNetwork();
   const { balance } = token;
   const { isLoading, loadOff, loadOn } = useLoading();
   const {
@@ -30,7 +30,7 @@ const TokenActions = ({ token, isTokens }: TokenActionsProps) => {
     successApproveTx,
   } = useNotification();
 
-  const scanInfo: ScanProps = SCANS[network.chainID];
+  const scanInfo: ScanProps = SCANS[chainID];
 
   const openScan = () => {
     window.open(`${scanInfo.scanPath}${token.address}`);

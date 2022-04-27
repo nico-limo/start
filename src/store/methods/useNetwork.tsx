@@ -4,7 +4,7 @@ import { NETWORKS } from "../../utils/constants/networks";
 import { NetworkProps } from "../../utils/interfaces/index.";
 import { networkState } from "../atoms/network";
 
-export const NetworksMethods = () => {
+const useNetwork = () => {
   const [network, setNetwork] = useRecoilState(networkState);
 
   const connectNetwork = (
@@ -26,5 +26,7 @@ export const NetworksMethods = () => {
     }
   };
 
-  return { connectNetwork, network };
+  return { connectNetwork, network, chainID: network.chainID };
 };
+
+export default useNetwork;

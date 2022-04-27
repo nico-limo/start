@@ -2,8 +2,8 @@ import { Button } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../store/atoms/user";
-import { TokensMethod } from "../../store/methods/tokens";
 import { useUserMethods } from "../../store/methods/user";
+import useTokens from "../../store/methods/useTokens";
 
 interface Props {
   onModalOpen: () => void;
@@ -11,7 +11,7 @@ interface Props {
 
 const WalletConnection: FC<Props> = ({ onModalOpen }) => {
   const { logOut } = useUserMethods();
-  const { cleanFarms } = TokensMethod();
+  const { cleanFarms } = useTokens();
 
   const handleLogOut = () => {
     cleanFarms();

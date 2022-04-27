@@ -23,6 +23,7 @@ interface TokenInfoProps {
 const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
   const { isPremium } = useUserMethods();
   const { symbol, balance, usd, usd_24h } = token;
+
   const { color_rate, symbol_rate } = priceStatus(usd_24h);
   const diffPrice = usd_24h ? usd_24h.toFixed(2) : "00.00";
   const isPrice: boolean = usd > 0 ?? false;

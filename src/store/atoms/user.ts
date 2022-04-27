@@ -16,20 +16,26 @@ export const userState = atom({
   },
 });
 
-export const portfolioState = atom({
-  key: "portfolioState",
-  default: { assets: currentTokens(250), hasBalance: false, liquidity: [] } as {
-    assets: TokenPortfolio[];
-    liquidity: TokenPortfolio[];
-    hasBalance: boolean;
-  },
-});
-
 export const farmsState = atom({
   key: "farmsState",
   default: { spiritFarms: [], liquidity: [], spookyFarms: [] } as {
     spiritFarms: FarmsPortfolio[];
     spookyFarms: FarmsPortfolio[];
     liquidity: FarmsLiquidity[];
+  },
+});
+
+export const portfolioStateV2 = atom({
+  key: "portfolioStateV2",
+  default: {
+    assets: currentTokens(250),
+    liquidity: [],
+    hasBalance: false,
+    isLoading: true,
+  } as {
+    assets: TokenPortfolio[];
+    liquidity: TokenPortfolio[];
+    hasBalance: boolean;
+    isLoading: boolean;
   },
 });

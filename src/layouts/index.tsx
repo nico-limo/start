@@ -1,4 +1,5 @@
-import ApiRoot from "./apiRoot";
+// import ApiRoot from "./apiRoot";
+import ApiRootV2 from "./ApiRootV2";
 import Footer from "./Footer";
 import Topbar from "./Topbar";
 import Web3Root from "./web3/Web3Root";
@@ -7,9 +8,11 @@ const Layout = (props) => (
   <>
     <Topbar />
     <Web3Root>
-      <ApiRoot>
+      {/* <ApiRoot> */}
+      <ApiRootV2>
         <main>{props.children}</main>
-      </ApiRoot>
+      </ApiRootV2>
+      {/* </ApiRoot> */}
     </Web3Root>
     <Footer />
   </>

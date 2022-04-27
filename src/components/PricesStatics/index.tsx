@@ -1,19 +1,22 @@
 import React from "react";
 import { Box, HStack, Skeleton, Text } from "@chakra-ui/react";
-import { NetworksMethods } from "../../store/methods/network";
+
 import { NATIVE_TOKENS, networksColors } from "../../utils/constants";
 import { formatAmount, priceStatus } from "../../utils/methods";
-import { TokensMethod } from "../../store/methods/tokens";
 import Image from "next/image";
+import useNetwork from "../../store/methods/useNetwork";
+import useTokens from "../../store/methods/useTokens";
 
 const PricesStatics = () => {
-  const { network } = NetworksMethods();
-  const { principalTokens } = TokensMethod();
-  const symbol: string = NATIVE_TOKENS[network.chainID];
+  const { network, chainID } = useNetwork();
+  const { principalTokens } = useTokens();
+
+  const symbol: string = NATIVE_TOKENS[chainID];
+
   const nativePrice: { USD: number; USD_24h: number } = principalTokens[symbol];
   const { USD, USD_24h } = nativePrice;
   const isLoadedPrice = USD > 0 ?? false;
-  const bg: string = networksColors[network.chainID].bg;
+  const bg: string = networksColors[chainID].bg;
 
   const { color_rate, symbol_rate } = priceStatus(USD_24h);
   const displayMode = { base: "none", md: "initial" };
