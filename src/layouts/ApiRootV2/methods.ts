@@ -117,8 +117,8 @@ export const getCovalentData = (
     if (
       !TOKENS_SCAM.includes(contract_address) &&
       contract_name &&
-      quote_rate < 300000 &&
       quote_rate &&
+      quote_rate < 300000 &&
       contract_decimals
     ) {
       if (contract_name.includes("LP")) {
@@ -176,11 +176,15 @@ export const getCovalentData = (
           const priceToken = allTokens.find((price) =>
             checkAddresses(price.address, contract_address)
           );
+
           if (priceToken) {
             const tokenBalance: TokenPortfolio = {
               ...priceToken,
               balance: formatUnits(balance, contract_decimals),
-              balance_24h: formatUnits(balance_24h, contract_decimals),
+              balance_24h: formatUnits(
+                balance_24h ? balance_24h : balance,
+                contract_decimals
+              ),
             };
             userBalances.push(tokenBalance);
           } else {
@@ -192,10 +196,13 @@ export const getCovalentData = (
               path: "",
               id_coinMarket: 0,
               balance: formatUnits(balance, contract_decimals),
-              balance_24h: formatUnits(balance_24h, contract_decimals),
+              balance_24h: formatUnits(
+                balance_24h ? balance_24h : balance,
+                contract_decimals
+              ),
               type: "",
               usd: quote_rate,
-              usd_24h: quote_rate_24h,
+              usd_24h: quote_rate_24h ? quote_rate_24h : quote_rate,
             };
             userBalances.push(tokenBalance);
           }
