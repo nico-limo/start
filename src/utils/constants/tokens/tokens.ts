@@ -235,6 +235,14 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       path: "pancakeswap-token",
       id_coinMarket: IDs_COINMARKET.CAKE,
     },
+    {
+      name: "Binance-Peg Avalanche Token",
+      symbol: "AVAX",
+      address: "0x1CE0c2827e2eF14D5C4f29a091d735A204794041",
+      decimals: 18,
+      path: "avalanche-2",
+      id_coinMarket: IDs_COINMARKET.AVAX,
+    },
   ],
   250: [
     {
@@ -389,7 +397,6 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       path: "deus-finance-2",
       id_coinMarket: IDs_COINMARKET.DEUS,
     },
-
     {
       name: "DEI",
       symbol: "DEI",
@@ -398,15 +405,21 @@ export const TOKENS: { 1: Token[]; 56: Token[]; 250: Token[] } = {
       path: "dei-token",
       id_coinMarket: IDs_COINMARKET.DEI,
     },
+    {
+      name: "Avalanche",
+      symbol: "AVAX",
+      address: "0x511D35c52a3C244E7b8bd92c0C297755FbD89212",
+      decimals: 18,
+      path: "avalanche-2",
+      id_coinMarket: IDs_COINMARKET.AVAX,
+    },
   ],
 };
 
 export const PATH_COINGECKO =
-  "bitcoin,ethereum,binancecoin,usd-coin,wrapped-bitcoin,fantom,spiritswap,spookyswap,tarot,wrapped-fantom,dai,tether,magic-internet-money,governance-ohm,binance-usd,beefy-finance,sushi,spell-token,multichain,pancakeswap-token,deus-finance-2, dei-token";
+  "bitcoin,ethereum,binancecoin,usd-coin,wrapped-bitcoin,fantom,spiritswap,spookyswap,tarot,wrapped-fantom,dai,tether,magic-internet-money,governance-ohm,binance-usd,beefy-finance,sushi,spell-token,multichain,pancakeswap-token,deus-finance-2, dei-token,avalanche-2";
 
 // Need to add on the list
-
-//   "avalanche-2",
 //   "aave",
 //   "frax",
 //   "frax-share",
