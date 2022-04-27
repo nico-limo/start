@@ -2,17 +2,17 @@ import { ChangeEvent, useState } from "react";
 import { Box, HStack, Text, useDisclosure } from "@chakra-ui/react";
 import TokenInfo from "./components/TokenInfo";
 import Labels from "./components/Labels";
-import { TokensMethod } from "../../store/methods/tokens";
 import SearchInput from "../SearchInput";
 import { TokenPortfolio } from "../../utils/interfaces/index.";
 import { sortItems } from "../../utils/methods";
+import useTokens from "../../store/methods/useTokens";
 
 interface TableProp {
   type: string;
 }
 
 const TokenTable = ({ type }: TableProp) => {
-  const { portfolio } = TokensMethod();
+  const { portfolio } = useTokens();
   const { isOpen, onToggle } = useDisclosure();
   const [inputValue, setInputValue] = useState("");
 

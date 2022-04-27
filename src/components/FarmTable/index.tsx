@@ -1,12 +1,12 @@
 import { ChangeEvent, useState } from "react";
 import { Box, HStack, Text, useDisclosure } from "@chakra-ui/react";
 import Labels from "./components/Labels";
-import { TokensMethod } from "../../store/methods/tokens";
 import FarmInfo from "./components/FarmInfo";
 import SearchInput from "../SearchInput";
+import useTokens from "../../store/methods/useTokens";
 
 const FarmTable = ({ pool }: { pool: string }) => {
-  const { farmsPortfolio } = TokensMethod();
+  const { farmsPortfolio } = useTokens();
   const { isOpen, onToggle } = useDisclosure();
   const [inputValue, setInputValue] = useState("");
   const farmsProtocol = pool === "SPIRIT" ? "spiritFarms" : "spookyFarms";

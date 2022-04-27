@@ -4,13 +4,11 @@ import { Button, GridItem, HStack, IconButton } from "@chakra-ui/react";
 import useNotification from "../../../hooks/useNotification";
 import { FarmActionProps } from "../../../utils/interfaces/components";
 import useLoading from "../../../hooks/useLoading";
-import { TokensMethod } from "../../../store/methods/tokens";
 import { checkAddresses } from "../../../utils/methods";
-import { useUserMethods } from "../../../store/methods/user";
+import useTokens from "../../../store/methods/useTokens";
 
 const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
-  const { portfolio, updateToken } = TokensMethod();
-  const { wallet } = useUserMethods();
+  const { portfolio } = useTokens();
   const { isLoading, loadOff, loadOn } = useLoading();
   const {
     isLoading: isLoadingWithdraw,
@@ -33,7 +31,6 @@ const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
       await tx.wait();
       loadOff();
       successTx();
-      await updateToken(wallet.account);
       onClaim();
     } catch (error) {
       loadOff();
@@ -49,7 +46,6 @@ const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
       await tx.wait();
       loadOffWithdraw();
       successTx();
-      await updateToken(wallet.account);
       onClaim();
     } catch (error) {
       loadOffWithdraw();

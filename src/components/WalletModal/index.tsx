@@ -11,7 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { FC, useState } from "react";
-import { NetworksMethods } from "../../store/methods/network";
+import useNetwork from "../../store/methods/useNetwork";
 import { useUserMethods } from "../../store/methods/user";
 import {
   DEFAULT_NETWORK,
@@ -28,7 +28,7 @@ import ModalRow from "../ModalRow";
 
 const WalletModal: FC<WalletModalProps> = ({ onClose, isOpen }) => {
   const { logIn } = useUserMethods();
-  const { connectNetwork } = NetworksMethods();
+  const { connectNetwork } = useNetwork();
   const [networkSelected, setNetworkSelected] =
     useState<ItemSelection>(DEFAULT_NETWORK);
   const [walletSelected, setWalletSelected] =

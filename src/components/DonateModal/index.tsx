@@ -15,7 +15,7 @@ import {
 import { useState } from "react";
 import useLoading from "../../hooks/useLoading";
 import useNotification from "../../hooks/useNotification";
-import { NetworksMethods } from "../../store/methods/network";
+import useNetwork from "../../store/methods/useNetwork";
 import { useUserMethods } from "../../store/methods/user";
 import { DONATE } from "../../utils/constants";
 import { sendTransaction } from "../../utils/cryptoMethods";
@@ -25,7 +25,7 @@ const defaultSelection = { low: false, mid: false, top: false };
 const DonateModal = ({ isOpen, onClose }) => {
   const { isLoading, loadOff, loadOn } = useLoading();
   const { wallet } = useUserMethods();
-  const { network } = NetworksMethods();
+  const { network } = useNetwork();
   const [isSelected, setIsSelected] = useState(defaultSelection);
   const { symbol, chainID } = network;
   const { low, mid, top } = DONATE[chainID];

@@ -1,8 +1,8 @@
 import { Grid, GridItem, HStack, Text, Flex } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
-import { TokensMethod } from "../../../store/methods/tokens";
 import { useUserMethods } from "../../../store/methods/user";
+import useTokens from "../../../store/methods/useTokens";
 import { getUSDBalance } from "../../../utils/cryptoMethods";
 import { FarmsPortfolio } from "../../../utils/interfaces/index.";
 import { formatAmount, getColumns } from "../../../utils/methods";
@@ -17,7 +17,7 @@ interface FarmInfoProps {
 }
 
 const FarmInfo = ({ farm, pool }: FarmInfoProps) => {
-  const { principalTokens, farmsPortfolio } = TokensMethod();
+  const { principalTokens, farmsPortfolio } = useTokens();
   const { isPremium } = useUserMethods();
   const [hasClaimed, setHasClaimed] = useState(false);
   const { earns, lpSymbol, staked, usd, actions, lpAddresses } = farm;

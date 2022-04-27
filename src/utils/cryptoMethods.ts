@@ -43,8 +43,9 @@ export const amountIsNegative = (amount: string): boolean => {
 export const getUSDBalance = (balance: string, price: number, round = 2) => {
   try {
     if (balance === "loading" || !balance) return "0.00";
+    const adjustedPrice = price < 0.00000000001 ? 0.0001 : price;
     const fixedBalance = FixedNumber.fromString(balance);
-    const fixedPrice = FixedNumber.from(price.toString());
+    const fixedPrice = FixedNumber.from(adjustedPrice.toString());
     const balacneUSD = fixedBalance
       .mulUnsafe(fixedPrice)
       .round(round)

@@ -1,19 +1,20 @@
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Button, HStack, Text } from "@chakra-ui/react";
 import React from "react";
-import { NetworksMethods } from "../../store/methods/network";
+import useNetwork from "../../store/methods/useNetwork";
 import { useUserMethods } from "../../store/methods/user";
 import { SCANS } from "../../utils/constants";
 
 const WalletLink = () => {
   const { wallet } = useUserMethods();
-  const { network } = NetworksMethods();
-  const { scanWallet } = SCANS[network.chainID];
+  const { chainID } = useNetwork();
+  const { scanWallet } = SCANS[chainID];
 
   return (
     <Button
       as="a"
-      w={130}
+      w={{ base: 100, md: 130 }}
+      fontSize={{ base: "xs", md: "md" }}
       href={`${scanWallet}${wallet.account}`}
       target="_blank"
       bg="gray.600"
