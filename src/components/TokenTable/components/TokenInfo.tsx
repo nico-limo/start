@@ -10,17 +10,12 @@ import {
 import Image from "next/image";
 import { useUserMethods } from "../../../store/methods/user";
 import { getUSDBalance } from "../../../utils/cryptoMethods";
-import { TokenPortfolio } from "../../../utils/interfaces/index.";
+import { LabelProps } from "../../../utils/interfaces/index.";
 import { formatAmount, getColumns, priceStatus } from "../../../utils/methods";
 import TokenActions from "./TokenActions";
 import TokenImages from "./TokenImages";
-interface TokenInfoProps {
-  token: TokenPortfolio;
-  showBalance: boolean;
-  type: string;
-}
 
-const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
+const TokenInfo = ({ token, showBalance, type }: LabelProps) => {
   const { isPremium } = useUserMethods();
   const { symbol, balance, usd, usd_24h } = token;
 
@@ -30,15 +25,14 @@ const TokenInfo = ({ token, showBalance, type }: TokenInfoProps) => {
   const balanceFormatted = formatAmount(balance, 5);
   const balanceUSD = getUSDBalance(balance, usd);
   const fontSize = { base: "xs", md: "md" };
-  const isTokens = type === "assets";
   const columns = getColumns(showBalance, isPremium);
   const showActions = showBalance && isPremium;
-
+  const isTokens = type.list === "assets";
   return (
     <Grid templateColumns={columns} my={1} bg="gray.700">
       <GridItem p={2} display="flex" alignItems="center">
         <Stack direction={isTokens ? "row" : "column"} spacing={1}>
-          <TokenImages type={type} symbol={symbol} />
+          <TokenImages type={type.list} symbol={symbol} />
 
           <HStack>
             <Text fontSize={fontSize}>{symbol}</Text>

@@ -1,6 +1,7 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import React from "react";
 import { useUserMethods } from "../../../store/methods/user";
+import { TokenInfoProps } from "../../../utils/interfaces/index.";
 import { getColumns } from "../../../utils/methods";
 
 const Labels = ({
@@ -8,16 +9,15 @@ const Labels = ({
   type,
 }: {
   showBalance: boolean;
-  type: string;
+  type: TokenInfoProps;
 }) => {
   const { isPremium } = useUserMethods();
-  const isToken = type === "assets";
   const columns = getColumns(showBalance, isPremium);
 
   const fontSize = { base: "xs", md: "md" };
   const labels = {
-    asset: isToken ? "Token" : "Pool",
-    market: isToken ? "Balance" : "Price",
+    asset: type.label_asset,
+    market: "Price",
     user: "Balance",
   };
   return (

@@ -139,3 +139,22 @@ export interface ScanProps {
   scanName: string;
   scanPath: string;
 }
+
+export interface ProtocolProps {
+  symbol: string;
+  farm: string;
+  earnToken: string;
+}
+
+export interface TokenInfoProps {
+  title: string;
+  placeholder: string;
+  list: string;
+  label_asset: string;
+}
+
+export interface LabelProps {
+  token: TokenPortfolio;
+  showBalance: boolean;
+  type: TokenInfoProps;
+}

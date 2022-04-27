@@ -3,12 +3,12 @@ import { Box, HStack, Text, useDisclosure } from "@chakra-ui/react";
 import TokenInfo from "./components/TokenInfo";
 import Labels from "./components/Labels";
 import SearchInput from "../SearchInput";
-import { TokenPortfolio } from "../../utils/interfaces/index.";
+import { TokenInfoProps, TokenPortfolio } from "../../utils/interfaces/index.";
 import { sortItems } from "../../utils/methods";
 import useTokens from "../../store/methods/useTokens";
 
 interface TableProp {
-  type: string;
+  type: TokenInfoProps;
 }
 
 const TokenTable = ({ type }: TableProp) => {
@@ -20,25 +20,24 @@ const TokenTable = ({ type }: TableProp) => {
     if (isOpen) setInputValue(e.target.value);
   };
 
-  const userPortfolio: TokenPortfolio[] = portfolio[type].filter(
+  const userPortfolio: TokenPortfolio[] = portfolio[type.list].filter(
     (token) =>
       token.symbol.toLowerCase().includes(inputValue.toLowerCase()) ||
       token.name.toLowerCase().includes(inputValue.toLowerCase())
   );
 
   const sortedUserPortfolio = sortItems(userPortfolio);
-  const isTokens = type === "assets";
-  const title = isTokens ? "ASSETS WALLETS" : "LIQUIDITY POOLS";
+
   return (
     <Box bg="gray.800" borderRadius={5} p={2} w="full">
       <HStack w="full" justify="space-between" align="center">
-        <Text>{title}</Text>
+        <Text>{type.title}</Text>
         <SearchInput
           value={inputValue}
           isVisible={isOpen}
           onToggle={onToggle}
           onChange={onchangeInput}
-          type={type}
+          type={type.placeholder}
         />
       </HStack>
       <Labels showBalance={portfolio.hasBalance} type={type} />

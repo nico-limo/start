@@ -4,7 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useUserMethods } from "../../../store/methods/user";
 import useTokens from "../../../store/methods/useTokens";
 import { getUSDBalance } from "../../../utils/cryptoMethods";
-import { FarmsPortfolio } from "../../../utils/interfaces/index.";
+import {
+  FarmsPortfolio,
+  ProtocolProps,
+} from "../../../utils/interfaces/index.";
 import { formatAmount, getColumns } from "../../../utils/methods";
 import TokenImage from "../../TokenImage";
 
@@ -13,10 +16,10 @@ const FarmActions = dynamic(() => import("./FarmActions"));
 
 interface FarmInfoProps {
   farm: FarmsPortfolio;
-  pool: string;
+  protocol: ProtocolProps;
 }
 
-const FarmInfo = ({ farm, pool }: FarmInfoProps) => {
+const FarmInfo = ({ farm, protocol }: FarmInfoProps) => {
   const { principalTokens, farmsPortfolio } = useTokens();
   const { isPremium } = useUserMethods();
   const [hasClaimed, setHasClaimed] = useState(false);
@@ -24,12 +27,15 @@ const FarmInfo = ({ farm, pool }: FarmInfoProps) => {
   const fontSize = { base: "xs", md: "md" };
   const [symbolA, symbolB] = lpSymbol;
   const earn_USD = useMemo(() => {
-    const earnToken = pool === "SPIRIT" ? pool : "BOO";
-    if (principalTokens.SPIRIT && principalTokens[earnToken].USD && earns) {
-      return getUSDBalance(earns, principalTokens[earnToken].USD, 4);
+    if (
+      principalTokens.SPIRIT &&
+      principalTokens[protocol.earnToken].USD &&
+      earns
+    ) {
+      return getUSDBalance(earns, principalTokens[protocol.earnToken].USD, 4);
     }
     return "0.00";
-  }, [earns, principalTokens, pool]);
+  }, [earns, principalTokens, protocol]);
   const columns = getColumns(true, isPremium);
 
   const handleClaim = () => {

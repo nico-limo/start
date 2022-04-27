@@ -4,6 +4,7 @@ import TokenDashboard from "../components/TokenDashboard";
 import { TokenTable } from "../components/TokenTable";
 import { useUserMethods } from "../store/methods/user";
 import useTokens from "../store/methods/useTokens";
+import { PROTOCOL, TOKEN_INFO } from "../utils/constants/protocols";
 
 // Dinamic Components
 const FarmTable = dynamic(() => import("../components/FarmTable"));
@@ -11,7 +12,8 @@ const FarmTable = dynamic(() => import("../components/FarmTable"));
 const Home = () => {
   const { farmsPortfolio, portfolio } = useTokens();
   const { wallet } = useUserMethods();
-
+  const { SPIRIT, SPOOKY } = PROTOCOL;
+  const { ASSETS, LIQUIDITY } = TOKEN_INFO;
   return (
     <VStack>
       <TokenDashboard />
@@ -21,8 +23,8 @@ const Home = () => {
         w="full"
         justify="space-between"
       >
-        <TokenTable type="assets" />
-        {portfolio?.liquidity?.length && <TokenTable type="liquidity" />}
+        <TokenTable type={ASSETS} />
+        {portfolio.liquidity?.length && <TokenTable type={LIQUIDITY} />}
       </Stack>
       {wallet.isConnected && (
         <Stack
@@ -31,8 +33,8 @@ const Home = () => {
           w="full"
           justify="space-between"
         >
-          {farmsPortfolio.spiritFarms.length && <FarmTable pool="SPIRIT" />}
-          {farmsPortfolio.spookyFarms.length && <FarmTable pool="SPOOKY" />}
+          {farmsPortfolio.spiritFarms.length && <FarmTable protocol={SPIRIT} />}
+          {farmsPortfolio.spookyFarms.length && <FarmTable protocol={SPOOKY} />}
         </Stack>
       )}
     </VStack>
