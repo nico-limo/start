@@ -48,7 +48,8 @@ export interface TokenActionsProps {
 }
 
 export interface PopupActionsProps {
-  token: TokenPortfolio;
   isLoading: boolean;
   label: OptionsActionsProps;
+  onAction: (action: string) => void;
+  action: string;
 }

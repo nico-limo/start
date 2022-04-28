@@ -9,9 +9,13 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { useUserMethods } from "../../../store/methods/user";
-import { getUSDBalance } from "../../../utils/cryptoMethods";
+import { getUSDBalanceV2 } from "../../../utils/cryptoMethods";
 import { LabelProps } from "../../../utils/interfaces/index.";
-import { formatAmount, getColumns, priceStatus } from "../../../utils/methods";
+import {
+  getColumns,
+  priceStatus,
+  formatAmountV2,
+} from "../../../utils/methods";
 import TokenActions from "./TokenActions";
 import TokenImages from "./TokenImages";
 
@@ -22,8 +26,8 @@ const TokenInfo = ({ token, showBalance, type }: LabelProps) => {
   const { color_rate, symbol_rate } = priceStatus(usd_24h);
   const diffPrice = usd_24h ? usd_24h.toFixed(2) : "00.00";
   const isPrice: boolean = usd > 0 ?? false;
-  const balanceFormatted = formatAmount(balance, 5);
-  const balanceUSD = getUSDBalance(balance, usd);
+  const balanceFormatted = formatAmountV2(balance, 4);
+  const balanceUSD = getUSDBalanceV2(balance, usd, 2);
   const fontSize = { base: "xs", md: "md" };
   const columns = getColumns(showBalance, isPremium);
   const showActions = showBalance && isPremium;
@@ -55,7 +59,7 @@ const TokenInfo = ({ token, showBalance, type }: LabelProps) => {
       >
         <Skeleton isLoaded={isPrice}>
           <HStack spacing={1}>
-            <Text fontSize={fontSize}>{formatAmount(usd, 4)}</Text>
+            <Text fontSize={fontSize}>{formatAmountV2(usd, 4)}</Text>
             {isTokens && (
               <HStack spacing={0}>
                 <Text
@@ -71,10 +75,10 @@ const TokenInfo = ({ token, showBalance, type }: LabelProps) => {
         <GridItem p={2}>
           <Flex direction="column" justify="end" align="flex-end">
             <Text fontSize={fontSize}>{balanceFormatted}</Text>
-            <Text color="teal.300" fontSize={fontSize}>{`$${formatAmount(
-              balanceUSD,
-              2
-            )}`}</Text>
+            <Text
+              color="teal.300"
+              fontSize={fontSize}
+            >{`$ ${balanceUSD}`}</Text>
           </Flex>
         </GridItem>
       )}

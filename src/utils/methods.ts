@@ -1,5 +1,6 @@
 import { TOKENS } from "./constants/tokens/tokens";
 import { Token, TokenPortfolio } from "./interfaces/index.";
+import BigNumber from "bignumber.js";
 
 export const formatAmount = (value: number | string = 0, round = 18) => {
   if (!value) return "0";
@@ -10,6 +11,15 @@ export const formatAmount = (value: number | string = 0, round = 18) => {
   const newValue = Number(integer).toLocaleString("en-US");
   const newDecimals = decimals?.slice(0, round);
   return newValue.concat(".", newDecimals);
+};
+
+export const formatAmountV2 = (value: number | string, round = 18) => {
+  if (!value) return "0.00";
+  const stringValue = value.toString();
+  const bgValue = new BigNumber(stringValue);
+  if (bgValue.isZero()) return "0.00";
+  if (bgValue.isLessThan(0.0001)) return "< 0.01";
+  return bgValue.decimalPlaces(round).toString();
 };
 
 export const currentTokens = (chainID: number): TokenPortfolio[] => {
@@ -52,4 +62,8 @@ export const getColumns = (balance: boolean, premium: boolean) => {
   if (!balance) return "1fr 1fr";
   if (balance && premium) return "1fr 1fr 1fr 80px";
   return "1fr 1fr 1fr";
+};
+
+export const openScan = (path, address) => {
+  window.open(`${path}${address}`);
 };

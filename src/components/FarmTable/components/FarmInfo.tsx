@@ -3,12 +3,12 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { useUserMethods } from "../../../store/methods/user";
 import useTokens from "../../../store/methods/useTokens";
-import { getUSDBalance } from "../../../utils/cryptoMethods";
+import { getUSDBalanceV2 } from "../../../utils/cryptoMethods";
 import {
   FarmsPortfolio,
   ProtocolProps,
 } from "../../../utils/interfaces/index.";
-import { formatAmount, getColumns } from "../../../utils/methods";
+import { getColumns, formatAmountV2 } from "../../../utils/methods";
 import TokenImage from "../../TokenImage";
 
 // Dynamic
@@ -32,7 +32,7 @@ const FarmInfo = ({ farm, protocol }: FarmInfoProps) => {
       principalTokens[protocol.earnToken].USD &&
       earns
     ) {
-      return getUSDBalance(earns, principalTokens[protocol.earnToken].USD, 4);
+      return getUSDBalanceV2(earns, principalTokens[protocol.earnToken].USD, 4);
     }
     return "0.00";
   }, [earns, principalTokens, protocol]);
@@ -64,19 +64,19 @@ const FarmInfo = ({ farm, protocol }: FarmInfoProps) => {
         justifyContent="flex-end"
       >
         <Flex direction="column" justify="end" align="flex-end">
-          <Text fontSize={fontSize}>{formatAmount(staked, 5)}</Text>
+          <Text fontSize={fontSize}>{formatAmountV2(staked, 4)}</Text>
           <Text color="teal.300" fontSize={fontSize}>
-            {`$${formatAmount(usd, 2)}`}
+            {`$ ${formatAmountV2(usd, 2)}`}
           </Text>
         </Flex>
       </GridItem>
       <GridItem p={2}>
         <Flex direction="column" justify="end" align="flex-end">
           <Text fontSize={fontSize}>
-            {hasClaimed ? "0" : formatAmount(earns, 5)}
+            {hasClaimed ? "0" : formatAmountV2(earns, 4)}
           </Text>
           <Text color="teal.300" fontSize={fontSize}>
-            {`$${hasClaimed ? "0.00" : formatAmount(earn_USD)}`}
+            {`$ ${hasClaimed ? "0.00" : earn_USD}`}
           </Text>
         </Flex>
       </GridItem>

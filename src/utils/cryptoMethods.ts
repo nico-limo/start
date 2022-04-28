@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { ethers, FixedNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { NETWORKS_ID } from "./constants";
@@ -53,6 +54,19 @@ export const getUSDBalance = (balance: string, price: number, round = 2) => {
     return balacneUSD;
   } catch (error) {
     console.log("error format USD amount ");
+    return "0.00";
+  }
+};
+
+export const getUSDBalanceV2 = (balance: string, price: number, round = 2) => {
+  try {
+    const bgBalance = new BigNumber(balance);
+    const value_USD = bgBalance.multipliedBy(price);
+    if (value_USD.isZero()) return "0.00";
+    if (value_USD.isLessThan(0.01)) return "< 0.01";
+    return value_USD.decimalPlaces(round).toString();
+  } catch (error) {
+    console.log("ERROR GET USD V2");
     return "0.00";
   }
 };

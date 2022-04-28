@@ -1,7 +1,7 @@
 import { AddIcon, LinkIcon } from "@chakra-ui/icons";
 import { GridItem } from "@chakra-ui/react";
 import { parseUnits } from "ethers/lib/utils";
-import React from "react";
+import React, { useState } from "react";
 import useLoading from "../../../hooks/useLoading";
 import useNotification from "../../../hooks/useNotification";
 import useNetwork from "../../../store/methods/useNetwork";
@@ -13,7 +13,7 @@ import {
   OptionsActionsProps,
   ScanProps,
 } from "../../../utils/interfaces/index.";
-import { checkAddresses } from "../../../utils/methods";
+import { checkAddresses, openScan } from "../../../utils/methods";
 import PopupActions from "./PopupActions";
 
 const TokenActions = ({ token, isTokens }: TokenActionsProps) => {
@@ -32,8 +32,10 @@ const TokenActions = ({ token, isTokens }: TokenActionsProps) => {
 
   const scanInfo: ScanProps = SCANS[chainID];
 
-  const openScan = () => {
-    window.open(`${scanInfo.scanPath}${token.address}`);
+  const [actionSelected, setActionSelected] = useState("stake");
+
+  const handleAction = (action: string) => {
+    setActionSelected(action);
   };
 
   const handleStake = async () => {
@@ -80,6 +82,12 @@ const TokenActions = ({ token, isTokens }: TokenActionsProps) => {
             id: "stake",
             icon: <AddIcon />,
           },
+          {
+            label: `View on ${scanInfo.scanName}`,
+            action: () => openScan(scanInfo.scanPath, token.address),
+            id: "viewscan",
+            icon: <LinkIcon />,
+          },
         ],
       }
     : {
@@ -93,7 +101,7 @@ const TokenActions = ({ token, isTokens }: TokenActionsProps) => {
           },
           {
             label: `View on ${scanInfo.scanName}`,
-            action: () => openScan(),
+            action: () => openScan(scanInfo.scanPath, token.address),
             id: "viewscan",
             icon: <LinkIcon />,
           },
@@ -107,7 +115,12 @@ const TokenActions = ({ token, isTokens }: TokenActionsProps) => {
       alignItems="center"
       justifyContent="flex-end"
     >
-      <PopupActions token={token} isLoading={isLoading} label={options} />
+      <PopupActions
+        isLoading={isLoading}
+        label={options}
+        onAction={handleAction}
+        action={actionSelected}
+      />
     </GridItem>
   );
 };

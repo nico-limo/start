@@ -1,27 +1,33 @@
-import React from "react";
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import { Button, GridItem, HStack, IconButton } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { AddIcon, LinkIcon, MinusIcon, StarIcon } from "@chakra-ui/icons";
+import { GridItem } from "@chakra-ui/react";
 import useNotification from "../../../hooks/useNotification";
 import { FarmActionProps } from "../../../utils/interfaces/components";
 import useLoading from "../../../hooks/useLoading";
-import { checkAddresses } from "../../../utils/methods";
+import { checkAddresses, openScan } from "../../../utils/methods";
 import useTokens from "../../../store/methods/useTokens";
+import {
+  OptionsActionsProps,
+  ScanProps,
+} from "../../../utils/interfaces/index.";
+import { SCANS } from "../../../utils/constants";
+import useNetwork from "../../../store/methods/useNetwork";
+import PopupActions from "../../TokenTable/components/PopupActions";
 
 const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
   const { portfolio } = useTokens();
+  const { chainID } = useNetwork();
   const { isLoading, loadOff, loadOn } = useLoading();
-  const {
-    isLoading: isLoadingWithdraw,
-    loadOff: loadOffWithdraw,
-    loadOn: loadOnWithdraw,
-  } = useLoading();
-  const {
-    isLoading: isLoadingDeposit,
-    loadOff: loadOfDeposit,
-    loadOn: loadOnDeposit,
-  } = useLoading();
+
   const { pendingTx, successTx, cancelTx, noBalanceTx } = useNotification();
   const { getRewards, withdrawAll, depositAll } = actions;
+  const scanInfo: ScanProps = SCANS[chainID];
+
+  const [actionSelected, setActionSelected] = useState("deposit");
+
+  const handleAction = (action: string) => {
+    setActionSelected(action);
+  };
 
   const handleClaim = async () => {
     try {
@@ -40,15 +46,15 @@ const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
 
   const handleWithdraw = async () => {
     try {
-      loadOnWithdraw();
+      loadOn();
       const tx = await withdrawAll();
       pendingTx();
       await tx.wait();
-      loadOffWithdraw();
+      loadOff();
       successTx();
       onClaim();
     } catch (error) {
-      loadOffWithdraw();
+      loadOff();
       cancelTx();
     }
   };
@@ -60,53 +66,60 @@ const FarmActions = ({ actions, address, onClaim }: FarmActionProps) => {
         portfolio.liquidity.find((lpPool) =>
           checkAddresses(lpPool.address, address)
         );
-
-      const hasBalance = farmPool ? true : false;
-      if (hasBalance) {
-        loadOnDeposit();
+      if (farmPool) {
+        loadOn();
         const tx = await depositAll();
         pendingTx();
         await tx.wait();
-        loadOfDeposit();
+        loadOff();
         successTx();
       } else {
         noBalanceTx();
       }
     } catch (error) {
-      loadOfDeposit();
+      loadOff();
       cancelTx();
     }
   };
 
+  const options: OptionsActionsProps = {
+    header: "Farm Actions",
+    options: [
+      {
+        label: "Deposit",
+        action: handleDeposit,
+        id: "deposit",
+        icon: <AddIcon />,
+      },
+      {
+        label: "Withdraw",
+        action: handleWithdraw,
+        id: "withdraw",
+        icon: <MinusIcon />,
+      },
+      {
+        label: "Claim",
+        action: handleClaim,
+        id: "claim",
+        icon: <StarIcon />,
+      },
+      {
+        label: `View on ${scanInfo.scanName}`,
+        action: () => openScan(scanInfo.scanPath, address),
+        id: "viewscan",
+        icon: <LinkIcon />,
+      },
+    ],
+  };
+
   return (
     <GridItem p={1} textAlign="end" alignSelf="center">
-      <HStack justify="end">
-        <IconButton
-          isLoading={isLoadingDeposit}
-          onClick={handleDeposit}
-          aria-label="deposit"
-          size="xs"
-          colorScheme="blackAlpha"
-          icon={<AddIcon />}
-        />
-        <IconButton
-          isLoading={isLoadingWithdraw}
-          onClick={handleWithdraw}
-          aria-label="withdraw"
-          size="xs"
-          colorScheme="blackAlpha"
-          icon={<MinusIcon />}
-        />
-      </HStack>
-      <Button
-        onClick={handleClaim}
+      <PopupActions
         isLoading={isLoading}
-        colorScheme="yellow"
-        fontSize="xs"
-        size="xs"
-      >
-        CLAIM
-      </Button>
+        label={options}
+        onAction={handleAction}
+        action={actionSelected}
+      />
     </GridItem>
   );
 };
