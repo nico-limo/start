@@ -96,7 +96,8 @@ export const coinmarketFormat = (data, chainID) => {
 
 export const getCovalentData = (
   data: CovalentData[],
-  allTokens: TokenPortfolio[]
+  allTokens: TokenPortfolio[],
+  chainID: number
 ) => {
   const userBalances: TokenPortfolio[] = [];
   const spiritBalance: TokenPortfolio[] = [];
@@ -115,7 +116,7 @@ export const getCovalentData = (
     } = data[i];
 
     if (
-      !TOKENS_SCAM.includes(contract_address) &&
+      !TOKENS_SCAM[chainID].includes(contract_address) &&
       contract_name &&
       quote_rate &&
       quote_rate < 300000 &&

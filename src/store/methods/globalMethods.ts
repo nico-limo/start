@@ -1,26 +1,45 @@
 import PAIR_ABI from "../../utils/constants/abis/pair.json";
 import SPOOKY_ABI from "../../utils/constants/abis/spookyMaster.json";
+import SPIRIT_ABI from "../../utils/constants/abis/spiritMasterchef.json";
 import { Contract } from "ethers-multicall";
-import { BOO_MASTERCHEF } from "../../utils/constants/contracts";
+import {
+  BOO_MASTERCHEF,
+  SPIRIT_MASTERCHEF,
+} from "../../utils/constants/contracts";
 import SPOOKYFARMS from "../../utils/constants/farms/spookyFarms";
 import { ethers } from "ethers";
-import { formatTokenAmount, getProvider } from "../../utils/cryptoMethods";
+import { formatTokenAmount, getProviderRPC } from "../../utils/cryptoMethods";
 import {
   FarmsLiquidity,
   FarmsPortfolio,
   TokenPortfolio,
 } from "../../utils/interfaces/index.";
 import { checkAddresses } from "../../utils/methods";
+import { spiritFarms_v1 } from "../../utils/constants/farms/spiritFarms";
 
-export const formatSpookyFarms = (calls, spookyFarms: TokenPortfolio[]) => {
-  const spookyData: FarmsPortfolio[] = [];
-  const spookyLiquidity: FarmsLiquidity[] = [];
-  const { signer } = getProvider();
+export const formatFarms = (calls, farms: TokenPortfolio[], type) => {
+  const farmsData: FarmsPortfolio[] = [];
+  const farmsLiquidity: FarmsLiquidity[] = [];
+  const provider = getProviderRPC();
+  const signer = provider.getSigner();
+  const protocol_farms = {
+    SPIRIT: {
+      array: spiritFarms_v1,
+      masterChef: SPIRIT_MASTERCHEF,
+      ABI: SPIRIT_ABI,
+    },
+    BOO: {
+      array: SPOOKYFARMS,
+      masterChef: BOO_MASTERCHEF,
+      ABI: SPOOKY_ABI,
+    },
+  };
+  const { array, masterChef, ABI } = protocol_farms[type];
 
-  for (let i = 0; i < SPOOKYFARMS.length; i++) {
-    const farm = SPOOKYFARMS[i];
+  for (let i = 0; i < array.length; i++) {
+    const farm = array[i];
     const [staked, earns, balanceOfAccount, allowance] = calls.splice(0, 4);
-    const covalent_farm = spookyFarms.find((covaFarm) =>
+    const covalent_farm = farms.find((covaFarm) =>
       checkAddresses(covaFarm.address, farm.lpAddresses[250])
     );
     const stakeFormat = formatTokenAmount(staked[0].toString(), 18);
@@ -33,18 +52,14 @@ export const formatSpookyFarms = (calls, spookyFarms: TokenPortfolio[]) => {
       signer
     );
 
-    const spookyContract = new ethers.Contract(
-      BOO_MASTERCHEF,
-      SPOOKY_ABI,
-      signer
-    );
+    const masterContract = new ethers.Contract(masterChef, ABI, signer);
 
     // SpookySwap actions
-    const getRewards = async () => await spookyContract.withdraw(farm.pid, "0");
+    const getRewards = async () => await masterContract.withdraw(farm.pid, "0");
     const withdrawAll = async () =>
-      await spookyContract.withdraw(farm.pid, staked[0].toString());
+      await masterContract.withdraw(farm.pid, staked[0].toString());
     const depositAll = async () =>
-      await spookyContract.deposit(farm.pid, balanceOfAccount.toString());
+      await masterContract.deposit(farm.pid, balanceOfAccount.toString());
 
     const approve = async () =>
       await LPEtherContract.approve(
@@ -60,7 +75,7 @@ export const formatSpookyFarms = (calls, spookyFarms: TokenPortfolio[]) => {
         allowance,
         approve,
       };
-      spookyLiquidity.push(liquidityFarm);
+      farmsLiquidity.push(liquidityFarm);
     }
 
     if (stakeFormat !== "0.0" || earnFormat !== "0.0") {
@@ -83,25 +98,39 @@ export const formatSpookyFarms = (calls, spookyFarms: TokenPortfolio[]) => {
         },
       };
 
-      spookyData.push(userFarm);
+      farmsData.push(userFarm);
     }
   }
-  return { spookyData, spookyLiquidity };
+  return { farmsData, farmsLiquidity };
 };
 
-export const spookyCalls = (account: string) => {
+export const farmsCall = (account: string, type) => {
   const calls = [];
-
-  for (let i = 0; i < SPOOKYFARMS.length; i++) {
-    const farm = SPOOKYFARMS[i];
+  const protocol_farms = {
+    SPIRIT: {
+      farms: spiritFarms_v1,
+      masterChef: SPIRIT_MASTERCHEF,
+      ABI: SPIRIT_ABI,
+      pending: "pendingSpirit",
+    },
+    BOO: {
+      farms: SPOOKYFARMS,
+      masterChef: BOO_MASTERCHEF,
+      ABI: SPOOKY_ABI,
+      pending: "pendingBOO",
+    },
+  };
+  const { farms, masterChef, ABI, pending } = protocol_farms[type];
+  for (let i = 0; i < farms.length; i++) {
+    const farm = farms[i];
     const lpAddress: string = farm.lpAddresses[250];
 
     const lpContract = new Contract(lpAddress, PAIR_ABI);
-    const masterChef = new Contract(BOO_MASTERCHEF, SPOOKY_ABI);
-    const staked = masterChef.userInfo(farm.pid, account);
-    const earn = masterChef.pendingBOO(farm.pid, account);
+    const masterChefContract = new Contract(masterChef, ABI);
+    const staked = masterChefContract.userInfo(farm.pid, account);
+    const earn = masterChefContract[pending](farm.pid, account);
     const lpAccountBalance = lpContract.balanceOf(account);
-    const lpAllowanceAccount = lpContract.allowance(account, BOO_MASTERCHEF);
+    const lpAllowanceAccount = lpContract.allowance(account, masterChef);
 
     calls.push(staked);
     calls.push(earn);

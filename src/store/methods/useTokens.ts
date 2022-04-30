@@ -4,7 +4,7 @@ import { getProviderRPC } from "../../utils/cryptoMethods";
 import { principalTokensState } from "../atoms/tokens";
 import { farmsState, portfolioStateV2 } from "../atoms/user";
 import { formatSpiritFarms, spiritCalls } from "./spiritMethod";
-import { formatSpookyFarms, spookyCalls } from "./spookyMethods";
+import { farmsCall, formatFarms } from "./globalMethods";
 
 const useTokens = () => {
   const [portfolio, setPortfolio] = useRecoilState(portfolioStateV2);
@@ -21,14 +21,23 @@ const useTokens = () => {
     const ethcallProvider = new Provider(provider);
     await ethcallProvider.init();
     const calls = spiritCalls(account);
-    const booCalls = spookyCalls(account);
+    const booCalls = farmsCall(account, "BOO");
+    const spiritV1Calls = farmsCall(account, "SPIRIT");
     const spiritLength = calls.length;
-    const globalCalls = calls.concat(booCalls);
+    const spiritV1Length = spiritV1Calls.length;
+    const globalCalls = [...calls, ...spiritV1Calls, ...booCalls];
     const result = await ethcallProvider.all(globalCalls);
+
     const spiritResult = result.splice(0, spiritLength);
-    const { spookyData, spookyLiquidity } = formatSpookyFarms(
-      result,
-      spookyFarms
+    const spiritV1Result = result.splice(0, spiritV1Length);
+
+    const { farmsData: spookyData, farmsLiquidity: spookyLiquidity } =
+      formatFarms(result, spookyFarms, "BOO");
+
+    const { farmsData, farmsLiquidity } = formatFarms(
+      spiritV1Result,
+      spiritFarms,
+      "SPIRIT"
     );
 
     const { spiritData, spiritLiquidity } = formatSpiritFarms(
@@ -36,9 +45,9 @@ const useTokens = () => {
       allTokens
     );
     setFarmsPortfolio({
-      spiritFarms: spiritData,
+      spiritFarms: [...spiritData, ...farmsData],
       spookyFarms: spookyData,
-      liquidity: [...spookyLiquidity, ...spiritLiquidity],
+      liquidity: [...spookyLiquidity, ...spiritLiquidity, ...farmsLiquidity],
     });
   };
 

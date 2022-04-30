@@ -30,7 +30,7 @@ const useGetPrice = (chainID: number) => {
       const { data: covalentData } = await axios("/api/covalentData", {
         params: { chainID, account },
       });
-      return getCovalentData(covalentData.data.items, allTokens);
+      return getCovalentData(covalentData.data.items, allTokens, chainID);
     } catch (error) {
       errorDB("covalent");
     }

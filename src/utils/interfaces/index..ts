@@ -77,7 +77,7 @@ export interface Farm {
   lpAddresses: {
     250: string;
   };
-  gaugeAddress: string;
+  investAddress: string;
 }
 
 export interface TransactionResponse {

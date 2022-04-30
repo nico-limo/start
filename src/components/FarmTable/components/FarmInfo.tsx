@@ -70,7 +70,12 @@ const FarmInfo = ({ farm, protocol }: FarmInfoProps) => {
           </Text>
         </Flex>
       </GridItem>
-      <GridItem p={2}>
+      <GridItem
+        p={2}
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+      >
         <Flex direction="column" justify="end" align="flex-end">
           <Text fontSize={fontSize}>
             {hasClaimed ? "0" : formatAmountV2(earns, 4)}

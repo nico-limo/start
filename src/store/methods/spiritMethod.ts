@@ -1,7 +1,7 @@
 import { ethers, FixedNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
-import { formatTokenAmount, getProvider } from "../../utils/cryptoMethods";
+import { formatTokenAmount, getProviderRPC } from "../../utils/cryptoMethods";
 import GAUGE_ABI from "../../utils/constants/abis/gauges.json";
 import PAIR_ABI from "../../utils/constants/abis/pair.json";
 import ERC_ABI from "../../utils/constants/abis/erc20.json";
@@ -17,8 +17,8 @@ import { ADDRESS_ZERO } from "../../utils/constants/contracts";
 export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
   const spiritData: FarmsPortfolio[] = [];
   const spiritLiquidity: FarmsLiquidity[] = [];
-  const { signer } = getProvider();
-
+  const provider = getProviderRPC();
+  const signer = provider.getSigner();
   for (let i = 0; i < spiritFarms.length; i++) {
     const farm = spiritFarms[i];
     const [
@@ -35,7 +35,7 @@ export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
     const balanceFormat = formatTokenAmount(balanceOfAccount.toString(), 18);
 
     const gaugeEtherContract = new ethers.Contract(
-      farm.gaugeAddress,
+      farm.investAddress,
       GAUGE_ABI,
       signer
     );
@@ -52,7 +52,7 @@ export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
 
     const approve = async () =>
       await LPEtherContract.approve(
-        farm.gaugeAddress,
+        farm.investAddress,
         ethers.constants.MaxUint256.toString()
       );
 
@@ -121,7 +121,7 @@ export const spiritCalls = (account: string) => {
     const farm = spiritFarms[i];
     const tokenAddress: string = QUOTES[farm.lpSymbol[1]]?.address;
     const lpAddress: string = farm.lpAddresses[250];
-    const gaugeAddress: string = farm.gaugeAddress;
+    const gaugeAddress: string = farm.investAddress;
     const tokenContract = new Contract(tokenAddress, ERC_ABI);
     const lpContract = new Contract(lpAddress, PAIR_ABI);
     const gaugeContract = new Contract(gaugeAddress, GAUGE_ABI);
@@ -129,7 +129,10 @@ export const spiritCalls = (account: string) => {
     const balanceOfLP = tokenContract.balanceOf(lpAddress);
     const lpSupply = lpContract.totalSupply();
     const lpAccountBalance = lpContract.balanceOf(account);
-    const lpAllowanceAccount = lpContract.allowance(account, farm.gaugeAddress);
+    const lpAllowanceAccount = lpContract.allowance(
+      account,
+      farm.investAddress
+    );
 
     const gaugeSupply = gaugeContract.totalSupply();
 
