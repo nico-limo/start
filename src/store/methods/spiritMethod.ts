@@ -1,7 +1,7 @@
 import { ethers, FixedNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
-import { formatTokenAmount, getProviderRPC } from "../../utils/cryptoMethods";
+import { formatTokenAmount, getProvider } from "../../utils/cryptoMethods";
 import GAUGE_ABI from "../../utils/constants/abis/gauges.json";
 import PAIR_ABI from "../../utils/constants/abis/pair.json";
 import ERC_ABI from "../../utils/constants/abis/erc20.json";
@@ -17,8 +17,7 @@ import { ADDRESS_ZERO } from "../../utils/constants/contracts";
 export const formatSpiritFarms = (calls, prices: TokenPortfolio[]) => {
   const spiritData: FarmsPortfolio[] = [];
   const spiritLiquidity: FarmsLiquidity[] = [];
-  const provider = getProviderRPC();
-  const signer = provider.getSigner();
+  const { signer } = getProvider();
   for (let i = 0; i < spiritFarms.length; i++) {
     const farm = spiritFarms[i];
     const [

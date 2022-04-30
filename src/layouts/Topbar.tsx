@@ -56,7 +56,7 @@ const Topbar = () => {
             height={30}
             src="/wallets/coinbase.png"
             alt="text"
-            loading="lazy"
+            loading="eager"
           />
           <Text fontSize="large" fontWeight={500} color="teal.300">
             StartSwap

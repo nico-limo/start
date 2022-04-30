@@ -8,7 +8,7 @@ import {
 } from "../../utils/constants/contracts";
 import SPOOKYFARMS from "../../utils/constants/farms/spookyFarms";
 import { ethers } from "ethers";
-import { formatTokenAmount, getProviderRPC } from "../../utils/cryptoMethods";
+import { formatTokenAmount, getProvider } from "../../utils/cryptoMethods";
 import {
   FarmsLiquidity,
   FarmsPortfolio,
@@ -20,8 +20,8 @@ import { spiritFarms_v1 } from "../../utils/constants/farms/spiritFarms";
 export const formatFarms = (calls, farms: TokenPortfolio[], type) => {
   const farmsData: FarmsPortfolio[] = [];
   const farmsLiquidity: FarmsLiquidity[] = [];
-  const provider = getProviderRPC();
-  const signer = provider.getSigner();
+  const { signer } = getProvider();
+
   const protocol_farms = {
     SPIRIT: {
       array: spiritFarms_v1,

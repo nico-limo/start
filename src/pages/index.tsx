@@ -11,6 +11,7 @@ const FarmTable = dynamic(() => import("../components/FarmTable"));
 
 const Home = () => {
   const { farmsPortfolio, portfolio } = useTokens();
+
   const { wallet } = useUserMethods();
   const { SPIRIT, SPOOKY } = PROTOCOL;
   const { ASSETS, LIQUIDITY } = TOKEN_INFO;

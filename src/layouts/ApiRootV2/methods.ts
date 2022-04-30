@@ -11,7 +11,10 @@ import {
   TokenPortfolio,
 } from "../../utils/interfaces/index.";
 import { checkAddresses } from "../../utils/methods";
-import { spiritFarms } from "../../utils/constants/farms/spiritFarms";
+import {
+  spiritFarms,
+  spiritFarms_v1,
+} from "../../utils/constants/farms/spiritFarms";
 import spookyFarms from "../../utils/constants/farms/spookyFarms";
 import { formatUnits } from "ethers/lib/utils";
 
@@ -118,8 +121,6 @@ export const getCovalentData = (
     if (
       !TOKENS_SCAM[chainID].includes(contract_address) &&
       contract_name &&
-      quote_rate &&
-      quote_rate < 300000 &&
       contract_decimals
     ) {
       if (contract_name.includes("LP")) {
@@ -139,16 +140,22 @@ export const getCovalentData = (
                 path: "",
                 id_coinMarket: 0,
                 balance: formatUnits(balance, contract_decimals),
-                balance_24h: formatUnits(balance_24h, contract_decimals),
+                balance_24h: formatUnits(
+                  balance_24h !== "0" ? balance_24h : balance,
+                  contract_decimals
+                ),
                 type: "",
-                usd: quote_rate,
-                usd_24h: quote_rate_24h,
+                usd: quote_rate ? quote_rate : 1,
+                usd_24h: quote_rate_24h ? quote_rate_24h : 1,
                 protocol: "BOO",
               };
               spookyBalance.push(newSpookyFarm);
             }
           } else {
             const spiritFarm = spiritFarms.find((lp) =>
+              checkAddresses(lp.lpAddresses[250], contract_address)
+            );
+            const spiritFarmV1 = spiritFarms_v1.find((lp) =>
               checkAddresses(lp.lpAddresses[250], contract_address)
             );
             if (spiritFarm) {
@@ -161,10 +168,33 @@ export const getCovalentData = (
                 path: "",
                 id_coinMarket: 0,
                 balance: formatUnits(balance, contract_decimals),
-                balance_24h: formatUnits(balance_24h, contract_decimals),
+                balance_24h: formatUnits(
+                  balance_24h !== "0" ? balance_24h : balance,
+                  contract_decimals
+                ),
                 type: "",
-                usd: quote_rate,
-                usd_24h: quote_rate_24h,
+                usd: quote_rate ? quote_rate : 1,
+                usd_24h: quote_rate_24h ? quote_rate_24h : 1,
+                protocol: "SPIRIT",
+              };
+              spiritBalance.push(newSpiritFarm);
+            } else if (spiritFarmV1) {
+              const { lpSymbol } = spiritFarmV1;
+              const newSpiritFarm: TokenPortfolio = {
+                name: `${lpSymbol[0]}-${lpSymbol[1]}`,
+                address: contract_address,
+                symbol: `${lpSymbol[0]}-${lpSymbol[1]}`,
+                decimals: 18,
+                path: "",
+                id_coinMarket: 0,
+                balance: formatUnits(balance, contract_decimals),
+                balance_24h: formatUnits(
+                  balance_24h !== "0" ? balance_24h : balance,
+                  contract_decimals
+                ),
+                type: "",
+                usd: quote_rate ? quote_rate : 1,
+                usd_24h: quote_rate_24h ? quote_rate_24h : 1,
                 protocol: "SPIRIT",
               };
               spiritBalance.push(newSpiritFarm);
@@ -173,7 +203,7 @@ export const getCovalentData = (
         }
       } else {
         // USER TOKENS BALANCE
-        if (balance && balance !== "0") {
+        if (balance && balance !== "0" && quote_rate && quote_rate < 300000) {
           const priceToken = allTokens.find((price) =>
             checkAddresses(price.address, contract_address)
           );

@@ -27,7 +27,7 @@ const PricesStatics = () => {
         <HStack align="center" justify="space-between">
           <Image
             alt={network.label}
-            loading="lazy"
+            loading="eager"
             src={`/networks/${network.label}.png`}
             width={30}
             height={30}

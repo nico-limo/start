@@ -49,8 +49,8 @@ const FarmInfo = ({ farm, protocol }: FarmInfoProps) => {
   return (
     <Grid templateColumns={columns} my={1} bg="gray.700">
       <GridItem p={2} display="flex" alignItems="center">
-        <Flex direction="column">
-          <HStack justify="center">
+        <Flex direction="column" align="start">
+          <HStack justify="start">
             <TokenImage symbol={symbolA} />
             <TokenImage symbol={symbolB} />
           </HStack>
