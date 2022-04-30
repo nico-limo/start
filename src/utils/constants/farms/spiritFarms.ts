@@ -18,7 +18,6 @@ export const spiritFarms_v1 = [
   {
     pid: 58,
     lpSymbol: ["linSPIRIT", "SPIRIT"],
-    isLPToken: true,
     lpAddresses: {
       250: "0x54d5b6881b429a694712fa89875448ca8adf06f4",
     },

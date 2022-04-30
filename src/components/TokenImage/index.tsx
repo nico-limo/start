@@ -6,7 +6,7 @@ const TokenImage = ({ symbol, w = 25, h = 25 }: TokenImageProps) => {
   const [imgSrc, setImgSrc] = useState(symbol);
   return (
     <Image
-      src={`/tokens/${imgSrc}.png`}
+      src={`/tokens/${imgSrc.toLowerCase()}.png`}
       alt={imgSrc}
       width={w}
       height={h}
