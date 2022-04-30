@@ -6,13 +6,13 @@ const TokenImage = ({ symbol, w = 25, h = 25 }: TokenImageProps) => {
   const [imgSrc, setImgSrc] = useState(symbol);
   return (
     <Image
-      src={`/tokens/${imgSrc.toUpperCase()}.png`}
-      alt={imgSrc.toUpperCase()}
+      src={`/tokens/${imgSrc}.png`}
+      alt={imgSrc}
       width={w}
       height={h}
       loading="lazy"
       onError={() => {
-        setImgSrc("DEFAULT");
+        setImgSrc("default");
       }}
     />
   );

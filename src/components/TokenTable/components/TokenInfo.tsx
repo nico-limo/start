@@ -42,7 +42,7 @@ const TokenInfo = ({ token, showBalance, type }: LabelProps) => {
             <Text fontSize={fontSize}>{symbol}</Text>
             {token.protocol && (
               <Image
-                src={`/tokens/${token.protocol.toUpperCase()}.png`}
+                src={`/tokens/${token.protocol}.png`}
                 width={12}
                 height={12}
                 alt={token.protocol}
