@@ -9,11 +9,11 @@ const SubHeader = () => {
   const { BNB, ETH, FTM } = principalTokens;
   const formatBNB = formatAmountV2(BNB.USD, 4);
   const { color_rate: color_BNB } = priceStatus(BNB.USD_24h);
+  const formatETH = formatAmountV2(ETH.USD, 4);
   const { color_rate: color_ETH } = priceStatus(ETH.USD_24h);
+  const formatFTM = formatAmountV2(FTM.USD, 4);
   const { color_rate: color_FTM } = priceStatus(FTM.USD_24h);
 
-  const formatETH = formatAmountV2(ETH.USD, 4);
-  const formatFTM = formatAmountV2(FTM.USD, 4);
   return (
     <HStack justify="space-around" align="center" bg="gray.600" p={1}>
       <HStack w="full" justify="center">
@@ -24,12 +24,16 @@ const SubHeader = () => {
       </HStack>
       <HStack w="full" justify="center" borderX="1px solid white">
         <TokenImage symbol={ETH.symbol} />
-        <Text color={color_ETH}>{`${ETH.symbol} $${formatETH}`}</Text>
+        <Skeleton isLoaded={ETH.USD > 0}>
+          <Text color={color_ETH}>{`${ETH.symbol} $${formatETH}`}</Text>
+        </Skeleton>
       </HStack>
 
       <HStack w="full" justify="center">
         <TokenImage symbol={FTM.symbol} />
-        <Text color={color_FTM}>{`${FTM.symbol} $${formatFTM}`}</Text>
+        <Skeleton isLoaded={FTM.USD > 0}>
+          <Text color={color_FTM}>{`${FTM.symbol} $${formatFTM}`}</Text>
+        </Skeleton>
       </HStack>
     </HStack>
   );
