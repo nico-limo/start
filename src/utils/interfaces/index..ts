@@ -114,12 +114,18 @@ export interface SearchInputProps {
   type: string;
 }
 
+interface PrincipalToken {
+  USD: number;
+  USD_24h: number;
+  symbol: string;
+}
+
 export interface PrincipalTokensProps {
-  ETH: { USD: number; USD_24h: number };
-  SPIRIT: { USD: number; USD_24h: number };
-  BOO: { USD: number; USD_24h: number };
-  BNB: { USD: number; USD_24h: number };
-  FTM: { USD: number; USD_24h: number };
+  ETH: PrincipalToken;
+  SPIRIT: PrincipalToken;
+  BOO: PrincipalToken;
+  BNB: PrincipalToken;
+  FTM: PrincipalToken;
 }
 
 export interface OptionsActionsProps {

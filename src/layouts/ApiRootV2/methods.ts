@@ -37,6 +37,7 @@ export const coingeckoFormat = (data: PricesApiDB[], chainID) => {
         principalTokens[defaultToken.symbol] = {
           USD: tokenList.price,
           USD_24h: tokenList.price24,
+          symbol: defaultToken.symbol,
         };
       }
       const portfolioToken: TokenPortfolio = {
@@ -78,6 +79,7 @@ export const coinmarketFormat = (data, chainID) => {
         principalTokens[defaultToken.symbol] = {
           USD: tokenCoinMarket.quote.USD.price,
           USD_24h: tokenCoinMarket.quote.USD.percent_change_24h,
+          symbol: defaultToken.symbol,
         };
       }
       const newTokenPortfolio: TokenPortfolio = {
