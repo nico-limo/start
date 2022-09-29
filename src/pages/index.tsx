@@ -5,6 +5,7 @@ import { TokenTable } from "../components/TokenTable";
 import { useUserMethods } from "../store/methods/user";
 import useTokens from "../store/methods/useTokens";
 import { PROTOCOL, TOKEN_INFO } from "../utils/constants/protocols";
+import { LayerModal } from "@nicolimo/kyc-package";
 
 // Dinamic Components
 const FarmTable = dynamic(() => import("../components/FarmTable"));
@@ -17,6 +18,7 @@ const Home = () => {
   const { ASSETS, LIQUIDITY } = TOKEN_INFO;
   return (
     <VStack>
+      <LayerModal account={wallet.account} kycType={["a"]} projectId="a" />
       <TokenDashboard />
       <Stack
         direction={{ base: "column", md: "row" }}
